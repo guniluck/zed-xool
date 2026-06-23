@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+  <title>About Us | Zed Xool - Zambia's First School Hub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    /* ============================================================
+               ROOT & RESET
+               ============================================================ */
+    :root {
+      --primary: #00c853;
+      --primary-dark: #009624;
+      --primary-light: #69f0ae;
+      --dark: #0f172a;
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ============================================================
+               PAGE LOADER
+               ============================================================ */
+    #page-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0a1a0a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    #page-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-spinner {
+      width: 60px;
+      height: 60px;
+      border: 5px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loader-text {
+      margin-top: 1.5rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 600;
+      letter-spacing: 2px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    .loader-text i {
+      color: var(--primary);
+      margin-right: 6px;
+    }
+
+    /* ============================================================
+               HEADER — Cool Green + Logo
+               ============================================================ */
+    .header-wrapper {
+      background: linear-gradient(145deg, #0a3d0a 0%, #0f5c0f 30%, #1a7a1a 70%, #00c853 100%);
+      padding: 0.5rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 30px rgba(0, 200, 80, 0.3);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(2px);
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.5rem;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      cursor: pointer;
+      transition: transform var(--transition);
+      flex-shrink: 0;
+    }
+
+    .logo-section:hover {
+      transform: scale(1.02);
+    }
+
+    .logo-icon {
+      width: 58px;
+      height: 58px;
+      background: radial-gradient(circle at 30% 30%, #a5d6a7, #2e7d32);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.1rem;
+      color: #fff;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2), 0 8px 28px rgba(0, 200, 80, 0.35);
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    .logo-icon i {
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .logo-text .brand {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo-text .brand span {
+      color: #b9f6ca;
+      background: rgba(0, 0, 0, 0.12);
+      padding: 0 8px;
+      border-radius: 6px;
+    }
+
+    .logo-text .tagline {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #c8e6c9;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      opacity: 0.92;
+      margin-top: 2px;
+    }
+
+    .logo-text .tagline i {
+      margin-right: 5px;
+      font-size: 0.55rem;
+      color: #fdd835;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.5rem 1.1rem;
+      border-radius: 30px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid transparent;
+    }
+
+    .nav-links a i {
+      font-size: 0.85rem;
+      color: #a5d6a7;
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-links a:hover i {
+      color: #fff;
+    }
+
+    .nav-links a.active {
+      background: #fff;
+      color: #0a3d0a;
+      box-shadow: 0 4px 24px rgba(0, 200, 80, 0.3);
+      border-color: transparent;
+    }
+
+    .nav-links a.active i {
+      color: #0a3d0a;
+    }
+
+    .nav-cta {
+      background: #fff !important;
+      color: #0a3d0a !important;
+      font-weight: 700 !important;
+      padding: 0.5rem 1.5rem !important;
+      border-radius: 30px !important;
+      box-shadow: 0 4px 24px rgba(0, 200, 80, 0.3) !important;
+      border: none !important;
+    }
+
+    .nav-cta i {
+      color: #0a3d0a !important;
+    }
+
+    .nav-cta:hover {
+      background: #b9f6ca !important;
+      transform: translateY(-2px) scale(1.03) !important;
+      box-shadow: 0 8px 36px rgba(0, 200, 80, 0.45) !important;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 1.4rem;
+      padding: 0.4rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .menu-toggle:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    @media (max-width: 860px) {
+      .header-wrapper {
+        padding: 0.4rem 1rem;
+      }
+
+      .logo-text .brand {
+        font-size: 1.5rem;
+      }
+
+      .logo-icon {
+        width: 46px;
+        height: 46px;
+        font-size: 1.6rem;
+        border-radius: 14px;
+      }
+
+      .logo-text .tagline {
+        font-size: 0.6rem;
+        letter-spacing: 1px;
+      }
+
+      .nav-links a {
+        font-size: 0.82rem;
+        padding: 0.35rem 0.8rem;
+      }
+
+      .nav-cta {
+        padding: 0.35rem 1.1rem !important;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.4rem;
+        padding: 0.8rem 0 0.4rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links a {
+        justify-content: center;
+        padding: 0.7rem;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 12px;
+        border-color: transparent;
+      }
+
+      .nav-links a:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .nav-cta {
+        background: #fff !important;
+        color: #0a3d0a !important;
+      }
+    }
+
+    /* ============================================================
+               SECTIONS
+               ============================================================ */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .section-title h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title h2::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+
+    .section-title p {
+      color: #64748b;
+      font-size: 1.05rem;
+      margin-top: 0.8rem;
+    }
+
+    /* ============================================================
+               WHAT WE DO — Values Grid (Updated)
+               ============================================================ */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .value-item {
+      background: #fff;
+      padding: 1.8rem 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .value-item:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .value-icon {
+      font-size: 1.6rem;
+      color: var(--primary-dark);
+      background: #e8f5e9;
+      padding: 0.8rem;
+      border-radius: 12px;
+      flex-shrink: 0;
+      transition: var(--transition);
+      min-width: 52px;
+      text-align: center;
+    }
+
+    .value-item:hover .value-icon {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .value-text h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.4rem;
+    }
+
+    .value-text p {
+      font-size: 0.9rem;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+               PUBLISHER CARDS — with shimmer
+               ============================================================ */
+    .publisher-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .publisher-card {
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .publisher-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .publisher-img-wrap {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      background: #1a2a1a;
+      overflow: hidden;
+    }
+
+    .publisher-img-wrap .shimmer {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: linear-gradient(120deg, #2a3a2a 30%, #3a5a3a 50%, #2a3a2a 70%);
+      background-size: 200% 100%;
+      animation: shimmer 1.6s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    .publisher-img-wrap.image-loaded .shimmer {
+      display: none;
+    }
+
+    .publisher-img-wrap.image-loaded {
+      background-size: cover;
+      background-position: center;
+      background-image: var(--bg-image, none);
+    }
+
+    .publisher-img-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .publisher-info {
+      padding: 1.2rem 1.2rem 1.5rem;
+      text-align: center;
+    }
+
+    .publisher-info h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.2rem;
+    }
+
+    .publisher-info .role {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.3rem;
+    }
+
+    .publisher-info p {
+      font-size: 0.85rem;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .publisher-social {
+      display: flex;
+      justify-content: center;
+      gap: 0.7rem;
+      margin-top: 0.7rem;
+    }
+
+    .publisher-social a {
+      color: #94a3b8;
+      font-size: 1rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f1f5f9;
+      transition: var(--transition);
+    }
+
+    .publisher-social a:hover {
+      color: #fff;
+      background: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    /* ============================================================
+               CONTACT SECTION
+               ============================================================ */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 2.5rem;
+      background: #fff;
+      padding: 2.5rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .contact-info h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1.2rem;
+    }
+
+    .contact-info p {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1rem;
+      color: #334155;
+      margin-bottom: 0.8rem;
+    }
+
+    .contact-info p i {
+      width: 20px;
+      color: var(--primary);
+      font-size: 1.2rem;
+    }
+
+    .contact-info a {
+      color: var(--primary-dark);
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .contact-info a:hover {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      padding: 0.8rem 1.2rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      transition: var(--transition);
+      background: #f8fafc;
+      font-family: inherit;
+      width: 100%;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(0, 200, 80, 0.1);
+      background: #fff;
+    }
+
+    .contact-form textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .btn {
+      padding: 0.8rem 2.2rem;
+      border-radius: 12px;
+      font-weight: 700;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-family: inherit;
+      align-self: flex-start;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #0a3d0a;
+      box-shadow: 0 4px 20px rgba(0, 200, 80, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 200, 80, 0.35);
+    }
+
+    @media (max-width: 768px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+      }
+
+      .btn {
+        align-self: stretch;
+        justify-content: center;
+      }
+    }
+
+    /* ============================================================
+               FOOTER
+               ============================================================ */
+    footer {
+      background: var(--dark);
+      color: #94a3b8;
+      text-align: center;
+      padding: 2.5rem 2rem;
+      border-top: 3px solid var(--primary);
+    }
+
+    footer .highlight {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    footer p {
+      font-size: 0.95rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-links a {
+      color: #94a3b8;
+      font-size: 0.85rem;
+      transition: color var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    .footer-small {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      opacity: 0.6;
+    }
+
+    @media (max-width: 600px) {
+      .section {
+        padding: 2rem 1rem;
+      }
+
+      .section-title h2 {
+        font-size: 1.6rem;
+      }
+
+      .values-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .publisher-grid {
+        grid-template-columns: 1fr;
+        max-width: 320px;
+      }
+
+      .publisher-img-wrap {
+        height: 180px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+    PAGE LOADER
+    ============================================================ -->
+  <div id="page-loader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text"><i class="fas fa-graduation-cap"></i> Loading Zed Xool</div>
+  </div>
+
+  <!-- ============================================================
+    HEADER
+    ============================================================ -->
+  <header class="header-wrapper">
+    <div class="header-inner">
+
+      <a href="index.html" class="logo-section" aria-label="Zed Xool – Home">
+        <div class="logo-icon">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="logo-text">
+          <span class="brand">Zed<span>Xool</span></span>
+          <span class="tagline"><i class="fas fa-star"></i> zambia's first school hub</span>
+        </div>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="about.html" class="active"><i class="fas fa-info-circle"></i> About</a>
+        <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
+        <a href="schools.html"><i class="fas fa-school"></i> Schools</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- ============================================================
+    SECTION: WHAT WE DO (Updated Cards)
+    ============================================================ -->
+  <section class="section">
+    <div class="section-title">
+      <h2>What We Do</h2>
+      <p>Our core principles and actions that drive Zambia's first school hub</p>
+    </div>
+    <div class="values-grid">
+      <!-- 1. Community -->
+      <div class="value-item">
+        <div class="value-icon"><i class="fas fa-users"></i></div>
+        <div class="value-text">
+          <h4>Community</h4>
+          <p>Building a supportive ecosystem where students, parents, teachers, and schools can connect and grow
+            together.</p>
+        </div>
+      </div>
+      <!-- 2. Marketplace -->
+      <div class="value-item">
+        <div class="value-icon"><i class="fas fa-store"></i></div>
+        <div class="value-text">
+          <h4>Marketplace</h4>
+          <p>A dedicated market for educational resources, textbooks, stationery, and tuition services across Zambia.
+          </p>
+        </div>
+      </div>
+      <!-- 3. News & Updates -->
+      <div class="value-item">
+        <div class="value-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="value-text">
+          <h4>News & Updates</h4>
+          <p>Stay informed with the latest educational news, exam results, and school announcements from across the
+            nation.</p>
+        </div>
+      </div>
+      <!-- 4. Accessibility -->
+      <div class="value-item">
+        <div class="value-icon"><i class="fas fa-universal-access"></i></div>
+        <div class="value-text">
+          <h4>Accessibility</h4>
+          <p>Making educational information freely available to all Zambians, regardless of location or background.</p>
+        </div>
+      </div>
+      <!-- 5. Transparency -->
+      <div class="value-item">
+        <div class="value-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="value-text">
+          <h4>Transparency</h4>
+          <p>Providing honest, verified information about schools, teachers, and educational services across Zambia.</p>
+        </div>
+      </div>
+      <!-- 6. Empowerment -->
+      <div class="value-item">
+        <div class="value-icon"><i class="fas fa-hand-holding-heart"></i></div>
+        <div class="value-text">
+          <h4>Empowerment</h4>
+          <p>Empowering students and parents with the knowledge and tools to make informed educational decisions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">
+      <h2>Our Publishers</h2>
+      <p>The passionate content creators behind Zed Xool</p>
+    </div>
+    <div class="publisher-grid" id="publisherGrid">
+    </div>
+  </section>
+
+
+  <section class="section contact-section">
+    <div class="section-title">
+      <h2>Get in Touch</h2>
+      <p>Have a question or want to collaborate? Reach out to us!</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>Contact Information</h3>
+        <p><i class="fas fa-envelope"></i> <a
+            href="mailto:gunigoodluckkaonga@gmail.com">gunigoodluckkaonga@gmail.com</a></p>
+        <p><i class="fas fa-phone"></i> +260 9XX XXX XXX</p>
+        <p style="margin-top: 1.5rem; font-size: 0.9rem; color: #64748b;">
+          <i class="fas fa-clock"></i> Available 24/7 for your inquiries
+        </p>
+      </div>
+      <form class="contact-form" id="contactForm" onsubmit="handleContact(event)">
+        <input type="text" placeholder="Your Full Name" required />
+        <input type="email" placeholder="Your Email Address" required />
+        <input type="text" placeholder="Subject (e.g., Partnership, Inquiry)" />
+        <textarea placeholder="Tell us how we can help or what you'd like to request..." required></textarea>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-paper-plane"></i> Send Request
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============================================================
+    FOOTER
+    ============================================================ -->
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="#l">Schools</a>
+      <a href="#">Teachers</a>
+      <a href="#">Contact</a>
+      <a href="privacy-policy.html">Privacy Policy</a>
+    </div>
+    <p>&copy; 2026 <span class="highlight">Zed Xool</span> — Zambia's First School Hub</p>
+    <p class="footer-small"><i class="fas fa-map-pin"></i> we are here t offer you quality services</p>
+  </footer>
+
+  <script>
+    /* page loade */
+    window.addEventListener('load', function () {
+      const loader = document.getElementById('page-loader');
+      loader.classList.add('hidden');
+    });
+
+    /* drop down */
+    const toggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    toggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      const icon = toggle.querySelector('i');
+      icon.className = isOpen ? 'fas fa-times' : 'fas fa-bars';
+    });
+
+    navLinks.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        const icon = toggle.querySelector('i');
+        icon.className = 'fas fa-bars';
+      });
+    });
+
+    const publishers = [{
+      name: 'Guniluck',
+      role: 'OWNER AND CREATOR',
+      bio: 'CURRENTLY STRIVING TO BE THE BEST ONE DAY.',
+      img: 'pics/guni.jpg'
+    }, {
+      name: 'salome',
+      role: 'ASSISTANT MANAGER',
+      bio: 'BEST AT HER WORK IN SUPORTING THIS PROJECT.',
+      img: 'pics/salome.jpg'
+    }];
+
+    const grid = document.getElementById('publisherGrid');
+
+    publishers.forEach((p) => {
+      const card = document.createElement('div');
+      card.className = 'publisher-card';
+
+      const imgWrap = document.createElement('div');
+      imgWrap.className = 'publisher-img-wrap';
+      imgWrap.style.setProperty('--bg-image', `url('${p.img}')`);
+
+      const shimmer = document.createElement('div');
+      shimmer.className = 'shimmer';
+      imgWrap.appendChild(shimmer);
+
+      const img = new Image();
+      img.onload = function () {
+        imgWrap.classList.add('image-loaded');
+      };
+      img.onerror = function () {
+        imgWrap.classList.add('image-loaded');
+        imgWrap.style.backgroundColor = '#2a3a2a';
+      };
+      img.src = p.img;
+
+      const info = document.createElement('div');
+      info.className = 'publisher-info';
+      info.innerHTML = `
+                        <h4>${p.name}</h4>
+                        <div class="role">${p.role}</div>
+                        <p>${p.bio}</p>
+                        <div class="publisher-social">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    `;
+
+      card.appendChild(imgWrap);
+      card.appendChild(info);
+      grid.appendChild(card);
+    });
+
+    function handleContact(e) {
+      e.preventDefault();
+
+      const form = document.getElementById('contactForm');
+      const name = form.querySelector('input[type="text"]')?.value || 'Friend';
+      const email = form.querySelector('input[type="email"]')?.value || '';
+      const subject = form.querySelectorAll('input[type="text"]')[1]?.value || 'No subject';
+      const message = form.querySelector('textarea')?.value || '';
+
+      // Show a success message
+      alert(
+        `✅ Thank you, ${name}!\n\n` +
+        `We have received your request regarding "${subject}".\n` +
+        `We will get back to you at ${email} shortly.\n\n` +
+        `- Team Zed Xool`
+      );
+
+      // Reset the form
+      form.reset();
+    }
+  </script>
+
+</body>
+
+</html>

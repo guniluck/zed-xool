@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+  <title>Register School | Zed Xool - Zambia's First School Hub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    /* ============================================================
+               ROOT & RESET
+               ============================================================ */
+    :root {
+      --primary: #00c853;
+      --primary-dark: #009624;
+      --primary-light: #69f0ae;
+      --primary-glow: #00e676;
+      --dark: #0f172a;
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --danger: #ef4444;
+      --success: #10b981;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ============================================================
+               PAGE LOADER
+               ============================================================ */
+    #page-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0a1a0a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    #page-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-spinner {
+      width: 60px;
+      height: 60px;
+      border: 5px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loader-text {
+      margin-top: 1.5rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 600;
+      letter-spacing: 2px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    .loader-text i {
+      color: var(--primary);
+      margin-right: 6px;
+    }
+
+    /* ============================================================
+               REGISTER CONTAINER
+               ============================================================ */
+    .register-wrapper {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* ============================================================
+               HEADER — Cool Green + Logo
+               ============================================================ */
+    .header-wrapper {
+      background: linear-gradient(145deg, #0a3d0a 0%, #0f5c0f 30%, #1a7a1a 70%, #00c853 100%);
+      padding: 0.5rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 30px rgba(0, 200, 80, 0.3);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(2px);
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.5rem;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      cursor: pointer;
+      transition: transform var(--transition);
+      flex-shrink: 0;
+    }
+
+    .logo-section:hover {
+      transform: scale(1.02);
+    }
+
+    .logo-icon {
+      width: 50px;
+      height: 50px;
+      background: radial-gradient(circle at 30% 30%, #a5d6a7, #2e7d32);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: #fff;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2), 0 8px 28px rgba(0, 200, 80, 0.35);
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    .logo-icon i {
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .logo-text .brand {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo-text .brand span {
+      color: #b9f6ca;
+      background: rgba(0, 0, 0, 0.12);
+      padding: 0 8px;
+      border-radius: 6px;
+    }
+
+    .logo-text .tagline {
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #c8e6c9;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      opacity: 0.92;
+      margin-top: 2px;
+    }
+
+    .logo-text .tagline i {
+      margin-right: 5px;
+      font-size: 0.5rem;
+      color: #fdd835;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid transparent;
+    }
+
+    .nav-links a i {
+      font-size: 0.8rem;
+      color: #a5d6a7;
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-links a:hover i {
+      color: #fff;
+    }
+
+    .nav-links a.active {
+      background: #fff;
+      color: #0a3d0a;
+      box-shadow: 0 4px 24px rgba(0, 200, 80, 0.3);
+      border-color: transparent;
+    }
+
+    .nav-links a.active i {
+      color: #0a3d0a;
+    }
+
+    .nav-cta {
+      background: #fff !important;
+      color: #0a3d0a !important;
+      font-weight: 700 !important;
+      padding: 0.4rem 1.3rem !important;
+      border-radius: 30px !important;
+      box-shadow: 0 4px 24px rgba(0, 200, 80, 0.3) !important;
+      border: none !important;
+    }
+
+    .nav-cta i {
+      color: #0a3d0a !important;
+    }
+
+    .nav-cta:hover {
+      background: #b9f6ca !important;
+      transform: translateY(-2px) scale(1.03) !important;
+      box-shadow: 0 8px 36px rgba(0, 200, 80, 0.45) !important;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 1.3rem;
+      padding: 0.3rem 0.9rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .menu-toggle:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    @media (max-width: 860px) {
+      .header-wrapper {
+        padding: 0.4rem 1rem;
+      }
+
+      .logo-text .brand {
+        font-size: 1.3rem;
+      }
+
+      .logo-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 1.4rem;
+        border-radius: 12px;
+      }
+
+      .logo-text .tagline {
+        font-size: 0.5rem;
+        letter-spacing: 1px;
+      }
+
+      .nav-links a {
+        font-size: 0.78rem;
+        padding: 0.3rem 0.7rem;
+      }
+
+      .nav-cta {
+        padding: 0.3rem 1rem !important;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.4rem;
+        padding: 0.8rem 0 0.4rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links a {
+        justify-content: center;
+        padding: 0.6rem;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 12px;
+        border-color: transparent;
+      }
+
+      .nav-links a:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .nav-cta {
+        background: #fff !important;
+        color: #0a3d0a !important;
+      }
+    }
+
+    /* ============================================================
+               REGISTER FORM BODY
+               ============================================================ */
+    .register-body {
+      background: #fff;
+      padding: 2.5rem;
+      border-radius: 0 0 var(--radius) var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .register-title {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .register-title h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+
+    .register-title h1 i {
+      color: var(--primary);
+    }
+
+    .register-title p {
+      color: #64748b;
+      font-size: 1rem;
+      margin-top: 0.3rem;
+    }
+
+    .success-message {
+      display: none;
+      background: #d1fae5;
+      color: #065f46;
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--success);
+    }
+
+    .success-message i {
+      margin-right: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .error-message {
+      display: none;
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--danger);
+    }
+
+    .error-message i {
+      margin-right: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    /* ============================================================
+               FORM SECTIONS
+               ============================================================ */
+    .form-section {
+      margin-bottom: 2rem;
+    }
+
+    .form-section h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .form-section h3 i {
+      color: var(--primary);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #475569;
+    }
+
+    .form-group label .required {
+      color: var(--danger);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      transition: var(--transition);
+      background: #f8fafc;
+      font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(0, 200, 80, 0.1);
+      background: #fff;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    /* ============================================================
+               CHECKBOXES — Grades & Features
+               ============================================================ */
+    .checkbox-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.2rem;
+      padding-top: 0.3rem;
+    }
+
+    .checkbox-grid .check-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #334155;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      transition: var(--transition);
+    }
+
+    .checkbox-grid .check-item:hover {
+      background: #f1f5f9;
+    }
+
+    .checkbox-grid input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--primary);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .checkbox-grid input[type="checkbox"]:checked+.check-label {
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    .check-label {
+      transition: var(--transition);
+    }
+
+    .checkbox-hint {
+      color: #64748b;
+      font-size: 0.8rem;
+      margin-top: 0.4rem;
+      display: block;
+    }
+
+    .checkbox-hint i {
+      margin-right: 4px;
+    }
+
+    /* ============================================================
+               FILE UPLOAD
+               ============================================================ */
+    .file-upload {
+      border: 2px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      background: #f8fafc;
+    }
+
+    .file-upload:hover {
+      border-color: var(--primary);
+      background: #f0fdf4;
+    }
+
+    .file-upload i {
+      font-size: 2rem;
+      color: #94a3b8;
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+
+    .file-upload p {
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    .file-upload .file-hint {
+      font-size: 0.75rem;
+      opacity: 0.6;
+    }
+
+    .file-upload input {
+      display: none;
+    }
+
+    .preview-image {
+      width: 100%;
+      height: 160px;
+      border-radius: 12px;
+      background-size: cover;
+      background-position: center;
+      margin-top: 1rem;
+      display: none;
+      border: 2px solid #e2e8f0;
+    }
+
+    /* ============================================================
+               SUBMIT BUTTON
+               ============================================================ */
+    .btn {
+      padding: 0.8rem 2.2rem;
+      border-radius: 12px;
+      font-weight: 700;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #0a3d0a;
+      box-shadow: 0 4px 20px rgba(0, 200, 80, 0.25);
+      width: 100%;
+      justify-content: center;
+      font-size: 1.05rem;
+      padding: 0.9rem;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 200, 80, 0.35);
+    }
+
+    .btn-primary i {
+      font-size: 1rem;
+    }
+
+    /* ============================================================
+               RESPONSIVE
+               ============================================================ */
+    @media (max-width: 700px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+
+      .register-body {
+        padding: 1.5rem;
+        border-radius: 0 0 var(--radius) var(--radius);
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .register-title h1 {
+        font-size: 1.4rem;
+        flex-wrap: wrap;
+      }
+
+      .checkbox-grid {
+        gap: 0.4rem 0.8rem;
+      }
+
+      .checkbox-grid .check-item {
+        font-size: 0.82rem;
+        padding: 0.15rem 0.3rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .register-body {
+        padding: 1rem;
+      }
+
+      .header-wrapper {
+        padding: 0.3rem 0.7rem;
+      }
+
+      .logo-text .brand {
+        font-size: 1.1rem;
+      }
+
+      .logo-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+    PAGE LOADER
+    ============================================================ -->
+  <div id="page-loader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text"><i class="fas fa-graduation-cap"></i> Loading Zed Xool</div>
+  </div>
+
+  <!-- ============================================================
+    REGISTER WRAPPER
+    ============================================================ -->
+  <div class="register-wrapper">
+
+    <!-- ============================================================
+        HEADER
+        ============================================================ -->
+    <header class="header-wrapper">
+      <div class="header-inner">
+
+        <a href="index.html" class="logo-section" aria-label="Zed Xool – Home">
+          <div class="logo-icon">
+            <i class="fas fa-graduation-cap"></i>
+          </div>
+          <div class="logo-text">
+            <span class="brand">Zed<span>Xool</span></span>
+            <span class="tagline"><i class="fas fa-star"></i> zambia's first school hub</span>
+          </div>
+        </a>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <nav class="nav-links" id="navLinks">
+          <a href="index.html"><i class="fas fa-home"></i> Home</a>
+          <a href="about.html"><i class="fas fa-info-circle"></i> About</a>
+          <a href="register.html" class="active"><i class="fas fa-user-plus"></i> Register</a>
+          <a href="schools.html"><i class="fas fa-school"></i> Schools</a>
+        </nav>
+
+      </div>
+    </header>
+
+    <!-- ============================================================
+        REGISTER BODY
+        ============================================================ -->
+    <div class="register-body">
+
+      <div class="register-title">
+        <h1><i class="fas fa-school"></i> Register Your <span style="color: var(--primary);">School</span></h1>
+        <p>Join Zambia's largest educational network — it's free!</p>
+      </div>
+
+      <!-- Messages -->
+      <div class="success-message" id="successMessage">
+        <i class="fas fa-check-circle"></i> Registration submitted successfully! Your school will appear after admin
+        approval.
+      </div>
+      <div class="error-message" id="errorMessage">
+        <i class="fas fa-exclamation-circle"></i> Please fill in all required fields and upload an image.
+      </div>
+
+      <!-- ============================================================
+            FORM
+            ============================================================ -->
+      <form id="schoolRegistrationForm">
+
+        <!-- ===== SCHOOL INFORMATION ===== -->
+        <div class="form-section">
+          <h3><i class="fas fa-info-circle"></i> School Information</h3>
+
+          <div class="form-group">
+            <label>School Name <span class="required">*</span></label>
+            <input type="text" id="schoolName" placeholder="Enter school name" required />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>School Type <span class="required">*</span></label>
+              <select id="schoolType" required>
+                <option value="">Select type</option>
+                <option value="Primary">Primary School</option>
+                <option value="Secondary">Secondary School</option>
+                <option value="Combined">Primary &amp; Secondary</option>
+                <option value="International">International School</option>
+                <option value="Technical">Technical School</option>
+                <option value="Tuition">Tuition Center</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Province <span class="required">*</span></label>
+              <select id="province" required>
+                <option value="">Select province</option>
+                <option value="Lusaka">Lusaka</option>
+                <option value="Copperbelt">Copperbelt</option>
+                <option value="Southern">Southern</option>
+                <option value="Eastern">Eastern</option>
+                <option value="Western">Western</option>
+                <option value="Northern">Northern</option>
+                <option value="North-Western">North-Western</option>
+                <option value="Central">Central</option>
+                <option value="Luapula">Luapula</option>
+                <option value="Muchinga">Muchinga</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>City/Town <span class="required">*</span></label>
+            <input type="text" id="city" placeholder="Enter city or town" required />
+          </div>
+
+          <div class="form-group">
+            <label>Full Address</label>
+            <textarea id="address" placeholder="Enter full school address"></textarea>
+          </div>
+        </div>
+
+        <!-- ===== CONTACT DETAILS ===== -->
+        <div class="form-section">
+          <h3><i class="fas fa-phone"></i> Contact Details</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Phone Number <span class="required">*</span></label>
+              <input type="tel" id="phone" placeholder="+260 xxx xxx xxx" required />
+            </div>
+            <div class="form-group">
+              <label>Email Address <span class="required">*</span></label>
+              <input type="email" id="email" placeholder="school@example.com" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Website (optional)</label>
+            <input type="url" id="website" placeholder="https://www.schoolwebsite.com" />
+          </div>
+        </div>
+
+        <!-- ===== GRADES OFFERED — CHECKBOXES ===== -->
+        <div class="form-section">
+          <h3><i class="fas fa-graduation-cap"></i> Grades Offered <span class="required">*</span></h3>
+          <div class="checkbox-grid" id="gradesGrid">
+            <label class="check-item">
+              <input type="checkbox" value="Grade 1" />
+              <span class="check-label">Grade 1</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Grade 2" />
+              <span class="check-label">Grade 2</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Grade 3" />
+              <span class="check-label">Grade 3</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Grade 4" />
+              <span class="check-label">Grade 4</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Grade 5" />
+              <span class="check-label">Grade 5</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Grade 6" />
+              <span class="check-label">Grade 6</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Grade 7" />
+              <span class="check-label">Grade 7</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Grade 8" />
+              <span class="check-label">Grade 8</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Grade 9" />
+              <span class="check-label">Grade 9</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Grade 10" />
+              <span class="check-label">Grade 10</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Grade 11" />
+              <span class="check-label">Grade 11</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Grade 12" />
+              <span class="check-label">Grade 12</span>
+            </label>
+          </div>
+          <span class="checkbox-hint"><i class="fas fa-info-circle"></i> Select all grades offered at your school</span>
+        </div>
+
+        <!-- ===== SCHOOL FEATURES — CHECKBOXES ===== -->
+        <div class="form-section">
+          <h3><i class="fas fa-cogs"></i> School Features &amp; Services</h3>
+          <div class="checkbox-grid" id="featuresGrid">
+            <label class="check-item">
+              <input type="checkbox" value="Boarding" />
+              <span class="check-label">Boarding</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Day School" />
+              <span class="check-label">Day School</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Library" />
+              <span class="check-label">Library</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Science Lab" />
+              <span class="check-label">Science Lab</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Computer Lab" />
+              <span class="check-label">Computer Lab</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Sports Facilities" />
+              <span class="check-label">Sports Facilities</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Music & Arts" />
+              <span class="check-label">Music &amp; Arts</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Special Needs" />
+              <span class="check-label">Special Needs Support</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Cafeteria" />
+              <span class="check-label">Cafeteria</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Transport" />
+              <span class="check-label">School Transport</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="ICT" />
+              <span class="check-label">ICT / Digital Learning</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" value="Counseling" />
+              <span class="check-label">Guidance &amp; Counseling</span>
+            </label>
+          </div>
+          <span class="checkbox-hint"><i class="fas fa-info-circle"></i> Select all features your school offers</span>
+        </div>
+
+        <!-- ===== SCHOOL IMAGE ===== -->
+        <div class="form-section">
+          <h3><i class="fas fa-image"></i> School Image <span class="required">*</span></h3>
+          <div class="form-group">
+            <div class="file-upload" onclick="document.getElementById('schoolImage').click()">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Click to upload school image or logo</p>
+              <span class="file-hint">Recommended: 800x600 pixels, JPG or PNG</span>
+            </div>
+            <input type="file" id="schoolImage" accept="image/*" required />
+            <div class="preview-image" id="imagePreview"></div>
+          </div>
+        </div>
+
+        <!-- ===== DESCRIPTION ===== -->
+        <div class="form-section">
+          <h3><i class="fas fa-pencil-alt"></i> About Your School</h3>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="description"
+              placeholder="Tell us about your school, its history, achievements, and what makes it special..."></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Student Capacity (optional)</label>
+              <input type="number" id="capacity" placeholder="Number of students" />
+            </div>
+            <div class="form-group">
+              <label>Year Established (optional)</label>
+              <input type="number" id="established" placeholder="e.g. 1990" />
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SUBMIT ===== -->
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-paper-plane"></i> Register School
+        </button>
+
+      </form>
+
+    </div><!-- /register-body -->
+
+  </div><!-- /register-wrapper -->
+
+  <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+  <script>
+    /* ============================================================
+           PAGE LOADER
+           ============================================================ */
+    window.addEventListener('load', function () {
+      const loader = document.getElementById('page-loader');
+      loader.classList.add('hidden');
+    });
+
+    /* ============================================================
+           MOBILE MENU
+           ============================================================ */
+    const toggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    toggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      const icon = toggle.querySelector('i');
+      icon.className = isOpen ? 'fas fa-times' : 'fas fa-bars';
+    });
+
+    navLinks.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        const icon = toggle.querySelector('i');
+        icon.className = 'fas fa-bars';
+      });
+    });
+
+    /* ============================================================
+           IMAGE PREVIEW
+           ============================================================ */
+    document.getElementById('schoolImage').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          const preview = document.getElementById('imagePreview');
+          preview.style.backgroundImage = 'url(' + event.target.result + ')';
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    /* ============================================================
+           FORM SUBMIT
+           ============================================================ */
+    document.getElementById('schoolRegistrationForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Get basic fields
+      const schoolName = document.getElementById('schoolName').value.trim();
+      const schoolType = document.getElementById('schoolType').value;
+      const province = document.getElementById('province').value;
+      const city = document.getElementById('city').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const imageFile = document.getElementById('schoolImage').files[0];
+
+      // Get selected grades
+      const gradeCheckboxes = document.querySelectorAll('#gradesGrid input[type="checkbox"]:checked');
+      const grades = Array.from(gradeCheckboxes).map(cb => cb.value);
+
+      // Get selected features
+      const featureCheckboxes = document.querySelectorAll('#featuresGrid input[type="checkbox"]:checked');
+      const features = Array.from(featureCheckboxes).map(cb => cb.value);
+
+      // Validate required fields
+      if (!schoolName || !schoolType || !province || !city || !phone || !email || !imageFile) {
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('successMessage').style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      // Build data object
+      const schoolData = {
+        id: Date.now(),
+        name: schoolName,
+        type: schoolType,
+        province: province,
+        city: city,
+        address: document.getElementById('address').value.trim(),
+        phone: phone,
+        email: email,
+        website: document.getElementById('website').value.trim(),
+        grades: grades,
+        features: features,
+        description: document.getElementById('description').value.trim(),
+        capacity: document.getElementById('capacity').value || '',
+        established: document.getElementById('established').value || '',
+        status: 'pending',
+        submittedAt: new Date().toISOString(),
+        imageUrl: ''
+      };
+
+      // Read image as base64
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        schoolData.imageUrl = event.target.result;
+
+        // Save to localStorage
+        let registrations = JSON.parse(localStorage.getItem('schoolRegistrations') || '[]');
+        registrations.push(schoolData);
+        localStorage.setItem('schoolRegistrations', JSON.stringify(registrations));
+
+        // Show success
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('errorMessage').style.display = 'none';
+
+        // Reset form
+        document.getElementById('schoolRegistrationForm').reset();
+        document.getElementById('imagePreview').style.display = 'none';
+
+        // Uncheck all checkboxes
+        document.querySelectorAll('#gradesGrid input[type="checkbox"]').forEach(cb => cb.checked = false);
+        document.querySelectorAll('#featuresGrid input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+      reader.readAsDataURL(imageFile);
+    });
+  </script>
+
+</body>
+
+</html>

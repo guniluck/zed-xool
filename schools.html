@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+  <title>Schools Directory | Zed Xool – Zambia's First School Hub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    /* ============================================================
+               ROOT & RESET
+               ============================================================ */
+    :root {
+      --primary: #00c853;
+      --primary-dark: #009624;
+      --primary-light: #69f0ae;
+      --primary-glow: #00e676;
+      --primary-bg: #f0faf0;
+      --dark: #0f172a;
+      --card-width: 190px;
+      --card-height: 230px;
+      --gap: 1rem;
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --fab-bg: linear-gradient(135deg, #7c3aed, #a855f7, #6366f1);
+      --fab-shadow: 0 8px 32px rgba(124, 58, 237, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ============================================================
+               PAGE LOADER
+               ============================================================ */
+    #page-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0a1a0a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    #page-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-spinner {
+      width: 60px;
+      height: 60px;
+      border: 5px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loader-text {
+      position: absolute;
+      bottom: 30%;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 600;
+      letter-spacing: 2px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    .loader-text i {
+      color: var(--primary);
+      margin-right: 6px;
+    }
+
+    /* ============================================================
+               HEADER
+               ============================================================ */
+    .header-wrapper {
+      background: linear-gradient(145deg, #0a3d0a 0%, #0f5c0f 30%, #1a7a1a 70%, #00c853 100%);
+      padding: 0.5rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 30px rgba(0, 200, 80, 0.3);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(2px);
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.5rem;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      cursor: pointer;
+      transition: transform var(--transition);
+      flex-shrink: 0;
+    }
+
+    .logo-section:hover {
+      transform: scale(1.02);
+    }
+
+    .logo-icon {
+      width: 58px;
+      height: 58px;
+      background: radial-gradient(circle at 30% 30%, #a5d6a7, #2e7d32);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.1rem;
+      color: #fff;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2), 0 8px 28px rgba(0, 200, 80, 0.35);
+      transition: var(--transition);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 16px;
+      background: transparent;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .logo-text .brand {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo-text .brand span {
+      color: #b9f6ca;
+      background: rgba(0, 0, 0, 0.12);
+      padding: 0 8px;
+      border-radius: 6px;
+    }
+
+    .logo-text .tagline {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #c8e6c9;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      opacity: 0.92;
+      margin-top: 2px;
+    }
+
+    .logo-text .tagline i {
+      margin-right: 5px;
+      font-size: 0.55rem;
+      color: #fdd835;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.5rem 1.1rem;
+      border-radius: 30px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid transparent;
+    }
+
+    .nav-links a i {
+      font-size: 0.85rem;
+      color: #a5d6a7;
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-links a:hover i {
+      color: #fff;
+    }
+
+    .nav-links a.active {
+      background: #fff;
+      color: #0a3d0a;
+      box-shadow: 0 4px 24px rgba(0, 200, 80, 0.3);
+      border-color: transparent;
+    }
+
+    .nav-links a.active i {
+      color: #0a3d0a;
+    }
+
+    .nav-cta {
+      background: #fff !important;
+      color: #0a3d0a !important;
+      font-weight: 700 !important;
+      padding: 0.5rem 1.5rem !important;
+      border-radius: 30px !important;
+      box-shadow: 0 4px 24px rgba(0, 200, 80, 0.3) !important;
+      border: none !important;
+    }
+
+    .nav-cta i {
+      color: #0a3d0a !important;
+    }
+
+    .nav-cta:hover {
+      background: #b9f6ca !important;
+      transform: translateY(-2px) scale(1.03) !important;
+      box-shadow: 0 8px 36px rgba(0, 200, 80, 0.45) !important;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 1.4rem;
+      padding: 0.4rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .menu-toggle:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    @media (max-width: 860px) {
+      .header-wrapper {
+        padding: 0.4rem 1rem;
+      }
+
+      .logo-text .brand {
+        font-size: 1.5rem;
+      }
+
+      .logo-icon {
+        width: 46px;
+        height: 46px;
+        font-size: 1.6rem;
+        border-radius: 14px;
+      }
+
+      .logo-text .tagline {
+        font-size: 0.6rem;
+        letter-spacing: 1px;
+      }
+
+      .nav-links a {
+        font-size: 0.82rem;
+        padding: 0.35rem 0.8rem;
+      }
+
+      .nav-cta {
+        padding: 0.35rem 1.1rem !important;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.4rem;
+        padding: 0.8rem 0 0.4rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links a {
+        justify-content: center;
+        padding: 0.7rem;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 12px;
+        border-color: transparent;
+      }
+
+      .nav-links a:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .nav-cta {
+        background: #fff !important;
+        color: #0a3d0a !important;
+      }
+    }
+
+    /* ============================================================
+               SEARCH SECTION
+               ============================================================ */
+    .search-section {
+      background: white;
+      padding: 2rem;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 1rem;
+      border-bottom: 3px solid var(--primary-light);
+    }
+
+    .search-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .search-container h2 {
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .search-container h2 i {
+      color: var(--primary);
+    }
+
+    .search-filters {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      width: 220px;
+      min-width: 180px;
+      padding: 0.8rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      transition: border-color 0.3s;
+      flex-shrink: 0;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 200, 80, 0.1);
+    }
+
+    .filter-selects {
+      display: flex;
+      gap: 1rem;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+
+    .search-select {
+      padding: 0.8rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      background: white;
+      min-width: 140px;
+      cursor: pointer;
+      transition: border-color 0.3s;
+    }
+
+    .search-select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    @media (max-width: 700px) {
+      .search-filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-selects {
+        margin-left: 0;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .search-input {
+        width: 100%;
+      }
+
+      .search-select {
+        width: 100%;
+      }
+    }
+
+    /* ============================================================
+               SECTION & GRID
+               ============================================================ */
+    .section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .section-header h2 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-header h2 i {
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+
+    .school-count {
+      background: var(--primary-bg);
+      color: var(--primary-dark);
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .schools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* ============================================================
+               SCHOOL CARD (now purely a modal trigger, no direct link)
+               ============================================================ */
+    .school-card {
+      border-radius: var(--radius);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+      box-shadow: var(--shadow);
+      background-color: #1a2a1a;
+      background-size: cover;
+      background-position: center;
+      height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .school-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .school-card .shimmer {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: linear-gradient(120deg, #2a3a2a 30%, #3a5a3a 50%, #2a3a2a 70%);
+      background-size: 200% 100%;
+      animation: shimmer 1.6s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    .school-card.image-loaded .shimmer {
+      display: none;
+    }
+
+    .school-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top,
+          rgba(0, 0, 0, 0.9) 0%,
+          rgba(0, 0, 0, 0.4) 50%,
+          rgba(0, 0, 0, 0.1) 80%);
+      z-index: 1;
+      transition: var(--transition);
+      pointer-events: none;
+    }
+
+    .school-card:hover::before {
+      background: linear-gradient(to top,
+          rgba(0, 0, 0, 0.95) 0%,
+          rgba(0, 0, 0, 0.5) 50%,
+          rgba(0, 0, 0, 0.2) 80%);
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--primary);
+      color: #0a3d0a;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      z-index: 3;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+      letter-spacing: 0.5px;
+    }
+
+    .card-info {
+      position: relative;
+      z-index: 3;
+      padding: 1rem 1rem 1.2rem;
+    }
+
+    .card-info h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      line-height: 1.2;
+    }
+
+    .card-info .location {
+      font-size: 0.75rem;
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-info .location i {
+      color: var(--primary-light);
+      font-size: 0.7rem;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 4rem 1rem;
+      color: #64748b;
+      font-size: 1.1rem;
+      grid-column: 1 / -1;
+    }
+
+    .no-results i {
+      font-size: 3rem;
+      color: #cbd5e1;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    /* ============================================================
+               MODAL (pop-up details)
+               ============================================================ */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      max-width: 620px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-header {
+      position: relative;
+      height: 220px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 20px 20px 0 0;
+      background-color: #1a2a1a;
+    }
+
+    .modal-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: linear-gradient(to top, white, transparent);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(0, 0, 0, 0.55);
+      color: white;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 10;
+      font-size: 1.1rem;
+      transition: background 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    .close-btn:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-body h2 {
+      font-size: 1.5rem;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .badge-container {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .modal-badge {
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .badge-type {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge-province {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .badge-status {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .info-item i {
+      color: var(--primary);
+      margin-top: 0.2rem;
+      font-size: 0.9rem;
+    }
+
+    .info-item .label {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    .info-item .value {
+      font-weight: 600;
+      color: var(--dark);
+      font-size: 0.9rem;
+    }
+
+    .modal-description {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e2e8f0;
+      color: #475569;
+      line-height: 1.6;
+      font-size: 0.9rem;
+    }
+
+    .modal-footer {
+      padding: 1.5rem;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.8rem 2rem;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-school-page {
+      background: var(--primary);
+      color: #fff;
+      font-size: 1.05rem;
+      padding: 0.9rem 2.2rem;
+      box-shadow: 0 4px 15px rgba(0, 200, 80, 0.3);
+      font-weight: 700;
+    }
+
+    .btn-school-page:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 200, 80, 0.45);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--dark);
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+
+    /* ============================================================
+               FOOTER
+               ============================================================ */
+    footer {
+      background: var(--dark);
+      color: #94a3b8;
+      text-align: center;
+      padding: 2.5rem 2rem;
+      margin-top: 3rem;
+      border-top: 3px solid var(--primary);
+    }
+
+    footer .highlight {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    footer p {
+      font-size: 0.95rem;
+    }
+
+    footer .footer-small {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      opacity: 0.6;
+    }
+
+    /* ============================================================
+               DRAGGABLE FAB
+               ============================================================ */
+    .fab-draggable {
+      position: fixed;
+      z-index: 1001;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: none;
+    }
+
+    .fab-draggable.dragging {
+      cursor: grabbing;
+      z-index: 1003;
+    }
+
+    .fab-draggable.dragging .fab-btn {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 12px rgba(124, 58, 237, 0.3), 0 20px 50px rgba(124, 58, 237, 0.5);
+    }
+
+    .fab-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--fab-bg);
+      border: none;
+      cursor: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--fab-shadow), 0 0 0 5px rgba(124, 58, 237, 0.18);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+      position: relative;
+      outline: none;
+      color: #fff;
+      font-size: 1.3rem;
+    }
+
+    .fab-btn:hover {
+      transform: scale(1.07);
+      box-shadow: 0 0 0 8px rgba(124, 58, 237, 0.35), 0 22px 55px rgba(124, 58, 237, 0.55);
+    }
+
+    .fab-btn:active {
+      transform: scale(0.93);
+    }
+
+    .fab-pulse-ring {
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 3px solid rgba(168, 85, 247, 0.5);
+      animation: fabPulse 2.4s ease-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes fabPulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+
+      100% {
+        transform: scale(1.8);
+        opacity: 0;
+      }
+    }
+
+    .fab-icon-wrapper {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      pointer-events: none;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .fab-draggable.card-open .fab-icon-wrapper {
+      transform: rotate(135deg);
+    }
+
+    .fab-icon-line {
+      position: absolute;
+      background: #fff;
+      border-radius: 3px;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .fab-icon-line.h {
+      width: 100%;
+      height: 3px;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+    }
+
+    .fab-icon-line.v {
+      width: 3px;
+      height: 100%;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+    }
+
+    .fab-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+    }
+
+    .fab-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .glass-card-wrapper {
+      position: fixed;
+      z-index: 1002;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.75);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
+      width: 340px;
+      max-width: 90vw;
+    }
+
+    .glass-card-wrapper.active {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border-radius: 24px;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 80px rgba(168, 85, 247, 0.2);
+      padding: 1.8rem 1.5rem 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .glass-card-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 2;
+    }
+
+    .glass-card-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .glass-card-logo {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 1rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .glass-card-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 14px;
+    }
+
+    .glass-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 1.3rem;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .glass-card-title i {
+      color: #c084fc;
+    }
+
+    .glass-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .glass-link {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.85rem 1.2rem;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .glass-link:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+
+    .link-ai {
+      background: rgba(34, 211, 238, 0.25);
+    }
+
+    .link-ai .link-dot {
+      background: #22d3ee;
+      box-shadow: 0 0 14px #22d3ee;
+    }
+
+    .link-ai .link-icon {
+      color: #22d3ee;
+    }
+
+    .link-market {
+      background: rgba(251, 191, 36, 0.25);
+    }
+
+    .link-market .link-dot {
+      background: #fbbf24;
+      box-shadow: 0 0 14px #fbbf24;
+    }
+
+    .link-market .link-icon {
+      color: #fbbf24;
+    }
+
+    .link-community {
+      background: rgba(244, 114, 182, 0.25);
+    }
+
+    .link-community .link-dot {
+      background: #f472b6;
+      box-shadow: 0 0 14px #f472b6;
+    }
+
+    .link-community .link-icon {
+      color: #f472b6;
+    }
+
+    .link-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: dotGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes dotGlow {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.85;
+      }
+
+      50% {
+        transform: scale(1.9);
+        opacity: 1;
+      }
+    }
+
+    .link-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .link-label {
+      flex: 1;
+      text-align: left;
+    }
+
+    .link-arrow {
+      font-size: 0.75rem;
+      opacity: 0.7;
+      transition: transform 0.3s ease;
+    }
+
+    .glass-link:hover .link-arrow {
+      transform: translateX(4px);
+      opacity: 1;
+    }
+
+    /* ============================================================
+               RESPONSIVE
+               ============================================================ */
+    @media (max-width: 768px) {
+      .schools-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1rem;
+      }
+
+      .school-card {
+        height: 220px;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-footer {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .fab-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.1rem;
+      }
+
+      .fab-icon-wrapper {
+        width: 20px;
+        height: 20px;
+      }
+
+      .fab-icon-line.h {
+        height: 2.5px;
+      }
+
+      .fab-icon-line.v {
+        width: 2.5px;
+      }
+
+      .fab-pulse-ring {
+        inset: -6px;
+        border-width: 2px;
+      }
+
+      .glass-card-wrapper {
+        width: 300px;
+        max-width: 92vw;
+      }
+
+      .glass-card {
+        padding: 1.4rem 1rem 1.2rem;
+        border-radius: 20px;
+      }
+
+      .glass-link {
+        padding: 0.7rem 1rem;
+        font-size: 0.85rem;
+        gap: 0.6rem;
+        border-radius: 14px;
+      }
+
+      .glass-card-title {
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+      }
+
+      .glass-card-close {
+        width: 28px;
+        height: 28px;
+        top: 10px;
+        right: 12px;
+        font-size: 0.75rem;
+      }
+
+      .glass-card-logo {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 0.7rem;
+        border-radius: 16px;
+      }
+
+      .link-dot {
+        width: 8px;
+        height: 8px;
+      }
+
+      .link-icon {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- PAGE LOADER -->
+  <div id="page-loader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text"><i class="fas fa-graduation-cap"></i> Loading Schools</div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header-wrapper">
+    <div class="header-inner">
+      <a href="index.html" class="logo-section" aria-label="Zed Xool – Home">
+        <div class="logo-icon">
+          <img src="admin/goodluck/zedlogo.jpg" alt="Zed Xool Logo"
+            onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-graduation-cap\'></i>';">
+        </div>
+        <div class="logo-text">
+          <span class="brand">Zed<span>Xool</span></span>
+          <span class="tagline"><i class="fas fa-star"></i> zambia's first school hub</span>
+        </div>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
+        <a href="about.html"><i class="fas fa-info-circle"></i> About</a>
+        <a href="schools.html" class="active"><i class="fas fa-school"></i> Schools</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- SEARCH SECTION -->
+  <div class="search-section">
+    <div class="search-container">
+      <h2><i class="fas fa-search"></i> Find Schools in Zambia</h2>
+      <div class="search-filters">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search by name or city...">
+        <div class="filter-selects">
+          <select class="search-select" id="provinceFilter">
+            <option value="">All Provinces</option>
+            <option value="Lusaka">Lusaka</option>
+            <option value="Copperbelt">Copperbelt</option>
+            <option value="Southern">Southern</option>
+            <option value="Eastern">Eastern</option>
+            <option value="Western">Western</option>
+            <option value="Northern">Northern</option>
+            <option value="North-Western">North-Western</option>
+            <option value="Central">Central</option>
+            <option value="Luapula">Luapula</option>
+            <option value="Muchinga">Muchinga</option>
+          </select>
+          <select class="search-select" id="typeFilter">
+            <option value="">All Types</option>
+            <option value="Primary">Primary School</option>
+            <option value="Secondary">Secondary School</option>
+            <option value="Combined">Primary & Secondary</option>
+            <option value="International">International School</option>
+            <option value="Technical">Technical School</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCHOOLS GRID SECTION -->
+  <div class="section">
+    <div class="section-header">
+      <h2><i class="fas fa-school"></i> All Schools</h2>
+      <span class="school-count" id="schoolCount">22 schools</span>
+    </div>
+    <div class="schools-grid" id="schoolsGrid">
+      <div class="no-results">
+        <i class="fas fa-spinner fa-spin" style="font-size:3rem;color:#cbd5e1;margin-bottom:1rem;display:block;"></i>
+        Loading schools...
+      </div>
+    </div>
+  </div>
+
+  <!-- SCHOOL DETAIL MODAL (pop-up) -->
+  <div class="modal" id="schoolModal">
+    <div class="modal-content">
+      <div class="modal-header" id="modalImage">
+        <button class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <h2 id="modalName"></h2>
+        <div class="badge-container">
+          <span class="modal-badge badge-type" id="modalType"></span>
+          <span class="modal-badge badge-province" id="modalProvince"></span>
+          <span class="modal-badge badge-status" id="modalStatus">Approved</span>
+        </div>
+        <div class="info-grid">
+          <div class="info-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <div>
+              <div class="label">Location</div>
+              <div class="value" id="modalLocation"></div>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-phone"></i>
+            <div>
+              <div class="label">Phone</div>
+              <div class="value" id="modalPhone"></div>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-envelope"></i>
+            <div>
+              <div class="label">Email</div>
+              <div class="value" id="modalEmail"></div>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-globe"></i>
+            <div>
+              <div class="label">Website</div>
+              <div class="value" id="modalWebsite"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-description" id="modalDescription"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+        <!-- This button now navigates to the school's own folder/path -->
+        <a href="#" class="btn btn-school-page" id="modalSchoolLink" target="_blank">
+          <i class="fas fa-external-link-alt"></i> Visit School Page
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2026 <span class="highlight">Zed Xool</span> — we are here to offer you quality service</p>
+    <p class="footer-small"><i class="fas fa-map-pin"></i> Zambia's first school hub</p>
+  </footer>
+
+  <!-- DRAGGABLE FAB (quick links) -->
+  <div class="fab-draggable" id="fabDraggable">
+    <button class="fab-btn" id="fabBtn" aria-label="Open quick links">
+      <div class="fab-icon-wrapper" id="fabIconWrapper">
+        <div class="fab-icon-line h"></div>
+        <div class="fab-icon-line v"></div>
+      </div>
+      <div class="fab-pulse-ring"></div>
+    </button>
+  </div>
+  <div class="fab-overlay" id="fabOverlay"></div>
+  <div class="glass-card-wrapper" id="glassCardWrapper">
+    <div class="glass-card">
+      <button class="glass-card-close" id="glassCardClose" aria-label="Close">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="glass-card-logo">
+        <img src="admin/goodluck/zedlogo.jpg" alt="Zed Xool Logo"
+          onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-graduation-cap\' style=\'font-size:2rem; color:#fff;\'></i>';">
+      </div>
+      <div class="glass-card-title"><i class="fas fa-bolt"></i> Quick Links</div>
+      <div class="glass-links">
+        <a href="https://funk.ai" target="_blank" rel="noopener" class="glass-link link-ai">
+          <span class="link-dot"></span><i class="fas fa-robot link-icon"></i>
+          <span class="link-label">FUNK AI</span><i class="fas fa-arrow-right link-arrow"></i>
+        </a>
+        <a href="zed-kontama/signin.html" target="_blank" rel="noopener" class="glass-link link-market">
+          <span class="link-dot"></span><i class="fas fa-store link-icon"></i>
+          <span class="link-label">MARKET</span><i class="fas fa-arrow-right link-arrow"></i>
+        </a>
+        <a href="community/login.html" target="_blank" rel="noopener" class="glass-link link-community">
+          <span class="link-dot"></span><i class="fas fa-users link-icon"></i>
+          <span class="link-label">COMMUNITY</span><i class="fas fa-arrow-right link-arrow"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // PAGE LOADER
+      window.addEventListener('load', function () {
+        const loader = document.getElementById('page-loader');
+        loader.classList.add('hidden');
+      });
+
+      // MOBILE MENU
+      const toggle = document.getElementById('menuToggle');
+      const navLinks = document.getElementById('navLinks');
+      toggle.addEventListener('click', () => {
+        const isOpen = navLinks.classList.toggle('open');
+        toggle.querySelector('i').className = isOpen ? 'fas fa-times' : 'fas fa-bars';
+      });
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          navLinks.classList.remove('open');
+          toggle.querySelector('i').className = 'fas fa-bars';
+        });
+      });
+
+      // 22 SCHOOLS DATA (website field = directory path)
+      const allSchools = [
+        { id: 1, name: 'Chongwe secondary School', type: 'International', province: 'Lusaka', city: 'Lusaka', phone: '+260 211 123456', email: 'info@lis.edu.zm', website: 'schools/chongwe/index.html', description: 'One of Zambia\'s and oldest schools in zambia.', imageUrl: 'pics/logo2.jpg', slug: 'chongwe-sec' },
+
+        { id: 2, name: 'Rafiki international  School', type: 'Secondary', province: 'Copperbelt', city: 'Kitwe', phone: '+260 212 234567', email: 'info@cho.edu.zm', website: 'schools/rafic/portal.html', description: 'Top-performing secondary school in chongwe, excelling in science and mathematics.', imageUrl: 'pics/second.jpg', slug: 'Rafiki-internation' },
+
+        { id: 3, name: 'Kabulonga Girls Secondary', type: 'Secondary', province: 'Lusaka', city: 'Lusaka', phone: '+260 211 345678', email: 'info@kabulonga.edu.zm', website: '', description: 'Leading all-girls school empowering young women through quality education and leadership.', imageUrl: 'pics/logo4.jpg', slug: 'kabulonga-girls' },
+
+        { id: 4, name: 'David Kaunda Technical', type: 'Technical', province: 'Lusaka', city: 'Lusaka', phone: '+260 211 456789', email: 'info@dktech.edu.zm', website: '', description: 'Premier technical secondary school producing skilled graduates for Zambia\'s growing industries.', imageUrl: 'pics/logo19.jpg', slug: 'david-kaunda-tech' },
+        { id: 5, name: 'Hillcrest National Technical', type: 'Technical', province: 'Southern', city: 'Livingstone', phone: '+260 213 321654', email: 'admin@hillcrest.edu.zm', website: '', description: 'Well-established technical school in the tourist capital, known for practical skills training.', imageUrl: 'pics/logo1.jpg', slug: 'hillcrest-technical' },
+        { id: 6, name: 'St. Mary\'s Secondary School', type: 'Secondary', province: 'Lusaka', city: 'Lusaka', phone: '+260 211 567890', email: 'contact@stmarys.edu.zm', website: '', description: 'Faith-based secondary school with a strong tradition of academic and moral excellence.', imageUrl: 'pics/logo6.jpg', slug: 'st-marys-secondary' },
+        { id: 7, name: 'Guni Secondary School', type: 'Secondary', province: 'Copperbelt', city: 'Kitwe', phone: '+260 212 678901', email: 'guni@edu.zm', website: '', description: 'Well-regarded secondary school in Kitwe with excellent examination results.', imageUrl: 'pics/logo7.jpg', slug: 'guni-secondary' },
+        { id: 8, name: 'Margaret Mwachiyeya Secondary', type: 'Secondary', province: 'Lusaka', city: 'Chongwe', phone: '+260 211 789012', email: 'mmss@edu.zm', website: 'schools/mmss/index.html', description: 'Rapidly growing secondary school in Chongwe district with a focus on science education.', imageUrl: 'admin/goodluck/mmsslogo.jpg', slug: 'margaret-mwachiyeya' },
+        { id: 9, name: 'Choma Day Secondary', type: 'Secondary', province: 'Southern', city: 'Choma', phone: '+260 213 890123', email: 'choma@edu.zm', website: '', description: 'Key secondary school serving the Southern Province with dedication to student success.', imageUrl: 'pics/logo9.jpg', slug: 'choma-day-secondary' },
+        { id: 10, name: 'Kasama Boys Secondary', type: 'Secondary', province: 'Northern', city: 'Kasama', phone: '+260 214 901234', email: 'kasamaboys@edu.zm', website: '', description: 'Historic boys\' school in the Northern Province with strong academic traditions.', imageUrl: 'pics/logo10.jpg', slug: 'kasama-boys' },
+        { id: 11, name: 'Chipata Day Secondary', type: 'Secondary', province: 'Eastern', city: 'Chipata', phone: '+260 216 012345', email: 'chipata@edu.zm', website: '', description: 'Leading secondary school in Eastern Province providing quality education to the community.', imageUrl: 'pics/logo11.jpg', slug: 'chipata-day' },
+        { id: 12, name: 'Solwezi Technical Secondary', type: 'Technical', province: 'North-Western', city: 'Solwezi', phone: '+260 218 123456', email: 'solwezitech@edu.zm', website: '', description: 'Growing technical school in the mining region, preparing students for industrial careers.', imageUrl: 'pics/logo12.jpg', slug: 'solwezi-technical' },
+        { id: 13, name: 'Mongu Secondary School', type: 'Secondary', province: 'Western', city: 'Mongu', phone: '+260 217 234567', email: 'mongu@edu.zm', website: '', description: 'Key educational institution in Western Province serving the Barotseland region.', imageUrl: 'pics/logo13.jpg', slug: 'mongu-secondary' },
+        { id: 14, name: 'Kabwe High School', type: 'Secondary', province: 'Central', city: 'Kabwe', phone: '+260 215 345678', email: 'kabwehigh@edu.zm', website: '', description: 'Historic high school in Central Province known for producing national leaders.', imageUrl: 'pics/logo14.jpg', slug: 'kabwe-high' },
+        { id: 15, name: 'Mansa Secondary School', type: 'Secondary', province: 'Luapula', city: 'Mansa', phone: '+260 219 456789', email: 'mansa@edu.zm', website: '', description: 'Leading secondary school in Luapula Province committed to academic excellence.', imageUrl: 'pics/logo15.jpg', slug: 'mansa-secondary' },
+        { id: 16, name: 'Chinsali Secondary School', type: 'Secondary', province: 'Muchinga', city: 'Chinsali', phone: '+260 214 567890', email: 'chinsali@edu.zm', website: '', description: 'Important secondary school in Muchinga Province fostering education in the region.', imageUrl: 'pics/logo16.jpg', slug: 'chinsali-secondary' },
+        { id: 17, name: 'Ndola Primary School', type: 'Primary', province: 'Copperbelt', city: 'Ndola', phone: '+260 212 678900', email: 'ndolaprimary@edu.zm', website: '', description: 'Well-established primary school in Ndola laying strong foundations for young learners.', imageUrl: 'pics/logo17.jpg', slug: 'ndola-primary' },
+        { id: 18, name: 'Livingstone Primary School', type: 'Primary', province: 'Southern', city: 'Livingstone', phone: '+260 213 789001', email: 'livprimary@edu.zm', website: '', description: 'Popular primary school in the tourist capital with a nurturing learning environment.', imageUrl: 'pics/logo18.jpg', slug: 'livingstone-primary' },
+        { id: 19, name: 'Bauleni Combined School', type: 'Combined', province: 'Lusaka', city: 'Lusaka', phone: '+260 211 890012', email: 'bauleni@edu.zm', website: '', description: 'Community-based combined school offering primary and secondary education in Lusaka.', imageUrl: 'pics/logo19.jpg', slug: 'bauleni-combined' },
+        { id: 20, name: 'Rhodes Park School', type: 'Combined', province: 'Lusaka', city: 'Lusaka', phone: '+260 211 901123', email: 'rhodespark@edu.zm', website: '', description: 'Well-known combined school in Lusaka offering quality education from early years to secondary.', imageUrl: 'pics/rhodes.jpg', slug: 'rhodes-park' },
+        { id: 21, name: 'Chilanga Primary School', type: 'Primary', province: 'Lusaka', city: 'Chilanga', phone: '+260 211 012345', email: 'chilanga@edu.zm', website: '', description: 'Community primary school in Chilanga district serving the growing population.', imageUrl: 'pics/chilanga.jpg', slug: 'chilanga-primary' },
+        { id: 22, name: 'Kafue Secondary School', type: 'Secondary', province: 'Lusaka', city: 'Kafue', phone: '+260 211 123450', email: 'kafue@edu.zm', website: '', description: 'Secondary school in the industrial town of Kafue, preparing students for diverse careers.', imageUrl: 'pics/last.jpg', slug: 'kafue-secondary' }
+      ];
+
+      function getAllSchools() {
+        const registrations = JSON.parse(localStorage.getItem('schoolRegistrations') || '[]');
+        const approved = registrations.filter(s => s.status === 'approved');
+        return [...allSchools, ...approved];
+      }
+
+      // Returns the correct link for a school: uses website directory if set, else schools/slug.html
+      function getSchoolLink(school) {
+        if (school.website && school.website.trim() !== '') {
+          return school.website.trim();
+        }
+        return 'schools/' + school.slug + '.html';
+      }
+
+      // DISPLAY SCHOOLS – cards now open the modal (pop-up), no direct navigation
+      function displaySchools(schools) {
+        const grid = document.getElementById('schoolsGrid');
+        const countEl = document.getElementById('schoolCount');
+        countEl.textContent = schools.length + ' school' + (schools.length !== 1 ? 's' : '');
+
+        if (schools.length === 0) {
+          grid.innerHTML = `<div class="no-results"><i class="fas fa-search"></i>No schools found matching your criteria</div>`;
+          return;
+        }
+
+        grid.innerHTML = schools.map(school => {
+          const hasImage = school.imageUrl && school.imageUrl.trim() !== '';
+          const bgStyle = hasImage ? `background-image: url('${school.imageUrl}')` : '';
+          return `
+                    <div class="school-card" data-src="${hasImage ? school.imageUrl : ''}" style="${bgStyle}" onclick="openSchoolModal(${school.id})">
+                        <div class="shimmer"></div>
+                        <span class="card-badge">${school.type}</span>
+                        <div class="card-info">
+                            <h3>${school.name}</h3>
+                            <div class="location"><i class="fas fa-map-marker-alt"></i> ${school.city}, ${school.province}</div>
+                        </div>
+                    </div>`;
+        }).join('');
+
+        // Preload images for shimmer effect
+        const cards = grid.querySelectorAll('.school-card');
+        cards.forEach(card => {
+          const src = card.dataset.src;
+          if (src && src.trim() !== '') {
+            const img = new Image();
+            img.onload = () => card.classList.add('image-loaded');
+            img.onerror = () => {
+              card.classList.add('image-loaded');
+              card.style.backgroundImage = 'none';
+              card.style.backgroundColor = '#2a3a2a';
+            };
+            img.src = src;
+          } else {
+            card.classList.add('image-loaded');
+            card.style.backgroundColor = '#1a2a1a';
+          }
+        });
+      }
+
+      // MODAL (pop-up) – called when a card is clicked
+      window.openSchoolModal = function (schoolId) {
+        const schools = getAllSchools();
+        const school = schools.find(s => s.id === schoolId);
+        if (!school) return;
+
+        document.getElementById('modalImage').style.backgroundImage = `url('${school.imageUrl || ''}')`;
+        document.getElementById('modalImage').style.backgroundColor = '#1a2a1a';
+        document.getElementById('modalName').textContent = school.name;
+        document.getElementById('modalType').textContent = school.type;
+        document.getElementById('modalProvince').textContent = school.province;
+        document.getElementById('modalLocation').textContent = `${school.city}, ${school.province}`;
+        document.getElementById('modalPhone').textContent = school.phone || 'Not provided';
+        document.getElementById('modalEmail').textContent = school.email || 'Not provided';
+        document.getElementById('modalWebsite').textContent = school.website || 'Not provided';
+        document.getElementById('modalDescription').textContent = school.description || 'No description available.';
+
+        const linkBtn = document.getElementById('modalSchoolLink');
+        linkBtn.href = getSchoolLink(school);   // points to the school's folder / home page
+        linkBtn.style.display = 'inline-flex';
+
+        document.getElementById('schoolModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+      };
+
+      window.closeModal = function () {
+        document.getElementById('schoolModal').classList.remove('active');
+        document.body.style.overflow = 'auto';
+      };
+
+      document.getElementById('schoolModal').addEventListener('click', function (e) {
+        if (e.target === this) closeModal();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeModal();
+      });
+
+      // FILTER
+      function filterSchools() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const provinceFilter = document.getElementById('provinceFilter').value;
+        const typeFilter = document.getElementById('typeFilter').value;
+        let schools = getAllSchools();
+        if (searchTerm) schools = schools.filter(s => s.name.toLowerCase().includes(searchTerm) || s.city.toLowerCase().includes(searchTerm));
+        if (provinceFilter) schools = schools.filter(s => s.province === provinceFilter);
+        if (typeFilter) schools = schools.filter(s => s.type === typeFilter);
+        displaySchools(schools);
+      }
+
+      document.getElementById('searchInput').addEventListener('input', filterSchools);
+      document.getElementById('provinceFilter').addEventListener('change', filterSchools);
+      document.getElementById('typeFilter').addEventListener('change', filterSchools);
+
+      displaySchools(getAllSchools());
+
+      // DRAGGABLE FAB
+      (function () {
+        const fabDraggable = document.getElementById('fabDraggable');
+        const fabBtn = document.getElementById('fabBtn');
+        const fabOverlay = document.getElementById('fabOverlay');
+        const glassCardWrapper = document.getElementById('glassCardWrapper');
+        const glassCardClose = document.getElementById('glassCardClose');
+        let isCardOpen = false, isDragging = false, hasMoved = false;
+        let dragStartX, dragStartY, containerStartX, containerStartY, posX, posY;
+        const dragThreshold = 6;
+
+        function initFabPosition() {
+          const vw = window.innerWidth, vh = window.innerHeight;
+          const btnSize = fabBtn.offsetWidth || 58;
+          posX = vw - btnSize - 24;
+          posY = vh - btnSize - 90;
+          clampFabPosition();
+          applyFabPosition();
+        }
+
+        function clampFabPosition() {
+          const vw = window.innerWidth, vh = window.innerHeight;
+          const btnSize = fabBtn.offsetWidth || 58;
+          const padding = 10;
+          posX = Math.max(padding, Math.min(posX, vw - btnSize - padding));
+          posY = Math.max(padding, Math.min(posY, vh - btnSize - padding));
+        }
+
+        function applyFabPosition() {
+          fabDraggable.style.left = posX + 'px';
+          fabDraggable.style.top = posY + 'px';
+          fabDraggable.style.right = 'auto';
+          fabDraggable.style.bottom = 'auto';
+        }
+
+        function openGlassCard() {
+          isCardOpen = true;
+          fabDraggable.classList.add('card-open');
+          fabOverlay.classList.add('active');
+          glassCardWrapper.classList.add('active');
+        }
+
+        function closeGlassCard() {
+          isCardOpen = false;
+          fabDraggable.classList.remove('card-open');
+          fabOverlay.classList.remove('active');
+          glassCardWrapper.classList.remove('active');
+        }
+
+        function toggleGlassCard(e) {
+          if (hasMoved) return;
+          e.stopPropagation();
+          isCardOpen ? closeGlassCard() : openGlassCard();
+        }
+
+        function onDragStart(e) {
+          if (isCardOpen) closeGlassCard();
+          isDragging = true;
+          hasMoved = false;
+          fabDraggable.classList.add('dragging');
+          const point = getEventPoint(e);
+          dragStartX = point.clientX;
+          dragStartY = point.clientY;
+          containerStartX = posX;
+          containerStartY = posY;
+          document.body.style.cursor = 'grabbing';
+          document.body.style.userSelect = 'none';
+          document.body.style.webkitUserSelect = 'none';
+        }
+
+        function onDragMove(e) {
+          if (!isDragging) return;
+          const point = getEventPoint(e);
+          const dx = point.clientX - dragStartX;
+          const dy = point.clientY - dragStartY;
+          if (Math.abs(dx) > dragThreshold || Math.abs(dy) > dragThreshold) hasMoved = true;
+          posX = containerStartX + dx;
+          posY = containerStartY + dy;
+          clampFabPosition();
+          applyFabPosition();
+          if (hasMoved && e.cancelable) e.preventDefault();
+        }
+
+        function onDragEnd() {
+          if (!isDragging) return;
+          isDragging = false;
+          fabDraggable.classList.remove('dragging');
+          document.body.style.cursor = '';
+          document.body.style.userSelect = '';
+          document.body.style.webkitUserSelect = '';
+          const vw = window.innerWidth;
+          const btnSize = fabBtn.offsetWidth || 58;
+          posX = (posX + btnSize / 2 < vw / 2) ? 16 : vw - btnSize - 16;
+          clampFabPosition();
+          fabDraggable.style.transition = 'left 0.4s cubic-bezier(0.34,1.56,0.64,1), top 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+          applyFabPosition();
+          setTimeout(() => { fabDraggable.style.transition = 'none'; }, 420);
+          setTimeout(() => { hasMoved = false; }, 120);
+        }
+
+        function getEventPoint(e) {
+          if (e.touches && e.touches.length > 0) return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
+          if (e.changedTouches && e.changedTouches.length > 0) return { clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY };
+          return { clientX: e.clientX, clientY: e.clientY };
+        }
+
+        fabBtn.addEventListener('mousedown', onDragStart);
+        window.addEventListener('mousemove', onDragMove);
+        window.addEventListener('mouseup', onDragEnd);
+        fabBtn.addEventListener('touchstart', onDragStart, { passive: false });
+        window.addEventListener('touchmove', onDragMove, { passive: false });
+        window.addEventListener('touchend', onDragEnd);
+        window.addEventListener('touchcancel', onDragEnd);
+        fabBtn.addEventListener('contextmenu', e => e.preventDefault());
+        fabBtn.addEventListener('click', e => {
+          if (hasMoved) { e.preventDefault(); e.stopPropagation(); return; }
+          toggleGlassCard(e);
+        });
+        fabOverlay.addEventListener('click', () => { if (isCardOpen) closeGlassCard(); });
+        glassCardClose.addEventListener('click', e => { e.stopPropagation(); closeGlassCard(); });
+        window.addEventListener('keydown', e => { if (e.key === 'Escape' && isCardOpen) closeGlassCard(); });
+        document.querySelectorAll('.glass-link').forEach(link => {
+          link.addEventListener('click', () => setTimeout(closeGlassCard, 150));
+        });
+        window.addEventListener('resize', () => { clampFabPosition(); applyFabPosition(); });
+        initFabPosition();
+        fabDraggable.style.opacity = '0';
+        fabDraggable.style.transform = 'scale(0.5)';
+        fabDraggable.style.transition = 'opacity 0.6s cubic-bezier(0.34,1.56,0.64,1), transform 0.6s cubic-bezier(0.34,1.56,0.64,1)';
+        requestAnimationFrame(() => {
+          fabDraggable.style.opacity = '1';
+          fabDraggable.style.transform = 'scale(1)';
+          setTimeout(() => { fabDraggable.style.transition = 'none'; }, 650);
+        });
+      })();
+    })();
+  </script>
+</body>
+
+</html>

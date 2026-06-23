@@ -1,0 +1,2074 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+  <title>Zed Xool | Zambia's First School Hub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    /* ============================================================
+               ROOT & RESET
+               ============================================================ */
+    :root {
+      --primary: #00c853;
+      --primary-dark: #009624;
+      --primary-light: #69f0ae;
+      --primary-glow: #00e676;
+      --primary-bg: #f0faf0;
+      --dark: #0f172a;
+      --card-width: 190px;
+      --card-height: 230px;
+      --gap: 1rem;
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      /* Draggable FAB colors */
+      --fab-bg: linear-gradient(135deg, #7c3aed, #a855f7, #6366f1);
+      --fab-shadow: 0 8px 32px rgba(124, 58, 237, 0.4);
+      --fab-glow: rgba(168, 85, 247, 0.5);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ============================================================
+               PAGE LOADER (overlay)
+               ============================================================ */
+    #page-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0a1a0a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    #page-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-spinner {
+      width: 60px;
+      height: 60px;
+      border: 5px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loader-text {
+      position: absolute;
+      bottom: 30%;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 600;
+      letter-spacing: 2px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    .loader-text i {
+      color: var(--primary);
+      margin-right: 6px;
+    }
+
+    /* ============================================================
+               HEADER — Cool Green + Logo
+               ============================================================ */
+    .header-wrapper {
+      background: linear-gradient(145deg, #0a3d0a 0%, #0f5c0f 30%, #1a7a1a 70%, #00c853 100%);
+      padding: 0.5rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 30px rgba(0, 200, 80, 0.3);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(2px);
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.5rem;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      cursor: pointer;
+      transition: transform var(--transition);
+      flex-shrink: 0;
+    }
+
+    .logo-section:hover {
+      transform: scale(1.02);
+    }
+
+    .logo-icon {
+      width: 58px;
+      height: 58px;
+      background: radial-gradient(circle at 30% 30%, #a5d6a7, #2e7d32);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.1rem;
+      color: #fff;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2), 0 8px 28px rgba(0, 200, 80, 0.35);
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    .logo-icon i {
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .logo-text .brand {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo-text .brand span {
+      color: #b9f6ca;
+      background: rgba(0, 0, 0, 0.12);
+      padding: 0 8px;
+      border-radius: 6px;
+    }
+
+    .logo-text .tagline {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #c8e6c9;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      opacity: 0.92;
+      margin-top: 2px;
+    }
+
+    .logo-text .tagline i {
+      margin-right: 5px;
+      font-size: 0.55rem;
+      color: #fdd835;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.5rem 1.1rem;
+      border-radius: 30px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid transparent;
+      position: relative;
+    }
+
+    .nav-links a i {
+      font-size: 0.85rem;
+      color: #a5d6a7;
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-links a:hover i {
+      color: #fff;
+    }
+
+    .nav-links a.active {
+      background: #fff;
+      color: #0a3d0a;
+      box-shadow: 0 4px 24px rgba(0, 200, 80, 0.3);
+      border-color: transparent;
+    }
+
+    .nav-links a.active i {
+      color: #0a3d0a;
+    }
+
+    .nav-cta {
+      background: #fff !important;
+      color: #0a3d0a !important;
+      font-weight: 700 !important;
+      padding: 0.5rem 1.5rem !important;
+      border-radius: 30px !important;
+      box-shadow: 0 4px 24px rgba(0, 200, 80, 0.3) !important;
+      border: none !important;
+    }
+
+    .nav-cta i {
+      color: #0a3d0a !important;
+    }
+
+    .nav-cta:hover {
+      background: #b9f6ca !important;
+      transform: translateY(-2px) scale(1.03) !important;
+      box-shadow: 0 8px 36px rgba(0, 200, 80, 0.45) !important;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 1.4rem;
+      padding: 0.4rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .menu-toggle:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    @media (max-width: 860px) {
+      .header-wrapper {
+        padding: 0.4rem 1rem;
+      }
+
+      .logo-text .brand {
+        font-size: 1.5rem;
+      }
+
+      .logo-icon {
+        width: 46px;
+        height: 46px;
+        font-size: 1.6rem;
+        border-radius: 14px;
+      }
+
+      .logo-text .tagline {
+        font-size: 0.6rem;
+        letter-spacing: 1px;
+      }
+
+      .nav-links a {
+        font-size: 0.82rem;
+        padding: 0.35rem 0.8rem;
+      }
+
+      .nav-cta {
+        padding: 0.35rem 1.1rem !important;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.4rem;
+        padding: 0.8rem 0 0.4rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        /* LIMIT HEIGHT: no more than half the screen, scroll if needed */
+        max-height: 50vh;
+        overflow-y: auto;
+        border-radius: 0 0 12px 12px;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links a {
+        justify-content: center;
+        padding: 0.7rem;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 12px;
+        border-color: transparent;
+      }
+
+      .nav-links a:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .nav-cta {
+        background: #fff !important;
+        color: #0a3d0a !important;
+      }
+    }
+
+    /* ============================================================
+               CAROUSEL (HERO)
+               ============================================================ */
+    .carousel-section {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      max-height: 700px;
+      overflow: hidden;
+      background: #0a1a0a;
+    }
+
+    .carousel-slides {
+      display: flex;
+      height: 100%;
+      transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom,
+          rgba(0, 0, 0, 0.2) 0%,
+          rgba(0, 0, 0, 0.65) 100%);
+      z-index: 1;
+    }
+
+    .slide-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: #fff;
+      padding: 2rem;
+      max-width: 900px;
+      animation: fadeUp 0.8s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .slide-content .badge {
+      display: inline-block;
+      background: var(--primary);
+      color: #0a3d0a;
+      padding: 0.4rem 1.6rem;
+      border-radius: 40px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 20px rgba(0, 200, 80, 0.3);
+    }
+
+    .slide-content .badge i {
+      margin-right: 6px;
+    }
+
+    .slide-content h1 {
+      font-size: clamp(2.2rem, 6.5vw, 4.2rem);
+      font-weight: 900;
+      margin-bottom: 0.75rem;
+      text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+      line-height: 1.1;
+    }
+
+    .slide-content p {
+      font-size: clamp(1rem, 2.2vw, 1.4rem);
+      opacity: 0.92;
+      font-weight: 400;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 1.4rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 5;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .carousel-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-50%) scale(1.08);
+    }
+
+    .prev-btn {
+      left: 24px;
+    }
+
+    .next-btn {
+      right: 24px;
+    }
+
+    .dots {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 5;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .dot.active {
+      background: var(--primary);
+      transform: scale(1.3);
+      border-color: var(--primary);
+      box-shadow: 0 0 20px rgba(0, 200, 80, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .carousel-section {
+        height: 50vh;
+        max-height: 450px;
+      }
+
+      .carousel-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+      }
+
+      .prev-btn {
+        left: 12px;
+      }
+
+      .next-btn {
+        right: 12px;
+      }
+
+      .dots {
+        bottom: 18px;
+        gap: 8px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+      }
+    }
+
+    /* ============================================================
+               SECTIONS
+               ============================================================ */
+    .section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 1.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .section-header h2 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-header h2 i {
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+
+    .view-all {
+      color: #2563eb;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: var(--transition);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      background: rgba(37, 99, 235, 0.06);
+    }
+
+    .view-all:hover {
+      background: rgba(37, 99, 235, 0.12);
+      gap: 0.7rem;
+    }
+
+    .view-all i {
+      font-size: 0.75rem;
+      transition: var(--transition);
+    }
+
+    .cards-scroll {
+      display: flex;
+      gap: var(--gap);
+      overflow-x: auto;
+      padding: 0.5rem 0.25rem 1rem;
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 transparent;
+    }
+
+    .cards-scroll::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .cards-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .cards-scroll::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 10px;
+    }
+
+    .card {
+      flex: 0 0 var(--card-width);
+      height: var(--card-height);
+      border-radius: var(--radius);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+      box-shadow: var(--shadow);
+      background-color: #1a2a1a;
+      background-size: cover;
+      background-position: center;
+      background-image: none;
+    }
+
+    .card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .card .shimmer {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: linear-gradient(120deg, #2a3a2a 30%, #3a5a3a 50%, #2a3a2a 70%);
+      background-size: 200% 100%;
+      animation: shimmer 1.6s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    .card.image-loaded .shimmer {
+      display: none;
+    }
+
+    .card.image-loaded {
+      background-image: var(--bg-image, none);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top,
+          rgba(0, 0, 0, 0.85) 0%,
+          rgba(0, 0, 0, 0.3) 50%,
+          rgba(0, 0, 0, 0.1) 80%);
+      z-index: 1;
+      transition: var(--transition);
+      pointer-events: none;
+    }
+
+    .card:hover::before {
+      background: linear-gradient(to top,
+          rgba(0, 0, 0, 0.9) 0%,
+          rgba(0, 0, 0, 0.4) 50%,
+          rgba(0, 0, 0, 0.15) 80%);
+    }
+
+    .card-number {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--primary);
+      color: #0a3d0a;
+      font-weight: 800;
+      font-size: 0.9rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 0.9rem 1.1rem;
+      z-index: 3;
+      color: #fff;
+    }
+
+    .card-info h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      line-height: 1.2;
+    }
+
+    .card-info .subtitle {
+      font-size: 0.72rem;
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-info .tag {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(6px);
+      padding: 0.15rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      margin-top: 0.3rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .card-info .tag i {
+      margin-right: 4px;
+      color: #fbbf24;
+    }
+
+    .card.no-image .shimmer {
+      display: none;
+    }
+
+    .card.no-image {
+      background: linear-gradient(145deg, #1a3a1a, #0f2a0f);
+    }
+
+    .card.no-image.image-loaded {
+      background: linear-gradient(145deg, #1a3a1a, #0f2a0f);
+    }
+
+    /* ============================================================
+               FOOTER
+               ============================================================ */
+    footer {
+      background: var(--dark);
+      color: #94a3b8;
+      text-align: center;
+      padding: 2.5rem 2rem;
+      margin-top: 3rem;
+      border-top: 3px solid var(--primary);
+    }
+
+    footer .highlight {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    footer p {
+      font-size: 0.95rem;
+    }
+
+    footer .footer-small {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      opacity: 0.6;
+    }
+
+    /* ============================================================
+               DRAGGABLE FAB BUTTON
+               ============================================================ */
+    .fab-draggable {
+      position: fixed;
+      z-index: 1001;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: none;
+    }
+
+    .fab-draggable.dragging {
+      cursor: grabbing;
+      z-index: 1003;
+    }
+
+    .fab-draggable.dragging .fab-btn {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 12px rgba(124, 58, 237, 0.3), 0 20px 50px rgba(124, 58, 237, 0.5);
+    }
+
+    .fab-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--fab-bg);
+      border: none;
+      cursor: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--fab-shadow), 0 0 0 5px rgba(124, 58, 237, 0.18);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.35s ease;
+      position: relative;
+      outline: none;
+      color: #fff;
+      font-size: 1.3rem;
+    }
+
+    .fab-btn:hover {
+      transform: scale(1.07);
+      box-shadow: 0 0 0 8px rgba(124, 58, 237, 0.35), 0 22px 55px rgba(124, 58, 237, 0.55);
+    }
+
+    .fab-btn:active {
+      transform: scale(0.93);
+    }
+
+    .fab-pulse-ring {
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 3px solid rgba(168, 85, 247, 0.5);
+      animation: fabPulse 2.4s ease-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes fabPulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+
+      100% {
+        transform: scale(1.8);
+        opacity: 0;
+      }
+    }
+
+    .fab-icon-wrapper {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      pointer-events: none;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .fab-draggable.card-open .fab-icon-wrapper {
+      transform: rotate(135deg);
+    }
+
+    .fab-icon-line {
+      position: absolute;
+      background: #fff;
+      border-radius: 3px;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .fab-icon-line.h {
+      width: 100%;
+      height: 3px;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+    }
+
+    .fab-icon-line.v {
+      width: 3px;
+      height: 100%;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+    }
+
+    /* ============================================================
+               FAB OVERLAY
+               ============================================================ */
+    .fab-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+    }
+
+    .fab-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ============================================================
+               GLASSMORPHISM SIDEBAR (right‑side panel)
+               ============================================================ */
+    .glass-card-wrapper {
+      position: fixed;
+      z-index: 1002;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: 340px;
+      max-width: 90vw;
+      transform: translateX(100%);
+      opacity: 1;
+      pointer-events: none;
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .glass-card-wrapper.active {
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border-radius: 24px 0 0 24px;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+        0 0 80px rgba(168, 85, 247, 0.2);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 1.8rem 1.5rem 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow-y: auto;
+    }
+
+    .glass-card-close {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 2;
+    }
+
+    .glass-card-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .glass-card-logo {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 1rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .glass-card-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 14px;
+      background: transparent;
+    }
+
+    .glass-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 1.3rem;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .glass-card-title i {
+      color: #c084fc;
+      font-size: 1rem;
+    }
+
+    .glass-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: auto;
+    }
+
+    .glass-link {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.85rem 1.2rem;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .glass-link::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+
+    .glass-link:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+
+    .glass-link:active {
+      transform: scale(0.95);
+      transition: transform 0.12s ease;
+    }
+
+    .link-ai {
+      background: rgba(34, 211, 238, 0.25);
+    }
+
+    .link-ai::before {
+      background: rgba(34, 211, 238, 0.3);
+    }
+
+    .link-ai:hover::before {
+      opacity: 1;
+    }
+
+    .link-ai .link-dot {
+      background: #22d3ee;
+      box-shadow: 0 0 14px #22d3ee;
+    }
+
+    .link-ai .link-icon {
+      color: #22d3ee;
+    }
+
+    .link-market {
+      background: rgba(251, 191, 36, 0.25);
+    }
+
+    .link-market::before {
+      background: rgba(251, 191, 36, 0.3);
+    }
+
+    .link-market:hover::before {
+      opacity: 1;
+    }
+
+    .link-market .link-dot {
+      background: #fbbf24;
+      box-shadow: 0 0 14px #fbbf24;
+    }
+
+    .link-market .link-icon {
+      color: #fbbf24;
+    }
+
+    .link-community {
+      background: rgba(244, 114, 182, 0.25);
+    }
+
+    .link-community::before {
+      background: rgba(244, 114, 182, 0.3);
+    }
+
+    .link-community:hover::before {
+      opacity: 1;
+    }
+
+    .link-community .link-dot {
+      background: #f472b6;
+      box-shadow: 0 0 14px #f472b6;
+    }
+
+    .link-community .link-icon {
+      color: #f472b6;
+    }
+
+    .link-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: dotGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes dotGlow {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.85;
+      }
+
+      50% {
+        transform: scale(1.9);
+        opacity: 1;
+      }
+    }
+
+    .link-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .link-label {
+      flex: 1;
+      text-align: left;
+    }
+
+    .link-arrow {
+      font-size: 0.75rem;
+      opacity: 0.7;
+      transition: transform 0.3s ease;
+    }
+
+    .glass-link:hover .link-arrow {
+      transform: translateX(4px);
+      opacity: 1;
+    }
+
+    /* ============================================================
+               VIEW ALL GLASS PANEL (full‑screen overlay)
+               ============================================================ */
+    .view-all-panel-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .view-all-panel-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .view-all-panel {
+      background: rgba(20, 20, 30, 0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+      width: min(90vw, 800px);
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 2rem;
+      position: relative;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .view-all-panel-close {
+      position: sticky;
+      top: 0;
+      align-self: flex-end;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all 0.25s ease;
+      z-index: 5;
+    }
+
+    .view-all-panel-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
+
+    .view-all-panel-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      color: #fff;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .view-all-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+
+    .view-all-grid .card {
+      flex: none;
+      width: 100%;
+      height: 200px;
+      border-radius: 14px;
+    }
+
+    @media (max-width: 480px) {
+      .view-all-panel {
+        width: 95vw;
+        padding: 1.2rem;
+        border-radius: 20px;
+      }
+
+      .view-all-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      }
+    }
+
+    /* ============================================================
+               RESPONSIVE for FAB & Glass Card
+               ============================================================ */
+    @media (max-width: 480px) {
+      .fab-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.1rem;
+      }
+
+      .fab-icon-wrapper {
+        width: 20px;
+        height: 20px;
+      }
+
+      .fab-icon-line.h {
+        height: 2.5px;
+      }
+
+      .fab-icon-line.v {
+        width: 2.5px;
+      }
+
+      .fab-pulse-ring {
+        inset: -6px;
+        border-width: 2px;
+      }
+
+      .glass-card-wrapper {
+        width: 280px;
+        max-width: 85vw;
+      }
+
+      .glass-card {
+        padding: 1.4rem 1rem 1.2rem;
+      }
+
+      .glass-link {
+        padding: 0.7rem 1rem;
+        font-size: 0.85rem;
+        gap: 0.6rem;
+        border-radius: 14px;
+      }
+
+      .glass-card-title {
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+      }
+
+      .glass-card-close {
+        width: 28px;
+        height: 28px;
+        top: 10px;
+        left: 12px;
+        font-size: 0.75rem;
+      }
+
+      .glass-card-logo {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 0.7rem;
+        border-radius: 16px;
+      }
+
+      .link-dot {
+        width: 8px;
+        height: 8px;
+      }
+
+      .link-icon {
+        font-size: 0.95rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      :root {
+        --card-width: 160px;
+        --card-height: 200px;
+        --gap: 0.7rem;
+      }
+
+      .section {
+        padding: 1.5rem 1rem 0.5rem;
+      }
+
+      .section-header h2 {
+        font-size: 1.3rem;
+      }
+
+      .section-header h2 i {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+    PAGE LOADER
+    ============================================================ -->
+  <div id="page-loader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text"><i class="fas fa-graduation-cap"></i> Loading Zed Xool</div>
+  </div>
+
+  <!-- ============================================================
+    HEADER (with News link on the right)
+    ============================================================ -->
+  <header class="header-wrapper">
+    <div class="header-inner">
+      <a href="#" class="logo-section" aria-label="Zed Xool – Home">
+        <div class="logo-icon">
+          <img style="border-radius: 9px;" src="admin/goodluck/zedlogo.jpg" alt="">
+        </div>
+        <div class="logo-text">
+          <span class="brand">Zed<span>Xool</span></span>
+          <span class="tagline"><i class="fas fa-star"></i> zambia's first school hub</span>
+        </div>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html" class="active"><i class="fas fa-home"></i> Home</a>
+        <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
+        <a href="about.html"><i class="fas fa-info-circle"></i> About</a>
+        <a href="schools.html"><i class="fas fa-school"></i> Schools</a>
+        <!-- NEWS LINK -->
+        <a href="news.html"><i class="fas fa-newspaper"></i> News</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============================================================
+    CAROUSEL (HERO SECTION)
+    ============================================================ -->
+  <div class="carousel-section" id="carousel">
+    <div class="carousel-slides" id="slides">
+      <!-- Slide 1 -->
+      <div class="slide" style="background-image: url('admin/goodluck/zedlogo.jpg');">
+        <div class="slide-content">
+          <div class="badge"><i class="fas fa-star"></i> ZED XOOL</div>
+          <h1>zambia's first school hub</h1>
+          <p>Discover top schools, brilliant pupils &amp; expert tutors</p>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="slide" style="background-image: linear-gradient(135deg, #0f2a0f, #1a4a1a);">
+        <div class="slide-content">
+          <div class="badge"><i class="fas fa-trophy"></i> EXCELLENCE</div>
+          <h1>Best Pupils 2026</h1>
+          <p>Celebrating young minds shaping Zambia's future</p>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="slide"
+        style="background-image: url('pics/headteachers.png'), linear-gradient(135deg, #0f2a0f, #1a4a1a); background-size: cover; background-position: center;">
+        <div class="slide-content">
+          <div class="badge"><i class="fas fa-trophy"></i> EXCELLENCE</div>
+          <h1>Best Headteachers 2026</h1>
+          <p>Honouring the leaders shaping Zambia's education</p>
+        </div>
+      </div>
+
+      <!-- Slide 4 -->
+      <div class="slide"
+        style="background-image: url('pics/titoma.jpg'), linear-gradient(135deg, #0f2a0f, #1a4a1a); background-size: cover; background-position: center;">
+        <div class="slide-content">
+          <div class="badge"><i class="fas fa-chalkboard-teacher"></i> TUTORS</div>
+          <h1>Popular Tuition Centers</h1>
+          <p>Find trusted learning hubs across Zambia</p>
+        </div>
+      </div>
+
+      <!-- Slide 5 -->
+      <div class="slide" style="background-image: url('pics/the\ best.jpg') linear-gradient(135deg, #0f2a0f, #1a4a1a);">
+        <div class="slide-content">
+          <div class="badge"><i class="fas fa-chalkboard-teacher"></i> PUPILS</div>
+          <h1>Best Pupils</h1>
+          <p>Discover the best pupils in the country</p>
+        </div>
+      </div>
+
+      <!-- Slide 6 -->
+      <div class="slide" style="background-image: linear-gradient(135deg, #0f2a0f, #1a4a1a);">
+        <div class="slide-content">
+          <div class="badge"><i class="fas fa-newspaper"></i> NEWS</div>
+          <h1>Stay informed with our news</h1>
+          <p>Read and watch news from all over the country</p>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-btn prev-btn" onclick="changeSlide(-1)">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="carousel-btn next-btn" onclick="changeSlide(1)">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2><i class="fas fa-school"></i> Best Schools</h2>
+      <a href="#" class="view-all" data-category="schools"><span>View All</span> <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="cards-scroll" id="schoolsRow"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2><i class="fas fa-user-graduate"></i> Best Pupils</h2>
+      <a href="#" class="view-all" data-category="pupils"><span>View All</span> <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="cards-scroll" id="pupilsRow"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2><i class="fas fa-chalkboard"></i> Best Teachers</h2>
+      <a href="#" class="view-all" data-category="teachers"><span>View All</span> <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="cards-scroll" id="teachersRow"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2><i class="fas fa-building"></i> Popular Tuition Centers</h2>
+      <a href="#" class="view-all" data-category="tuition"><span>View All</span> <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="cards-scroll" id="tuitionRow"></div>
+  </div>
+
+  <!-- ============================================================
+    FOOTER
+    ============================================================ -->
+  <footer>
+    <p>&copy; 2026 <span class="highlight">Zed Xool</span> — we are here to offer you quality service</p>
+    <p class="footer-small"><i class="fas fa-map-pin"></i> Zambia's first school hub</p>
+  </footer>
+
+  <div class="fab-draggable" id="fabDraggable">
+    <button class="fab-btn" id="fabBtn" aria-label="Open quick links">
+      <div class="fab-icon-wrapper" id="fabIconWrapper">
+        <div class="fab-icon-line h"></div>
+        <div class="fab-icon-line v"></div>
+      </div>
+      <div class="fab-pulse-ring"></div>
+    </button>
+  </div>
+
+  <!-- ============================================================
+    FAB OVERLAY
+    ============================================================ -->
+  <div class="fab-overlay" id="fabOverlay"></div>
+
+  <!-- GLASSMORPHISM SIDEBAR (right side) -->
+  <div class="glass-card-wrapper" id="glassCardWrapper">
+    <div class="glass-card">
+      <button class="glass-card-close" id="glassCardClose" aria-label="Close">
+        <i class="fas fa-times"></i>
+      </button>
+      <!-- Zed Xool logo image -->
+      <div class="glass-card-logo">
+        <img src="admin/goodluck/zedlogo.jpg" alt="Zed Xool Logo"
+          onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-graduation-cap\' style=\'font-size:2rem; color:#fff;\'></i>';">
+      </div>
+
+      <div class="glass-card-title">
+        <i class="fas fa-bolt"></i> Quick Lainks
+      </div>
+
+      <div class="glass-links">
+        <a href="funk-ai.html" target="_blank" rel="noopener" class="glass-link link-ai">
+          <span class="link-dot"></span>
+          <i class="fas fa-robot link-icon"></i>
+          <span class="link-label">FUNK AI</span>
+          <i class="fas fa-arrow-right link-arrow"></i>
+        </a>
+        <!-- MARKET -->
+        <a href="zed-kontama/signin.html" target="_blank" rel="noopener" class="glass-link link-market">
+          <span class="link-dot"></span>
+          <i class="fas fa-store link-icon"></i>
+          <span class="link-label">MARKET</span>
+          <i class="fas fa-arrow-right link-arrow"></i>
+        </a>
+        <a href="news.html" target="_blank" rel="noopener" class="glass-link link-market">
+          <span class="link-dot"></span>
+          <i class="fas fa-store link-icon"></i>
+          <span class="link-label">NEWS</span>
+          <i class="fas fa-arrow-right link-arrow"></i>
+        </a>
+        <!-- COMMUNITY -->
+        <a href="community/index.html" target="_blank" rel="noopener" class="glass-link link-community">
+          <span class="link-dot"></span>
+          <i class="fas fa-users link-icon"></i>
+          <span class="link-label">COMMUNITY</span>
+          <i class="fas fa-arrow-right link-arrow"></i>
+        </a>
+        <a href="zedmotoka/index.html" target="_blank" rel="noopener" class="glass-link link-community">
+          <span class="link-dot"></span>
+          <i class="fas fa-users link-icon"></i>
+          <span class="link-label">ZEDRIDE</span>
+          <i class="fas fa-arrow-right link-arrow"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+    VIEW ALL PANEL (Glassmorphism overlay)
+    ============================================================ -->
+  <div class="view-all-panel-overlay" id="viewAllOverlay">
+    <div class="view-all-panel" id="viewAllPanel">
+      <button class="view-all-panel-close" id="viewAllPanelClose">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="view-all-panel-title" id="viewAllTitle"></div>
+      <div class="view-all-grid" id="viewAllGrid"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+  <script>
+    /* ============================================================
+           PAGE LOADER
+           ============================================================ */
+    window.addEventListener('load', function () {
+      const loader = document.getElementById('page-loader');
+      loader.classList.add('hidden');
+    });
+
+    /* ============================================================
+           CAROUSEL
+           ============================================================ */
+    let currentSlide = 0;
+    const totalSlides = 6;   // 6 slides now
+    const slidesContainer = document.getElementById('slides');
+    const dotsContainer = document.getElementById('dots');
+
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('span');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.dataset.index = i;
+      dot.addEventListener('click', () => goToSlide(i));
+      dotsContainer.appendChild(dot);
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      slidesContainer.style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
+      document.querySelectorAll('.dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlide);
+      });
+      // Restart auto‑slide timer after manual change
+      restartAutoSlide();
+    }
+
+    function changeSlide(direction) {
+      let newIndex = currentSlide + direction;
+      if (newIndex < 0) newIndex = totalSlides - 1;
+      if (newIndex >= totalSlides) newIndex = 0;
+      goToSlide(newIndex);
+    }
+
+    // Auto‑slide management
+    let autoSlide;
+    const autoDelay = 5500;
+
+    function startAutoSlide() {
+      autoSlide = setInterval(() => changeSlide(1), autoDelay);
+    }
+
+    function restartAutoSlide() {
+      clearInterval(autoSlide);
+      startAutoSlide();
+    }
+
+    // Start the automatic carousel immediately
+    startAutoSlide();
+
+    const carousel = document.getElementById('carousel');
+    carousel.addEventListener('mouseenter', () => clearInterval(autoSlide));
+    carousel.addEventListener('mouseleave', startAutoSlide);
+
+    /* ============================================================
+           MOBILE MENU
+           ============================================================ */
+    const toggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    toggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      const icon = toggle.querySelector('i');
+      icon.className = isOpen ? 'fas fa-times' : 'fas fa-bars';
+    });
+
+    navLinks.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        const icon = toggle.querySelector('i');
+        icon.className = 'fas fa-bars';
+      });
+    });
+
+    /* ============================================================
+           DATA
+           ============================================================ */
+    const schools = [
+      { name: 'Margaret Mwachiyeya', location: 'Chomgwe', img: 'admin/goodluck/mmsslogo.jpg' },
+      { name: 'Kabulonga Girls', location: 'Lusaka', img: 'pics/logo4.jpg' },
+      { name: 'Guni Secondary', location: 'lusaka', img: 'pics/guni1.png' },
+      { name: "St. Mary's Secondary", location: 'Lusaka', img: 'pics/stmaria.jpg' },
+      { name: 'David Kaunda Tech', location: 'Lusaka', img: 'pics/logo19.jpg' },
+      { name: 'Hillcrest School', location: 'Livingstone', img: 'pics/logo1.jpg' }
+    ];
+
+    const pupils = [
+      { name: 'Lushomo Shiyala', detail: 'Grade 11 · 8A*', img: 'pics/lushomo.jpg' },
+      { name: 'Roset Kaputo', detail: 'Grade 11 · Science', img: 'pics/roset.jpg' },
+      { name: 'Yande Muma', detail: 'Grade 12 · Biology', img: 'pics/yande.jpg' },
+      { name: 'Muhambe', detail: 'Form 1 · English', img: 'admin/goodluck/best1.jpg' },
+      { name: 'chimuka loobwe', detail: 'Grade 12 Gold · chemistry', img: 'pics/chimukaa.jpg' },
+      { name: 'Grace phiri', detail: 'Grade 12 Red · singer', img: 'pics/grace.jpg' },
+      { name: 'Panji phiri', detail: 'Grade 12 Red · singer', img: 'pics/panji.jpg' }
+    ];
+
+    const teachers = [
+      { name: 'Prof. T. Chimwanga', detail: 'Physics', img: 'pics/chimwanga.jpeg' },
+      { name: 'Mr. simakumba', detail: 'biology', img: 'pics/simakumba.jpg' },
+      { name: 'Mr. mulenga', detail: 'jets coordinator', img: 'pics/mulenga.jpg' },
+      { name: 'Mrs. kajiko', detail: 'chemistry.', img: 'pics/kajiko.jpg' },
+      { name: 'Mr. chansa', detail: 'music', img: 'pics/songs.jpg' }
+    ];
+
+    const tuition = [
+      { name: 'TITOMA T.Center', detail: 'Lusaka', img: 'pics/titoma.jpg' },
+      { name: 'Trust Tutors', detail: 'Kitwe', img: 'pics/tution1.jpg' },
+      { name: 'Scholars Zambia', detail: 'Ndola', img: 'pics/tution2.jpg' },
+      { name: 'A+ Learning Center', detail: 'Livingstone', img: 'pics/tution3.jpg' },
+      { name: 'Prime Tutors', detail: 'Lusaka', img: 'pics/tution4.jpg' }
+    ];
+
+    /* ============================================================
+           RENDER CARDS (used for both main rows and view‑all panel)
+           ============================================================ */
+    function renderCardHTML(item, index, type) {
+      const iconMap = {
+        school: 'fa-map-marker-alt',
+        pupil: 'fa-award',
+        teacher: 'fa-book',
+        tuition: 'fa-map-pin',
+      };
+      const labelMap = {
+        school: 'Top School',
+        pupil: 'Best Pupil',
+        teacher: 'Excellent',
+        tuition: 'Popular',
+      };
+      const iconColor = '#fbbf24';
+      const hasImage = item.img && item.img.trim() !== '';
+      const dataSrc = hasImage ? item.img : '';
+      const noImageClass = !hasImage ? 'no-image' : '';
+
+      return `
+        <div class="card ${noImageClass}" data-src="${dataSrc}" style="--bg-image: url('${dataSrc}');">
+            <div class="shimmer"></div>
+            <div class="card-number">${index + 1}</div>
+            <div class="card-info">
+                <h4>${item.name}</h4>
+                <div class="subtitle">
+                    <i class="fas ${iconMap[type] || 'fa-tag'}"></i>
+                    ${item.detail || item.location || ''}
+                </div>
+                <span class="tag">
+                    <i class="fas ${type === 'school' ? 'fa-star' : type === 'pupil' ? 'fa-medal' : type === 'teacher' ? 'fa-apple-alt' : 'fa-fire'}" style="color: ${iconColor};"></i>
+                    ${labelMap[type] || 'Featured'}
+                </span>
+            </div>
+        </div>`;
+    }
+
+    function preloadCardImages(container) {
+      container.querySelectorAll('.card[data-src]').forEach(card => {
+        const src = card.dataset.src;
+        if (src && src.trim() !== '') {
+          const img = new Image();
+          img.onload = function () {
+            card.style.backgroundImage = `url('${src}')`;
+            card.classList.add('image-loaded');
+          };
+          img.onerror = function () {
+            card.classList.add('image-loaded');
+            card.style.backgroundImage = 'none';
+            card.style.backgroundColor = '#2a3a2a';
+          };
+          img.src = src;
+        } else {
+          card.classList.add('image-loaded');
+          card.style.backgroundImage = 'none';
+          card.style.backgroundColor = '#1a2a1a';
+        }
+      });
+    }
+
+    function renderCardsTo(containerId, data, type) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = data.map((item, i) => renderCardHTML(item, i, type)).join('');
+      preloadCardImages(container);
+    }
+
+    renderCardsTo('schoolsRow', schools, 'school');
+    renderCardsTo('pupilsRow', pupils, 'pupil');
+    renderCardsTo('teachersRow', teachers, 'teacher');
+    renderCardsTo('tuitionRow', tuition, 'tuition');
+
+    /* ============================================================
+           VIEW ALL PANEL LOGIC
+           ============================================================ */
+    const viewAllOverlay = document.getElementById('viewAllOverlay');
+    const viewAllTitle = document.getElementById('viewAllTitle');
+    const viewAllGrid = document.getElementById('viewAllGrid');
+    const viewAllClose = document.getElementById('viewAllPanelClose');
+
+    const categoryMap = {
+      schools: { data: schools, type: 'school', title: '<i class="fas fa-school"></i> All Schools' },
+      pupils: { data: pupils, type: 'pupil', title: '<i class="fas fa-user-graduate"></i> All Best Pupils' },
+      teachers: { data: teachers, type: 'teacher', title: '<i class="fas fa-chalkboard"></i> All Best Teachers' },
+      tuition: { data: tuition, type: 'tuition', title: '<i class="fas fa-building"></i> All Tuition Centers' }
+    };
+
+    function openViewAll(categoryKey) {
+      const category = categoryMap[categoryKey];
+      if (!category) return;
+      viewAllTitle.innerHTML = category.title;
+      viewAllGrid.innerHTML = category.data.map((item, i) => renderCardHTML(item, i, category.type)).join('');
+      preloadCardImages(viewAllGrid);
+      viewAllOverlay.classList.add('active');
+    }
+
+    function closeViewAll() {
+      viewAllOverlay.classList.remove('active');
+    }
+
+    document.querySelectorAll('.view-all').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const category = this.dataset.category;
+        openViewAll(category);
+      });
+    });
+
+    viewAllClose.addEventListener('click', closeViewAll);
+    viewAllOverlay.addEventListener('click', function (e) {
+      if (e.target === viewAllOverlay) closeViewAll();
+    });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && viewAllOverlay.classList.contains('active')) {
+        closeViewAll();
+      }
+    });
+
+    /* ============================================================
+           DRAGGABLE FAB BUTTON — Core Logic
+           ============================================================ */
+    (function () {
+      const fabDraggable = document.getElementById('fabDraggable');
+      const fabBtn = document.getElementById('fabBtn');
+      const fabOverlay = document.getElementById('fabOverlay');
+      const glassCardWrapper = document.getElementById('glassCardWrapper');
+      const glassCardClose = document.getElementById('glassCardClose');
+
+      let isCardOpen = false;
+      let isDragging = false;
+      let hasMoved = false;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let containerStartX = 0;
+      let containerStartY = 0;
+      let posX = 0;
+      let posY = 0;
+      const dragThreshold = 6;
+
+      function initFabPosition() {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const btnSize = fabBtn.offsetWidth || 58;
+        const padding = 16;
+        posX = vw - btnSize - 24;
+        posY = vh - btnSize - 90;
+        clampFabPosition();
+        applyFabPosition();
+      }
+
+      function clampFabPosition() {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const btnSize = fabBtn.offsetWidth || 58;
+        const padding = 10;
+        posX = Math.max(padding, Math.min(posX, vw - btnSize - padding));
+        posY = Math.max(padding, Math.min(posY, vh - btnSize - padding));
+      }
+
+      function applyFabPosition() {
+        fabDraggable.style.left = posX + 'px';
+        fabDraggable.style.top = posY + 'px';
+        fabDraggable.style.right = 'auto';
+        fabDraggable.style.bottom = 'auto';
+      }
+
+      function openGlassCard() {
+        isCardOpen = true;
+        fabDraggable.classList.add('card-open');
+        fabOverlay.classList.add('active');
+        glassCardWrapper.classList.add('active');
+      }
+
+      function closeGlassCard() {
+        isCardOpen = false;
+        fabDraggable.classList.remove('card-open');
+        fabOverlay.classList.remove('active');
+        glassCardWrapper.classList.remove('active');
+      }
+
+      function toggleGlassCard(e) {
+        if (hasMoved) return;
+        e.stopPropagation();
+        if (isCardOpen) {
+          closeGlassCard();
+        } else {
+          openGlassCard();
+        }
+      }
+
+      function onDragStart(e) {
+        if (isCardOpen) closeGlassCard();
+        isDragging = true;
+        hasMoved = false;
+        fabDraggable.classList.add('dragging');
+
+        const point = getEventPoint(e);
+        dragStartX = point.clientX;
+        dragStartY = point.clientY;
+        containerStartX = posX;
+        containerStartY = posY;
+
+        document.body.style.cursor = 'grabbing';
+        document.body.style.userSelect = 'none';
+        document.body.style.webkitUserSelect = 'none';
+      }
+
+      function onDragMove(e) {
+        if (!isDragging) return;
+        const point = getEventPoint(e);
+        const dx = point.clientX - dragStartX;
+        const dy = point.clientY - dragStartY;
+
+        if (Math.abs(dx) > dragThreshold || Math.abs(dy) > dragThreshold) {
+          hasMoved = true;
+        }
+
+        posX = containerStartX + dx;
+        posY = containerStartY + dy;
+        clampFabPosition();
+        applyFabPosition();
+
+        if (hasMoved && e.cancelable) {
+          e.preventDefault();
+        }
+      }
+
+      function onDragEnd(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        fabDraggable.classList.remove('dragging');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+        document.body.style.webkitUserSelect = '';
+
+        snapToEdge();
+
+        if (hasMoved && isCardOpen) {
+          closeGlassCard();
+        }
+
+        setTimeout(() => {
+          hasMoved = false;
+        }, 120);
+      }
+
+      function snapToEdge() {
+        const vw = window.innerWidth;
+        const btnSize = fabBtn.offsetWidth || 58;
+        const padding = 16;
+        const centerX = posX + btnSize / 2;
+        if (centerX < vw / 2) {
+          posX = padding;
+        } else {
+          posX = vw - btnSize - padding;
+        }
+        clampFabPosition();
+        fabDraggable.style.transition =
+          'left 0.4s cubic-bezier(0.34,1.56,0.64,1), top 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+        applyFabPosition();
+        setTimeout(() => {
+          fabDraggable.style.transition = 'none';
+        }, 420);
+      }
+
+      function getEventPoint(e) {
+        if (e.touches && e.touches.length > 0) {
+          return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
+        }
+        if (e.changedTouches && e.changedTouches.length > 0) {
+          return { clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY };
+        }
+        return { clientX: e.clientX, clientY: e.clientY };
+      }
+
+      // Event listeners
+      fabBtn.addEventListener('mousedown', onDragStart);
+      window.addEventListener('mousemove', onDragMove);
+      window.addEventListener('mouseup', onDragEnd);
+
+      fabBtn.addEventListener('touchstart', onDragStart, { passive: false });
+      window.addEventListener('touchmove', onDragMove, { passive: false });
+      window.addEventListener('touchend', onDragEnd);
+      window.addEventListener('touchcancel', onDragEnd);
+
+      fabBtn.addEventListener('contextmenu', (e) => e.preventDefault());
+
+      fabBtn.addEventListener('click', (e) => {
+        if (hasMoved) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        toggleGlassCard(e);
+      });
+
+      fabOverlay.addEventListener('click', () => {
+        if (isCardOpen) closeGlassCard();
+      });
+
+      glassCardClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeGlassCard();
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isCardOpen) {
+          closeGlassCard();
+        }
+      });
+
+      document.querySelectorAll('.glass-link').forEach(link => {
+        link.addEventListener('click', () => {
+          setTimeout(closeGlassCard, 150);
+        });
+      });
+
+      window.addEventListener('resize', () => {
+        clampFabPosition();
+        applyFabPosition();
+      });
+
+      initFabPosition();
+      fabDraggable.style.opacity = '0';
+      fabDraggable.style.transform = 'scale(0.5)';
+      fabDraggable.style.transition =
+        'opacity 0.6s cubic-bezier(0.34,1.56,0.64,1), transform 0.6s cubic-bezier(0.34,1.56,0.64,1)';
+      requestAnimationFrame(() => {
+        fabDraggable.style.opacity = '1';
+        fabDraggable.style.transform = 'scale(1)';
+        setTimeout(() => {
+          fabDraggable.style.transition = 'none';
+        }, 650);
+      });
+    })();
+  </script>
+</body>
+
+</html>
