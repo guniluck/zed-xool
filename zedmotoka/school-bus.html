@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Bus - Zed Napyamo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f4f9f4;
+      color: #1a1a1a;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    body.loaded {
+      opacity: 1;
+    }
+
+    :root {
+      --green-dark: #14532d;
+      --green-mid: #166534;
+      --green-primary: #16a34a;
+      --green-light: #22c55e;
+      --green-surface: #f0fdf4;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    /* ----- PRELOADER ----- */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background: #0b1a0b;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    #preloader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    #preloader .spinner {
+      width: 64px;
+      height: 64px;
+      border: 5px solid rgba(255, 255, 255, 0.04);
+      border-top: 5px solid #16a34a;
+      border-radius: 50%;
+      animation: spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+      box-shadow: 0 0 40px rgba(22, 163, 74, 0.05);
+    }
+
+    #preloader .loader-text {
+      color: #16a34a;
+      margin-top: 24px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    #preloader .loader-text i {
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ----- HEADER ----- */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--green-dark);
+    }
+
+    .logo img {
+      height: 42px;
+      border-radius: 8px;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.8rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: #333;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.4rem 0;
+      border-bottom: 2px solid transparent;
+      transition: 0.2s;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: var(--green-primary);
+      border-bottom-color: var(--green-primary);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ----- HERO WITH BACKGROUND BUS IMAGE ----- */
+    .hero-bus {
+      position: relative;
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      color: white;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-bus::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=1200&h=600&fit=crop&crop=center') center/cover no-repeat;
+      filter: brightness(0.6) saturate(0.8);
+      z-index: 0;
+    }
+
+    .hero-bus::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(20, 83, 45, 0.7), rgba(34, 197, 94, 0.3));
+      z-index: 1;
+    }
+
+    .hero-bus * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-bus h2 {
+      font-size: clamp(1.8rem, 5vw, 2.2rem);
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-bus .price-tag {
+      font-size: clamp(2.5rem, 8vw, 3rem);
+      font-weight: 800;
+      margin: 0.5rem 0;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-bus p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ----- BUS GALLERY (FULL BACKGROUND CARDS) ----- */
+    .bus-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .bus-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      height: 260px;
+      background: #e8f0e8;
+      cursor: default;
+    }
+
+    .bus-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Background image */
+    .bus-card .bg-image {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+      transition: transform 0.4s ease;
+    }
+
+    .bus-card:hover .bg-image {
+      transform: scale(1.05);
+    }
+
+    /* Dark overlay for readability */
+    .bus-card .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.1) 60%);
+      z-index: 1;
+    }
+
+    /* Text content */
+    .bus-card .bus-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.5rem;
+      z-index: 2;
+      color: white;
+    }
+
+    .bus-card .bus-info h4 {
+      color: white;
+      font-size: 1.2rem;
+      margin-bottom: 0.2rem;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .bus-card .bus-info p {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.9rem;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .bus-card .bus-info .badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.9rem;
+      border-radius: 40px;
+      margin-top: 0.4rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* ----- CARD ----- */
+    .card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .card h2 {
+      color: var(--green-dark);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    /* ----- ROUTES ----- */
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .route-card {
+      background: var(--green-surface);
+      padding: 1.5rem;
+      border-radius: 16px;
+      border-left: 6px solid var(--green-primary);
+      transition: 0.2s;
+    }
+
+    .route-card:hover {
+      background: #dcfce7;
+    }
+
+    .route-card h4 {
+      color: var(--green-dark);
+      margin-bottom: 0.8rem;
+    }
+
+    .route-card p {
+      font-size: 0.95rem;
+      color: #3f3f46;
+    }
+
+    /* ----- FORM ----- */
+    .form-row {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+      margin-bottom: 1.2rem;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      background: #f9fafb;
+      transition: 0.2s;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--green-primary);
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    }
+
+    .btn {
+      padding: 0.9rem 2.5rem;
+      border-radius: 40px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--green-primary);
+      color: white;
+      margin-top: 0.5rem;
+    }
+
+    .btn:hover {
+      background: var(--green-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(22, 163, 74, 0.25);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
+      transform: translateY(-2px);
+    }
+
+    /* ----- MODAL ----- */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 28px;
+      padding: 2.5rem 2rem 2rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-box .modal-icon {
+      font-size: 3.5rem;
+      color: var(--green-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-box h3 {
+      color: var(--green-dark);
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-box .modal-details {
+      text-align: left;
+      background: var(--green-surface);
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0;
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+
+    .modal-box .modal-details strong {
+      color: var(--green-dark);
+    }
+
+    .modal-box .btn {
+      margin: 0.5rem 0.3rem;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.96);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* ----- REGISTRATIONS LIST ----- */
+    .registrations-list {
+      margin-top: 1.5rem;
+    }
+
+    .reg-item {
+      background: var(--green-surface);
+      padding: 1rem 1.2rem;
+      border-radius: 14px;
+      margin-bottom: 0.7rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      border: 1px solid rgba(22, 163, 74, 0.06);
+    }
+
+    .reg-item .reg-name {
+      font-weight: 600;
+      color: var(--green-dark);
+    }
+
+    .reg-item .reg-route {
+      color: #3f3f46;
+      font-size: 0.9rem;
+    }
+
+    .reg-item .reg-actions button {
+      background: none;
+      border: none;
+      color: #a0a0a0;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: color 0.2s;
+      padding: 0 6px;
+    }
+
+    .reg-item .reg-actions button:hover {
+      color: #e74c3c;
+    }
+
+    .empty-reg {
+      color: #888;
+      font-style: italic;
+      padding: 0.8rem 0;
+    }
+
+    /* ----- FOOTER ----- */
+    footer {
+      background: var(--green-dark);
+      color: rgba(255, 255, 255, 0.85);
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    /* ----- RESPONSIVE ----- */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.8rem 1rem;
+      }
+
+      nav {
+        gap: 1rem;
+        justify-content: center;
+      }
+
+      .bus-gallery {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+      }
+
+      .bus-card {
+        height: 200px;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      .modal-box {
+        padding: 1.8rem 1.2rem;
+      }
+
+      .hero-bus {
+        padding: 2rem 1rem;
+        min-height: 220px;
+      }
+
+      .bus-card .bus-info {
+        padding: 1rem;
+      }
+
+      .bus-card .bus-info h4 {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .bus-gallery {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+      }
+
+      .bus-card {
+        height: 160px;
+        border-radius: 14px;
+      }
+
+      .bus-card .bus-info {
+        padding: 0.8rem;
+      }
+
+      .bus-card .bus-info h4 {
+        font-size: 0.9rem;
+      }
+
+      .bus-card .bus-info p {
+        font-size: 0.75rem;
+      }
+
+      .bus-card .bus-info .badge {
+        font-size: 0.6rem;
+        padding: 0.1rem 0.7rem;
+      }
+
+      .route-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+      }
+
+      .route-card {
+        padding: 1rem;
+      }
+
+      .hero-bus {
+        padding: 1.5rem 1rem;
+        min-height: 180px;
+        border-radius: 16px;
+      }
+
+      .hero-bus h2 {
+        font-size: 1.3rem;
+      }
+
+      .hero-bus .price-tag {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- PRELOADER -->
+  <div id="preloader">
+    <div class="spinner"></div>
+    <div class="loader-text"><i class="fas fa-bus"></i> Loading Fleet</div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <img src="zedlogo.jpg" alt="Zed Napyamo Logo">
+      <span>Zed Napyamo</span>
+    </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="ride.html">Ride</a>
+      <a href="school-bus.html" class="active">School Bus</a>
+      <a href="admin.html">Driver Signup</a>
+    </nav>
+  </header>
+
+  <div class="container">
+
+    <!-- HERO WITH BUS BACKGROUND -->
+    <div class="hero-bus">
+      <h2><i class="fas fa-bus"></i> Safe School Transport</h2>
+      <div class="price-tag">ZMW 300<span style="font-size: 1.4rem;">/month</span></div>
+      <p>Per child · Guaranteed seat · Live tracking · Attendance monitoring</p>
+    </div>
+
+    <!-- BUS GALLERY – FULL BACKGROUND IMAGE CARDS -->
+    <div class="card" style="padding-bottom: 1.8rem;">
+      <h2><i class="fas fa-images"></i> Our Fleet</h2>
+      <div class="bus-gallery">
+        <!-- Bus 1 -->
+        <div class="bus-card">
+          <div class="bg-image" style="background-image: url('bus1.jpg');">
+          </div>
+          <div class="overlay"></div>
+          <div class="bus-info">
+            <h4>Bus #1 – Kabulonga</h4>
+            <p><i class="fas fa-users"></i> 32 seats · AC</p>
+            <span class="badge"><i class="fas fa-check-circle"></i> Active</span>
+          </div>
+        </div>
+        <!-- Bus 2 -->
+        <div class="bus-card">
+          <div class="bg-image" style="background-image: url('bus2.jpg');">
+          </div>
+          <div class="overlay"></div>
+          <div class="bus-info">
+            <h4>Bus #2 – Chilanga</h4>
+            <p><i class="fas fa-users"></i> 28 seats · AC</p>
+            <span class="badge"><i class="fas fa-check-circle"></i> Active</span>
+          </div>
+        </div>
+        <!-- Bus 3 -->
+        <div class="bus-card">
+          <div class="bg-image" style="background-image: url('bus3.jpg');">
+          </div>
+          <div class="overlay"></div>
+          <div class="bus-info">
+            <h4>Bus #3 – Matero</h4>
+            <p><i class="fas fa-users"></i> 30 seats · AC</p>
+            <span class="badge"><i class="fas fa-check-circle"></i> Active</span>
+          </div>
+        </div>
+        <!-- Bus 4 -->
+        <div class="bus-card">
+          <div class="bg-image" style="background-image: url('bus4.jpg');">
+          </div>
+          <div class="overlay"></div>
+          <div class="bus-info">
+            <h4>Bus #4 – Woodlands</h4>
+            <p><i class="fas fa-users"></i> 26 seats · AC</p>
+            <span class="badge"><i class="fas fa-check-circle"></i> Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROUTES -->
+    <div class="card">
+      <h2><i class="fas fa-route"></i> Available Routes</h2>
+      <div class="route-grid">
+        <div class="route-card">
+          <h4>Route A: Kabulonga</h4>
+          <p><i class="far fa-clock"></i> Pickup 06:40<br><i class="far fa-clock"></i> Return 15:30</p>
+        </div>
+        <div class="route-card">
+          <h4>Route B: Chilanga</h4>
+          <p><i class="far fa-clock"></i> Pickup 06:30<br><i class="far fa-clock"></i> Return 15:30</p>
+        </div>
+        <div class="route-card">
+          <h4>Route C: Matero</h4>
+          <p><i class="far fa-clock"></i> Pickup 06:50<br><i class="far fa-clock"></i> Return 15:45</p>
+        </div>
+        <div class="route-card">
+          <h4>Route D: Woodlands</h4>
+          <p><i class="far fa-clock"></i> Pickup 07:00<br><i class="far fa-clock"></i> Return 16:00</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTRATION FORM -->
+    <div class="card">
+      <h2><i class="fas fa-child"></i> Register a Child</h2>
+      <form id="registrationForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="childName">Child's Full Name *</label>
+            <input type="text" id="childName" placeholder="e.g., Thandiwe Banda" required>
+          </div>
+          <div class="form-group">
+            <label for="childGrade">Grade / Class *</label>
+            <input type="text" id="childGrade" placeholder="e.g., Grade 5" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="parentPhone">Parent/Guardian Phone *</label>
+            <input type="text" id="parentPhone" placeholder="260 97..." required>
+          </div>
+          <div class="form-group">
+            <label for="routeSelect">Select Route *</label>
+            <select id="routeSelect" required>
+              <option value="">— Choose a route —</option>
+              <option value="Route A - Kabulonga">Route A - Kabulonga</option>
+              <option value="Route B - Chilanga">Route B - Chilanga</option>
+              <option value="Route C - Matero">Route C - Matero</option>
+              <option value="Route D - Woodlands">Route D - Woodlands</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn"><i class="fas fa-check-circle"></i> Subscribe Now</button>
+      </form>
+    </div>
+
+    <!-- REGISTRATIONS LIST -->
+    <div class="card" id="registrationsCard">
+      <h2><i class="fas fa-list"></i> Registered Children</h2>
+      <div id="registrationsList">
+        <!-- Dynamically filled -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="confirmationModal">
+    <div class="modal-box">
+      <div class="modal-icon"><i class="fas fa-check-circle"></i></div>
+      <h3>Registration Successful! 🎉</h3>
+      <p style="color:#4a5a4a;">You will receive an MTN/Airtel payment prompt for <strong>ZMW 300</strong>.</p>
+      <div class="modal-details" id="modalDetails">
+        <!-- filled by JS -->
+      </div>
+      <div>
+        <button class="btn" id="modalCloseBtn"><i class="fas fa-thumbs-up"></i> Got it</button>
+        <button class="btn btn-secondary" id="modalDeleteBtn" style="background:#fee2e2;color:#b91c1c;">
+          <i class="fas fa-trash-alt"></i> Cancel Registration
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Zed Napyamo. All rights reserved.</p>
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ----- PRELOADER -----
+      window.addEventListener('load', function () {
+        const preloader = document.getElementById('preloader');
+        preloader.classList.add('hidden');
+        document.body.classList.add('loaded');
+      });
+
+      // ----- DOM refs -----
+      const form = document.getElementById('registrationForm');
+      const childName = document.getElementById('childName');
+      const childGrade = document.getElementById('childGrade');
+      const parentPhone = document.getElementById('parentPhone');
+      const routeSelect = document.getElementById('routeSelect');
+      const registrationsList = document.getElementById('registrationsList');
+      const modal = document.getElementById('confirmationModal');
+      const modalDetails = document.getElementById('modalDetails');
+      const modalCloseBtn = document.getElementById('modalCloseBtn');
+      const modalDeleteBtn = document.getElementById('modalDeleteBtn');
+
+      let currentRegId = null;
+
+      // ----- Storage -----
+      function getRegistrations() {
+        try {
+          return JSON.parse(localStorage.getItem('zed_bus_registrations')) || [];
+        } catch {
+          return [];
+        }
+      }
+
+      function saveRegistrations(list) {
+        localStorage.setItem('zed_bus_registrations', JSON.stringify(list));
+      }
+
+      // ----- Render list -----
+      function renderList() {
+        const list = getRegistrations();
+        if (list.length === 0) {
+          registrationsList.innerHTML =
+            `<div class="empty-reg"><i class="fas fa-info-circle"></i> No registrations yet.</div>`;
+          return;
+        }
+        let html = '';
+        list.forEach((item, index) => {
+          const id = item.id || index;
+          html += `
+                        <div class="reg-item" data-id="${id}">
+                            <span class="reg-name"><i class="fas fa-user-graduate"></i> ${escapeHtml(item.childName)}</span>
+                            <span class="reg-route"><i class="fas fa-route"></i> ${escapeHtml(item.route)}</span>
+                            <span style="font-size:0.85rem; color:#4a5a4a;"><i class="fas fa-phone"></i> ${escapeHtml(item.phone)}</span>
+                            <div class="reg-actions">
+                                <button class="delete-reg" data-id="${id}" title="Remove"><i class="fas fa-times-circle"></i></button>
+                            </div>
+                        </div>
+                    `;
+        });
+        registrationsList.innerHTML = html;
+
+        // Attach delete events
+        document.querySelectorAll('.delete-reg').forEach(btn => {
+          btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const id = parseInt(this.dataset.id);
+            deleteRegistration(id);
+          });
+        });
+      }
+
+      // ----- Helper: escape HTML -----
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>"]/g, function (m) {
+          if (m === '&') return '&amp;';
+          if (m === '<') return '&lt;';
+          if (m === '>') return '&gt;';
+          if (m === '"') return '&quot;';
+          return m;
+        });
+      }
+
+      // ----- Delete -----
+      function deleteRegistration(id) {
+        if (!confirm('Remove this registration?')) return;
+        let list = getRegistrations();
+        list = list.filter(item => (item.id || list.indexOf(item)) !== id);
+        saveRegistrations(list);
+        renderList();
+        if (modal.classList.contains('open') && currentRegId === id) {
+          modal.classList.remove('open');
+          currentRegId = null;
+        }
+      }
+
+      // ----- Show modal -----
+      function showModal(data) {
+        currentRegId = data.id;
+        modalDetails.innerHTML = `
+                    <strong>Child:</strong> ${escapeHtml(data.childName)}<br>
+                    <strong>Grade:</strong> ${escapeHtml(data.grade)}<br>
+                    <strong>Parent Phone:</strong> ${escapeHtml(data.phone)}<br>
+                    <strong>Route:</strong> ${escapeHtml(data.route)}<br>
+                    <strong>Monthly Fee:</strong> ZMW 300
+                `;
+        modal.classList.add('open');
+      }
+
+      // ----- Close modal -----
+      function closeModal() {
+        modal.classList.remove('open');
+        currentRegId = null;
+      }
+
+      // ----- Handle form submit -----
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const name = childName.value.trim();
+        const grade = childGrade.value.trim();
+        const phone = parentPhone.value.trim();
+        const route = routeSelect.value;
+
+        if (!name || !grade || !phone || !route) {
+          alert('Please fill in all fields.');
+          return;
+        }
+
+        const entry = {
+          id: Date.now(),
+          childName: name,
+          grade: grade,
+          phone: phone,
+          route: route,
+          registeredAt: new Date().toISOString()
+        };
+
+        const list = getRegistrations();
+        list.unshift(entry);
+        saveRegistrations(list);
+        renderList();
+
+        showModal(entry);
+        form.reset();
+      });
+
+      // ----- Modal buttons -----
+      modalCloseBtn.addEventListener('click', closeModal);
+      modalDeleteBtn.addEventListener('click', function () {
+        if (currentRegId !== null) {
+          deleteRegistration(currentRegId);
+          closeModal();
+        } else {
+          closeModal();
+        }
+      });
+
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+      });
+
+      // ----- Initial render -----
+      renderList();
+
+      // Expose for console
+      window.busReg = {
+        get: getRegistrations,
+        clear: function () {
+          saveRegistrations([]);
+          renderList();
+        },
+        add: function (data) {
+          const list = getRegistrations();
+          list.unshift({ id: Date.now(), ...data });
+          saveRegistrations(list);
+          renderList();
+        }
+      };
+
+    })();
+  </script>
+
+</body>
+
+</html>

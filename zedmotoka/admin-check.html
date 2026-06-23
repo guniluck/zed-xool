@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Zed Napyamo – Admin Panel</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f4f9f4;
+      color: #1a1a1a;
+    }
+
+    :root {
+      --green-dark: #14532d;
+      --green-mid: #166534;
+      --green-primary: #16a34a;
+      --green-light: #22c55e;
+      --green-surface: #f0fdf4;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .site-header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--green-dark);
+    }
+
+    .brand img {
+      height: 42px;
+      border-radius: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.8rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: #333;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.4rem 0;
+      border-bottom: 2px solid transparent;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--green-primary);
+      border-bottom-color: var(--green-primary);
+    }
+
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--green-dark);
+    }
+
+    @media (max-width:768px) {
+      .site-header {
+        flex-wrap: wrap;
+        padding: 0.8rem 1rem;
+      }
+
+      .hamburger {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        gap: 0.8rem;
+        padding: 1rem 0 0;
+        order: 3;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .card h2 {
+      color: var(--green-dark);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.3rem;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      background: #f9fafb;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input:focus {
+      border-color: var(--green-primary);
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    }
+
+    .btn {
+      padding: 0.8rem 2rem;
+      border-radius: 40px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: var(--green-primary);
+      color: white;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-primary:hover {
+      background: var(--green-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #333;
+    }
+
+    .error-msg {
+      color: #dc2626;
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    .dashboard-stats {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      flex: 1;
+      min-width: 150px;
+      background: var(--green-surface);
+      padding: 1.2rem;
+      border-radius: 16px;
+      text-align: center;
+      border-left: 5px solid var(--green-primary);
+    }
+
+    .stat-card h3 {
+      font-size: 2rem;
+      color: var(--green-dark);
+    }
+
+    .stat-card p {
+      color: #555;
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th {
+      background: var(--green-surface);
+      padding: 0.7rem;
+      text-align: left;
+      font-size: 0.9rem;
+      color: var(--green-dark);
+    }
+
+    td {
+      padding: 0.7rem;
+      border-bottom: 1px solid #eee;
+      font-size: 0.9rem;
+    }
+
+    .login-box {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    footer {
+      background: var(--green-dark);
+      color: rgba(255, 255, 255, 0.85);
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    @media (max-width:480px) {
+      .btn {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="brand"><img src="admin/goodluck/zedlogo.jpg" alt="Zed Napyamo"><span>Zed Napyamo</span></div>
+    <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="ride.html">Ride</a>
+      <a href="school-bus.html">School Bus</a>
+      <a href="admin.html">Driver Signup</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <!-- Login Form -->
+      <div id="loginForm" class="login-box">
+        <h2><i class="fas fa-lock"></i> Admin Login</h2>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="adminEmail" placeholder="Enter admin email">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="adminPass" placeholder="Enter password">
+        </div>
+        <div class="error-msg" id="loginError"></div>
+        <button class="btn btn-primary" onclick="adminLogin()">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </button>
+        <!-- No password hint shown -->
+      </div>
+
+      <!-- Dashboard (hidden initially) -->
+      <div id="dashboard" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+          <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+          <button class="btn btn-secondary" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+        <div class="dashboard-stats">
+          <div class="stat-card">
+            <h3 id="totalDrivers">0</h3>
+            <p><i class="fas fa-users"></i> Drivers Registered</p>
+          </div>
+          <div class="stat-card">
+            <h3 id="totalEarnings">ZMW 0</h3>
+            <p><i class="fas fa-money-bill-wave"></i> Total Collected</p>
+          </div>
+        </div>
+        <h3 style="margin:1rem 0 0.5rem;"><i class="fas fa-list"></i> Registered Drivers</h3>
+        <div style="overflow-x:auto;">
+          <table id="driversTable">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Car</th>
+                <th>Province</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>&copy; 2025 Zed Napyamo. All rights reserved.</footer>
+
+  <script>
+    const DB = {
+      get(key) { try { return JSON.parse(localStorage.getItem('zn_' + key)); } catch (e) { return null; } },
+      set(key, value) { localStorage.setItem('zn_' + key, JSON.stringify(value)); },
+      drivers() { return this.get('drivers') || []; }
+    };
+
+    // Hardcoded admin credentials – these are NOT displayed anywhere
+    const ADMIN_EMAIL = 'salome@gmail.com';
+    const ADMIN_PASS = 'the-one';
+
+    function adminLogin() {
+      const email = document.getElementById('adminEmail').value.trim();
+      const pass = document.getElementById('adminPass').value;
+      const errorEl = document.getElementById('loginError');
+
+      if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        errorEl.style.display = 'none';
+        loadDashboard();
+      } else {
+        errorEl.textContent = 'Invalid credentials. Please try again.';
+        errorEl.style.display = 'block';
+      }
+    }
+
+    function adminLogout() {
+      document.getElementById('loginForm').style.display = 'block';
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('adminEmail').value = '';
+      document.getElementById('adminPass').value = '';
+      document.getElementById('loginError').style.display = 'none';
+    }
+
+    function loadDashboard() {
+      const drivers = DB.drivers();
+      document.getElementById('totalDrivers').textContent = drivers.length;
+      document.getElementById('totalEarnings').textContent = 'ZMW ' + (drivers.length * 200).toLocaleString();
+
+      const tbody = document.getElementById('driversTable').querySelector('tbody');
+      if (drivers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;">No drivers registered yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = drivers.map(d => `
+        <tr>
+          <td>${d.name}</td>
+          <td>${d.email}</td>
+          <td>${d.phone}</td>
+          <td>${d.car}</td>
+          <td>${d.province}</td>
+          <td>${new Date(d.registrationDate).toLocaleDateString()}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('hamburgerBtn').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+  </script>
+</body>
+
+</html>

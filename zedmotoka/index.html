@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zed Napyamo - Ride & School Bus</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      color: #1a1a1a;
+      background: #f4f9f4;
+    }
+
+    :root {
+      --green-dark: #14532d;
+      --green-mid: #166534;
+      --green-primary: #16a34a;
+      --green-light: #22c55e;
+      --green-surface: #f0fdf4;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--green-dark);
+    }
+
+    .logo img {
+      height: 42px;
+      border-radius: 8px;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.8rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: #333;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.4rem 0;
+      border-bottom: 2px solid transparent;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: var(--green-primary);
+      border-bottom-color: var(--green-primary);
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #14532d 0%, #166534 60%, #22c55e 100%);
+      color: white;
+      padding: 5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 30px 30px;
+      opacity: 0.3;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 650px;
+      margin: 0 auto 2rem;
+      opacity: 0.9;
+      position: relative;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .btn {
+      padding: 0.8rem 2rem;
+      border-radius: 40px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-light {
+      background: white;
+      color: var(--green-dark);
+    }
+
+    .btn-light:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-outline {
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      color: white;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-3px);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 4rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 24px 36px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-card i {
+      font-size: 2.8rem;
+      color: var(--green-primary);
+      margin-bottom: 1.2rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.8rem;
+      color: var(--green-dark);
+    }
+
+    .best-section {
+      max-width: 1100px;
+      margin: 0 auto 4rem;
+      padding: 0 1.5rem;
+    }
+
+    .best-section h2 {
+      font-size: 2rem;
+      color: var(--green-dark);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .best-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.8rem;
+    }
+
+    .vehicle-card {
+      background-size: cover;
+      background-position: center;
+      border-radius: 20px;
+      padding: 1.8rem;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s;
+      position: relative;
+      overflow: hidden;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .vehicle-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.3) 100%);
+      z-index: 1;
+    }
+
+    .vehicle-card:hover {
+      transform: translateY(-8px) scale(1.02);
+    }
+
+    .vehicle-card>* {
+      position: relative;
+      z-index: 2;
+    }
+
+    .vehicle-header {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .vehicle-icon {
+      background: rgba(255, 255, 255, 0.2);
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.4rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .vehicle-name {
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .vehicle-rating {
+      color: #fbbf24;
+      font-size: 0.9rem;
+    }
+
+    .vehicle-detail {
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .vehicle-price {
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-top: 0.3rem;
+    }
+
+    .badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-block;
+      width: fit-content;
+      backdrop-filter: blur(4px);
+    }
+
+    .vehicle-card .btn {
+      width: fit-content;
+      background: white;
+      color: var(--green-dark);
+      border: none;
+      padding: 0.6rem 1.5rem;
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+
+    .car-bg-1 {
+      background-image: url('tax1.jpg');
+    }
+
+    .car-bg-2 {
+      background-image: url('https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&h=400&fit=crop');
+    }
+
+    .car-bg-3 {
+      background-image: url('https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&h=400&fit=crop');
+    }
+
+    .bus-bg-1 {
+      background-image: url('bus1.jpg');
+    }
+
+    .bus-bg-2 {
+      background-image: url('bus2.jpg');
+    }
+
+    .bus-bg-3 {
+      background-image: url('bus4.jpg');
+    }
+
+    footer {
+      background: var(--green-dark);
+      color: rgba(255, 255, 255, 0.85);
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.95rem;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      nav {
+        gap: 1rem;
+        justify-content: center;
+      }
+
+      .hero {
+        padding: 3rem 1rem;
+      }
+
+      .best-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">
+      <img src="zedlogo.jpg" alt="Zed Napyamo Logo">
+      <span>Zed Napyamo</span>
+    </div>
+    <nav>
+      <a href="index.html" class="active">Home</a>
+      <a href="ride.html">Ride</a>
+      <a href="school-bus.html">School Bus</a>
+      <a href="admin.html">Driver Signup</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Your Ride, Your Price</h1>
+    <p>Drivers compete for your trip. Set your destination, receive offers, pick the best. Safe, verified, built for
+      Zambia.</p>
+    <div class="btn-group">
+      <a href="ride.html" class="btn btn-light"><i class="fas fa-car"></i> Book a Ride</a>
+      <a href="school-bus.html" class="btn btn-outline"><i class="fas fa-bus"></i> School Bus (ZMW 300/m)</a>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="feature-card">
+      <i class="fas fa-hand-holding-usd"></i>
+      <h3>Offer System</h3>
+      <p>Drivers bid on your trip. You control the price, not an algorithm.</p>
+    </div>
+    <div class="feature-card">
+      <i class="fas fa-child"></i>
+      <h3>School Transport</h3>
+      <p>Monthly subscription with live tracking, attendance, and secure routes.</p>
+    </div>
+    <div class="feature-card">
+      <i class="fas fa-shield-alt"></i>
+      <h3>Verified & Safe</h3>
+      <p>All drivers vetted. Mobile money payments (MTN & Airtel).</p>
+    </div>
+  </section>
+
+  <div class="best-section">
+    <h2><i class="fas fa-star" style="color: #f59e0b;"></i> Best Rides & Buses</h2>
+    <div class="best-grid">
+      <div class="vehicle-card car-bg-1">
+        <div class="vehicle-header">
+          <div class="vehicle-icon"><i class="fas fa-car"></i></div>
+          <div>
+            <div class="vehicle-name">John Banda</div>
+            <div class="vehicle-rating"><i class="fas fa-star"></i> 4.8 (124 trips)</div>
+          </div>
+        </div>
+        <div class="vehicle-detail"><i class="fas fa-taxi"></i> Toyota Corolla (Silver)</div>
+        <div class="vehicle-detail"><i class="fas fa-map-marker-alt"></i> Lusaka CBD</div>
+        <span class="badge"><i class="fas fa-bolt"></i> Avg offer: ZMW 45</span>
+        <div class="vehicle-price">Top Rated Driver</div>
+      </div>
+      <div class="vehicle-card car-bg-2">
+        <div class="vehicle-header">
+          <div class="vehicle-icon"><i class="fas fa-car"></i></div>
+          <div>
+            <div class="vehicle-name">Mwila Chisanga</div>
+            <div class="vehicle-rating"><i class="fas fa-star"></i> 4.7 (98 trips)</div>
+          </div>
+        </div>
+        <div class="vehicle-detail"><i class="fas fa-taxi"></i> Honda Fit (White)</div>
+        <div class="vehicle-detail"><i class="fas fa-map-marker-alt"></i> Matero</div>
+        <span class="badge"><i class="fas fa-bolt"></i> Avg offer: ZMW 38</span>
+        <div class="vehicle-price">Best Value</div>
+      </div>
+      <div class="vehicle-card car-bg-3">
+        <div class="vehicle-header">
+          <div class="vehicle-icon"><i class="fas fa-car"></i></div>
+          <div>
+            <div class="vehicle-name">Peter Phiri</div>
+            <div class="vehicle-rating"><i class="fas fa-star"></i> 4.9 (201 trips)</div>
+          </div>
+        </div>
+        <div class="vehicle-detail"><i class="fas fa-taxi"></i> Suzuki Swift (Red)</div>
+        <div class="vehicle-detail"><i class="fas fa-map-marker-alt"></i> Kabulonga</div>
+        <span class="badge"><i class="fas fa-bolt"></i> Avg offer: ZMW 50</span>
+        <div class="vehicle-price">Premium Ride</div>
+      </div>
+      <div class="vehicle-card bus-bg-1" style="border-left: 5px solid var(--green-primary);">
+        <div class="vehicle-header">
+          <div class="vehicle-icon"><i class="fas fa-bus"></i></div>
+          <div>
+            <div class="vehicle-name">Route A · Kabulonga</div>
+            <div style="color: #a7f3d0; font-size: 0.9rem;"><i class="far fa-clock"></i> 06:40 & 15:30</div>
+          </div>
+        </div>
+        <div class="vehicle-detail"><i class="fas fa-map-pin"></i> Stops: Kabulonga, Woodlands</div>
+        <div class="vehicle-detail"><i class="fas fa-chair"></i> 8 seats left</div>
+        <div class="vehicle-price">ZMW 300/month</div>
+        <a href="school-bus.html" class="btn">Subscribe</a>
+      </div>
+      <div class="vehicle-card bus-bg-2" style="border-left: 5px solid var(--green-primary);">
+        <div class="vehicle-header">
+          <div class="vehicle-icon"><i class="fas fa-bus"></i></div>
+          <div>
+            <div class="vehicle-name">Route B · Chilanga</div>
+            <div style="color: #a7f3d0; font-size: 0.9rem;"><i class="far fa-clock"></i> 06:30 & 15:30</div>
+          </div>
+        </div>
+        <div class="vehicle-detail"><i class="fas fa-map-pin"></i> Stops: Chilanga, Libala South</div>
+        <div class="vehicle-detail"><i class="fas fa-chair"></i> 5 seats left</div>
+        <div class="vehicle-price">ZMW 300/month</div>
+        <a href="school-bus.html" class="btn">Subscribe</a>
+      </div>
+      <div class="vehicle-card bus-bg-3" style="border-left: 5px solid var(--green-primary);">
+        <div class="vehicle-header">
+          <div class="vehicle-icon"><i class="fas fa-bus"></i></div>
+          <div>
+            <div class="vehicle-name">Route D · Woodlands</div>
+            <div style="color: #a7f3d0; font-size: 0.9rem;"><i class="far fa-clock"></i> 07:00 & 16:00</div>
+          </div>
+        </div>
+        <div class="vehicle-detail"><i class="fas fa-map-pin"></i> Stops: Woodlands, PHI</div>
+        <div class="vehicle-detail"><i class="fas fa-chair"></i> 6 seats left</div>
+        <div class="vehicle-price">ZMW 300/month</div>
+        <a href="school-bus.html" class="btn">Subscribe</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Zed Napyamo. Connecting Zambia, one ride at a time.</p>
+  </footer>
+</body>
+
+</html>

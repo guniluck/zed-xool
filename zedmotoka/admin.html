@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Zed Napyamo – Driver Registration</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f4f9f4;
+      color: #1a1a1a;
+    }
+
+    :root {
+      --green-dark: #14532d;
+      --green-mid: #166534;
+      --green-primary: #16a34a;
+      --green-light: #22c55e;
+      --green-surface: #f0fdf4;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .site-header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--green-dark);
+    }
+
+    .brand img {
+      height: 42px;
+      border-radius: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.8rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: #333;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.4rem 0;
+      border-bottom: 2px solid transparent;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--green-primary);
+      border-bottom-color: var(--green-primary);
+    }
+
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--green-dark);
+    }
+
+    @media (max-width:768px) {
+      .site-header {
+        flex-wrap: wrap;
+        padding: 0.8rem 1rem;
+      }
+
+      .hamburger {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        gap: 0.8rem;
+        padding: 1rem 0 0;
+        order: 3;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .card h2 {
+      color: var(--green-dark);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.3rem;
+      color: #333;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      background: #f9fafb;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--green-primary);
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    }
+
+    .btn {
+      padding: 0.8rem 2rem;
+      border-radius: 40px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      width: 100%;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .btn-pay {
+      background: var(--green-mid);
+      color: white;
+    }
+
+    .pay-amount {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--green-dark);
+      text-align: center;
+      margin: 1.5rem 0;
+    }
+
+    .error-msg {
+      color: #dc2626;
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    .success-msg {
+      color: var(--green-primary);
+      font-size: 0.95rem;
+      text-align: center;
+      margin: 1rem 0;
+      display: none;
+    }
+
+    footer {
+      background: var(--green-dark);
+      color: rgba(255, 255, 255, 0.85);
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="brand"><img src="admin/goodluck/zedlogo.jpg" alt="Zed Napyamo"><span>Zed Napyamo</span></div>
+    <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="ride.html">Ride</a>
+      <a href="school-bus.html">School Bus</a>
+      <a href="admin.html" class="active">Driver Signup</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2><i class="fas fa-id-card"></i> Register as a Driver</h2>
+      <form id="driverForm" onsubmit="return false;">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="dName" placeholder="e.g., John Banda" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="dEmail" placeholder="e.g., john@example.com" required>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" id="dPhone" placeholder="e.g., 0977 123456" required>
+        </div>
+        <div class="form-group">
+          <label>Car Model</label>
+          <input type="text" id="dCar" placeholder="e.g., Toyota Corolla" required>
+        </div>
+        <div class="form-group">
+          <label>Province</label>
+          <select id="dProvince" required>
+            <option value="">Select province</option>
+            <option>Lusaka</option>
+            <option>Copperbelt</option>
+            <option>Southern</option>
+            <option>Eastern</option>
+            <option>Western</option>
+            <option>Northern</option>
+            <option>Muchinga</option>
+            <option>Central</option>
+            <option>Luapula</option>
+          </select>
+        </div>
+
+        <div class="pay-amount">ZMW 200</div>
+        <p style="text-align:center; color:#555;">Registration fee (simulated payment)</p>
+        <div class="error-msg" id="driverError"></div>
+        <div class="success-msg" id="driverSuccess"></div>
+
+        <button type="submit" class="btn btn-pay" onclick="registerDriver()">
+          <i class="fas fa-credit-card"></i> Pay ZMW 200 & Register
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <footer>&copy; 2025 Zed Napyamo. All rights reserved.</footer>
+
+  <script>
+    const DB = {
+      get(key) { try { return JSON.parse(localStorage.getItem('zn_' + key)); } catch (e) { return null; } },
+      set(key, value) { localStorage.setItem('zn_' + key, JSON.stringify(value)); },
+      drivers() { return this.get('drivers') || []; }
+    };
+
+    function registerDriver() {
+      const name = document.getElementById('dName').value.trim();
+      const email = document.getElementById('dEmail').value.trim();
+      const phone = document.getElementById('dPhone').value.trim();
+      const car = document.getElementById('dCar').value.trim();
+      const province = document.getElementById('dProvince').value;
+
+      const errorEl = document.getElementById('driverError');
+      const successEl = document.getElementById('driverSuccess');
+      errorEl.style.display = 'none';
+      successEl.style.display = 'none';
+
+      if (!name || !email || !phone || !car || !province) {
+        errorEl.textContent = 'Please fill all fields.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      const newDriver = {
+        id: Date.now().toString(),
+        name, email, phone, car, province,
+        registrationDate: new Date().toISOString(),
+        paid: 200
+      };
+
+      const drivers = DB.drivers();
+      drivers.push(newDriver);
+      DB.set('drivers', drivers);
+
+      document.getElementById('dName').value = '';
+      document.getElementById('dEmail').value = '';
+      document.getElementById('dPhone').value = '';
+      document.getElementById('dCar').value = '';
+      document.getElementById('dProvince').value = '';
+
+      successEl.textContent = '✅ Registration successful! Welcome aboard, ' + name + '.';
+      successEl.style.display = 'block';
+    }
+
+    document.getElementById('hamburgerBtn').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+  </script>
+</body>
+
+</html>
