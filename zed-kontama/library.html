@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library – Zed Kantemba</title>
+  <style>
+    :root {
+      --green-dark: #0a4f1c;
+      --green-mid: #228B22;
+      --green-bright: #32CD32;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4faf5;
+      color: #222;
+    }
+
+    header {
+      background: var(--green-dark);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    header .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    header nav a {
+      color: white;
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    header nav a:hover {
+      color: var(--green-bright);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      position: relative;
+      height: 280px;
+      border-radius: 8px;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s;
+      color: white;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    .card .overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+      padding: 1.2rem;
+    }
+
+    .card .title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .card .author {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .card .price {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #b9f5b0;
+    }
+
+    .placeholder-bg {
+      background: linear-gradient(135deg, #0a4f1c, #228B22);
+    }
+
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--green-dark);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      display: none;
+      z-index: 1000;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">Zed Kantemba</div>
+    <nav>
+      <a href="market.html">Market</a>
+      <a href="library.html">Library</a>
+      <a href="upload.html">Upload</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+  <div class="container">
+    <h2 style="margin-bottom:1.5rem;">Library</h2>
+    <div class="grid" id="libraryGrid"></div>
+  </div>
+  <div class="notification" id="notify"></div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('zedCurrentUser'));
+    if (!user) window.location.href = 'signin.html';
+
+    function seedLibrary() {
+      if (!localStorage.getItem('zedLibrary')) {
+        const dummy = [
+          { id: 1, uploaderId: 1, title: 'Zed Past Papers - Math', author: 'ECZ', price: 20, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 2, uploaderId: 2, title: 'Intro to Programming', author: 'John M.', price: 35, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 3, uploaderId: 3, title: 'Business Plan Template', author: 'ZDA', price: 15, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 4, uploaderId: 4, title: 'Biology Notes Grade 12', author: 'Mrs. Banda', price: 25, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 5, uploaderId: 5, title: 'Cooking Recipes Zambia', author: 'Chef Mwansa', price: 10, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 6, uploaderId: 6, title: 'English Grammar Guide', author: 'Oxford', price: 30, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 7, uploaderId: 7, title: 'History of Zambia', author: 'Prof. Phiri', price: 45, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 8, uploaderId: 8, title: 'Computer Science 101', author: 'ZICT', price: 50, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 9, uploaderId: 9, title: 'Agriculture Basics', author: 'Ministry of Ag.', price: 20, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 10, uploaderId: 10, title: 'Civic Education Notes', author: 'Mwila', price: 18, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 11, uploaderId: 11, title: 'Physics Formulas', author: 'Dr. Lungu', price: 12, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 12, uploaderId: 12, title: 'Accounting Principles', author: 'ZICA', price: 55, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 13, uploaderId: 13, title: 'Poetry Collection', author: 'Shadreck', price: 22, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 14, uploaderId: 14, title: 'Web Development 2025', author: 'Code Academy', price: 40, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 15, uploaderId: 15, title: 'Nursing Procedures', author: 'NMCZ', price: 33, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 16, uploaderId: 1, title: 'Geography Map Reading', author: 'ECZ', price: 18, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 17, uploaderId: 2, title: 'Entrepreneurship 101', author: 'Bwalya', price: 25, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 18, uploaderId: 3, title: 'Chitonga Language Guide', author: 'Mweetwa', price: 15, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 19, uploaderId: 4, title: 'Motor Vehicle Mechanics', author: 'TEVETA', price: 38, imageData: null, fileUrl: null, fileData: null, fileType: null },
+          { id: 20, uploaderId: 5, title: 'Organic Farming Manual', author: 'Kasisi', price: 28, imageData: null, fileUrl: null, fileData: null, fileType: null }
+        ];
+        localStorage.setItem('zedLibrary', JSON.stringify(dummy));
+      }
+    }
+    seedLibrary();
+
+    function getLibrary() { return JSON.parse(localStorage.getItem('zedLibrary')); }
+    function getUsers() { return JSON.parse(localStorage.getItem('zedUsers')) || []; }
+
+    function renderLibrary() {
+      const items = getLibrary();
+      const users = getUsers();
+      const grid = document.getElementById('libraryGrid');
+      grid.innerHTML = '';
+      items.forEach(item => {
+        const uploader = users.find(u => u.id === item.uploaderId) || { name: 'Unknown' };
+        const bgStyle = item.imageData ? `background-image:url(${item.imageData})` : '';
+        const card = document.createElement('div');
+        card.className = `card ${item.imageData ? '' : 'placeholder-bg'}`;
+        card.style = bgStyle;
+        card.innerHTML = `<div class="overlay"><div class="title">${item.title}</div><div class="author">${item.author} – by ${uploader.name}</div><div class="price">ZMW ${item.price}</div></div>`;
+        card.addEventListener('click', () => buyLibrary(item.id));
+        grid.appendChild(card);
+      });
+    }
+
+    function buyLibrary(id) {
+      let items = getLibrary();
+      const item = items.find(i => i.id === id);
+      if (!item) return;
+      if (item.uploaderId === user.id) return showNotification("You already own this.");
+      if (user.balance < item.price) return showNotification("Insufficient balance.");
+
+      user.balance -= item.price;
+      saveCurrentUser(user);
+
+      let transactions = JSON.parse(localStorage.getItem('zedTransactions')) || [];
+      transactions.push({ buyerId: user.id, sellerId: item.uploaderId, type: 'library', itemName: item.title, amount: item.price });
+      localStorage.setItem('zedTransactions', JSON.stringify(transactions));
+
+      if (item.fileUrl) {
+        window.open(item.fileUrl, '_blank');
+        showNotification("Download started (external URL).");
+      } else if (item.fileData) {
+        const a = document.createElement('a');
+        a.href = item.fileData;
+        a.download = `${item.title.replace(/\s/g, '_')}.${item.fileType || 'txt'}`;
+        a.click();
+        showNotification("Download started.");
+      } else {
+        const blob = new Blob([`Downloaded: ${item.title} by ${item.author}.`], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${item.title.replace(/\s/g, '_')}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showNotification("Downloaded demo file.");
+      }
+    }
+
+    function saveCurrentUser(u) {
+      localStorage.setItem('zedCurrentUser', JSON.stringify(u));
+      const users = JSON.parse(localStorage.getItem('zedUsers'));
+      const idx = users.findIndex(us => us.id === u.id);
+      if (idx > -1) { users[idx] = u; localStorage.setItem('zedUsers', JSON.stringify(users)); }
+    }
+
+    function showNotification(msg) {
+      const n = document.getElementById('notify');
+      n.textContent = msg; n.style.display = 'block';
+      setTimeout(() => n.style.display = 'none', 4000);
+    }
+
+    function logout() { localStorage.removeItem('zedCurrentUser'); window.location.href = 'signin.html'; }
+
+    renderLibrary();
+  </script>
+</body>
+
+</html>

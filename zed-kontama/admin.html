@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel – Zed Kantemba</title>
+  <style>
+    :root {
+      --green-dark: #0a4f1c;
+      --green-mid: #228B22;
+      --green-bright: #32CD32;
+      --green-light: #e6ffe6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4faf5;
+      color: #222;
+    }
+
+    header {
+      background: var(--green-dark);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    header .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    header nav a {
+      color: white;
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    header nav a:hover {
+      color: var(--green-bright);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      color: var(--green-dark);
+      margin-bottom: 1rem;
+    }
+
+    .stat {
+      font-size: 2rem;
+      color: var(--green-dark);
+      font-weight: 700;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th {
+      background: var(--green-dark);
+      color: white;
+      padding: 0.8rem;
+    }
+
+    td {
+      padding: 0.8rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: var(--green-mid);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #1e7b1e;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">Zed Kantemba · Admin</div>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="market.html">Market</a>
+      <a href="admin.html">Admin</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Administrator Panel</h2>
+    <div class="card">
+      <h3>Admin Balance</h3>
+      <div class="stat" id="adminBalance">ZMW 0.00</div>
+    </div>
+    <div class="card">
+      <h3>Registration Fees Collected</h3>
+      <div class="stat" id="totalFees">ZMW 0.00</div>
+    </div>
+    <div class="card">
+      <h3>Registration Transactions</h3>
+      <table id="feeTable">
+        <tr>
+          <th>User ID</th>
+          <th>Name</th>
+          <th>Amount</th>
+          <th>Date</th>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const currentUser = JSON.parse(localStorage.getItem('zedCurrentUser'));
+    if (!currentUser || currentUser.email !== 'admin@zed.com') {
+      alert('Access denied. Admin only.');
+      window.location.href = 'signin.html';
+    }
+
+    function getUsers() {
+      return JSON.parse(localStorage.getItem('zedUsers')) || [];
+    }
+    function getTransactions() {
+      return JSON.parse(localStorage.getItem('zedTransactions')) || [];
+    }
+
+    const admin = getUsers().find(u => u.id === 0);
+    document.getElementById('adminBalance').textContent = `ZMW ${admin ? admin.balance.toFixed(2) : '0.00'}`;
+
+    const allTx = getTransactions();
+    const regTx = allTx.filter(t => t.type === 'registration');
+    const totalFees = regTx.reduce((sum, t) => sum + t.amount, 0);
+    document.getElementById('totalFees').textContent = `ZMW ${totalFees.toFixed(2)}`;
+
+    const table = document.getElementById('feeTable');
+    const users = getUsers();
+    regTx.forEach(t => {
+      const user = users.find(u => u.id === t.buyerId) || { name: 'Unknown' };
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${t.buyerId}</td><td>${user.name}</td><td>ZMW ${t.amount.toFixed(2)}</td><td>${new Date(t.createdAt || Date.now()).toLocaleDateString()}</td>`;
+      table.appendChild(row);
+    });
+
+    function logout() {
+      localStorage.removeItem('zedCurrentUser');
+      window.location.href = 'signin.html';
+    }
+  </script>
+</body>
+
+</html>

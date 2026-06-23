@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload – Zed Kantemba</title>
+  <style>
+    :root {
+      --green-dark: #0a4f1c;
+      --green-mid: #228B22;
+      --green-bright: #32CD32;
+      --green-light: #e6ffe6;
+      --white: #fff;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: #f4faf5;
+      color: #222;
+    }
+
+    header {
+      background: var(--green-dark);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    header .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    header nav a {
+      color: white;
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    header nav a:hover {
+      color: var(--green-bright);
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 2rem;
+    }
+
+    h2 {
+      color: var(--green-dark);
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--green-dark);
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border 0.2s;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--green-mid);
+      outline: none;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      background: var(--green-mid);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+    }
+
+    .btn:hover {
+      background: #1e7b1e;
+    }
+
+    .preview-container {
+      margin-bottom: 1.5rem;
+    }
+
+    .preview {
+      width: 100%;
+      height: 220px;
+      background: #eee;
+      border-radius: 10px;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #aaa;
+      font-weight: 500;
+      border: 2px dashed #ddd;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .preview.has-image {
+      border: none;
+      background-size: cover;
+    }
+
+    .message {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1.5rem;
+      display: none;
+      font-weight: 500;
+    }
+
+    .message.success {
+      background: #e6ffe6;
+      color: #0a4f1c;
+      display: block;
+    }
+
+    .message.error {
+      background: #ffe6e6;
+      color: #c0392b;
+      display: block;
+    }
+
+    .file-option {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .file-option>div {
+      flex: 1;
+    }
+
+    .or-divider {
+      text-align: center;
+      margin: 0.5rem 0;
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+
+    .inline-btn {
+      background: var(--green-mid);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .inline-btn:hover {
+      background: #1e7b1e;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">Zed Kantemba</div>
+    <nav>
+      <a href="market.html">Market</a>
+      <a href="library.html">Library</a>
+      <a href="upload.html">Upload</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2>➕ Add New Item</h2>
+      <form id="uploadForm">
+        <label for="type">Type *</label>
+        <select id="type" required>
+          <option value="product">🛍️ Product (Marketplace)</option>
+          <option value="library">📚 Library Item (Document / Book)</option>
+        </select>
+
+        <div id="productFields">
+          <label for="name">Product Name *</label>
+          <input type="text" id="name" placeholder="e.g., Chitenge Material" required>
+          <label for="price">Price (ZMW) *</label>
+          <input type="number" id="price" step="0.01" min="1" placeholder="120" required>
+        </div>
+
+        <div id="libraryFields" style="display:none;">
+          <label for="title">Title *</label>
+          <input type="text" id="title" placeholder="e.g., Past Papers Math">
+          <label for="author">Author / Description *</label>
+          <input type="text" id="author" placeholder="e.g., ECZ">
+          <label for="libPrice">Price (ZMW) *</label>
+          <input type="number" id="libPrice" step="0.01" min="1" placeholder="20">
+
+          <label style="margin-top:1rem;">📄 Document File (choose one option)</label>
+          <div class="file-option">
+            <div>
+              <label style="font-weight:normal; font-size:0.9rem;">Upload from device</label>
+              <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.ppt,.pptx">
+            </div>
+            <div>
+              <label style="font-weight:normal; font-size:0.9rem;">Or paste a URL</label>
+              <input type="url" id="fileUrl" placeholder="https://example.com/book.pdf">
+            </div>
+          </div>
+          <div class="or-divider">— or —</div>
+          <small style="color:#888;">If both are provided, the URL will be used for download.</small>
+        </div>
+
+        <label style="margin-top:1rem;">🖼️ Cover Image</label>
+        <div class="preview-container">
+          <div class="preview" id="imagePreview" onclick="document.getElementById('imageFile').click()">
+            No image selected (click to upload)
+          </div>
+        </div>
+        <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
+          <input type="text" id="imageUrl" placeholder="or paste image URL">
+          <button type="button" class="inline-btn" onclick="loadImageFromUrl()">Load URL</button>
+        </div>
+        <input type="file" id="imageFile" accept="image/*" style="display:none;" onchange="previewImageFile(this)">
+
+        <button type="submit" class="btn" style="margin-top:0.5rem;">Upload Item</button>
+      </form>
+      <div id="message" class="message"></div>
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('zedCurrentUser'));
+    if (!user) window.location.href = 'signin.html';
+
+    document.getElementById('type').addEventListener('change', function () {
+      const isProduct = this.value === 'product';
+      document.getElementById('productFields').style.display = isProduct ? 'block' : 'none';
+      document.getElementById('libraryFields').style.display = isProduct ? 'none' : 'block';
+      document.getElementById('name').required = isProduct;
+      document.getElementById('price').required = isProduct;
+      document.getElementById('title').required = !isProduct;
+      document.getElementById('libPrice').required = !isProduct;
+    });
+
+    let imageDataUrl = '';
+
+    window.loadImageFromUrl = function () {
+      const url = document.getElementById('imageUrl').value.trim();
+      if (!url) return;
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = function () {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        imageDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        const preview = document.getElementById('imagePreview');
+        preview.style.backgroundImage = `url(${imageDataUrl})`;
+        preview.classList.add('has-image');
+        preview.textContent = '';
+        showMessage('Image loaded from URL.', 'success');
+      };
+      img.onerror = function () { showMessage('Could not load image. Check the URL.', 'error'); };
+      img.src = url;
+    };
+
+    window.previewImageFile = function (input) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        imageDataUrl = e.target.result;
+        const preview = document.getElementById('imagePreview');
+        preview.style.backgroundImage = `url(${imageDataUrl})`;
+        preview.classList.add('has-image');
+        preview.textContent = '';
+      };
+      reader.readAsDataURL(file);
+    };
+
+    document.getElementById('uploadForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const type = document.getElementById('type').value;
+      if (type === 'product') {
+        const name = document.getElementById('name').value.trim();
+        const price = parseFloat(document.getElementById('price').value);
+        if (!name || isNaN(price) || price <= 0) return showMessage('Fill all product fields correctly.', 'error');
+        let products = JSON.parse(localStorage.getItem('zedProducts')) || [];
+        const newId = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
+        products.push({ id: newId, sellerId: user.id, name, price, imageData: imageDataUrl || null });
+        localStorage.setItem('zedProducts', JSON.stringify(products));
+        showMessage('Product added successfully!', 'success');
+        resetForm();
+      } else {
+        const title = document.getElementById('title').value.trim();
+        const author = document.getElementById('author').value.trim();
+        const price = parseFloat(document.getElementById('libPrice').value);
+        if (!title || !author || isNaN(price) || price <= 0) return showMessage('Fill all library fields correctly.', 'error');
+        const fileInput = document.getElementById('fileInput');
+        const fileUrl = document.getElementById('fileUrl').value.trim();
+        if (fileUrl) {
+          let library = JSON.parse(localStorage.getItem('zedLibrary')) || [];
+          const newId = library.length ? Math.max(...library.map(l => l.id)) + 1 : 1;
+          library.push({ id: newId, uploaderId: user.id, title, author, price, imageData: imageDataUrl || null, fileUrl: fileUrl, fileData: null, fileType: null });
+          localStorage.setItem('zedLibrary', JSON.stringify(library));
+          showMessage('Library item added (using document URL).', 'success');
+          resetForm();
+          return;
+        }
+        if (fileInput.files.length === 0) return showMessage('Please upload a document file or provide a URL.', 'error');
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+          const fileData = ev.target.result;
+          const fileType = file.name.split('.').pop();
+          let library = JSON.parse(localStorage.getItem('zedLibrary')) || [];
+          const newId = library.length ? Math.max(...library.map(l => l.id)) + 1 : 1;
+          library.push({ id: newId, uploaderId: user.id, title, author, price, imageData: imageDataUrl || null, fileUrl: null, fileData: fileData, fileType: fileType });
+          localStorage.setItem('zedLibrary', JSON.stringify(library));
+          showMessage('Library item added (file uploaded).', 'success');
+          resetForm();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function resetForm() {
+      document.getElementById('uploadForm').reset();
+      document.getElementById('imagePreview').style.backgroundImage = '';
+      document.getElementById('imagePreview').classList.remove('has-image');
+      document.getElementById('imagePreview').textContent = 'No image selected (click to upload)';
+      imageDataUrl = '';
+      document.getElementById('productFields').style.display = 'block';
+      document.getElementById('libraryFields').style.display = 'none';
+    }
+
+    function showMessage(msg, cls) {
+      const m = document.getElementById('message');
+      m.textContent = msg; m.className = 'message ' + cls;
+      setTimeout(() => m.className = 'message', 5000);
+    }
+
+    function logout() { localStorage.removeItem('zedCurrentUser'); window.location.href = 'signin.html'; }
+  </script>
+</body>
+
+</html>

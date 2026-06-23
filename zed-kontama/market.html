@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace – Zed Kantemba</title>
+  <style>
+    :root {
+      --green-dark: #0a4f1c;
+      --green-mid: #228B22;
+      --green-bright: #32CD32;
+      --green-light: #e6ffe6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4faf5;
+      color: #222;
+    }
+
+    header {
+      background: var(--green-dark);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    header .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    header nav a {
+      color: white;
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    header nav a:hover {
+      color: var(--green-bright);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      position: relative;
+      height: 280px;
+      border-radius: 8px;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s;
+      color: white;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    .card .overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+      padding: 1.2rem;
+    }
+
+    .card .title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .card .price {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #b9f5b0;
+    }
+
+    .card .seller {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    .placeholder-bg {
+      background: linear-gradient(135deg, #228B22, #0a4f1c);
+    }
+
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--green-dark);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      display: none;
+      z-index: 1000;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">Zed Kantemba</div>
+    <nav>
+      <a href="market.html">Market</a>
+      <a href="library.html">Library</a>
+      <a href="upload.html">Upload</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+  <div class="container">
+    <h2 style="margin-bottom:1.5rem;">Marketplace</h2>
+    <div class="grid" id="productGrid"></div>
+  </div>
+  <div class="notification" id="notify"></div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('zedCurrentUser'));
+    if (!user) window.location.href = 'signin.html';
+
+    function seedProducts() {
+      if (!localStorage.getItem('zedProducts')) {
+        const dummy = [
+          { id: 1, sellerId: 1, name: 'Chitenge Material', price: 120, imageData: null },
+          { id: 2, sellerId: 2, name: 'Mealie Meal 25kg', price: 180, imageData: null },
+          { id: 3, sellerId: 3, name: 'Second-hand Smartphone', price: 450, imageData: null },
+          { id: 4, sellerId: 4, name: 'Kitchen Utensils Set', price: 320, imageData: null },
+          { id: 5, sellerId: 5, name: 'Solar Panel 100W', price: 550, imageData: null },
+          { id: 6, sellerId: 6, name: 'Bicycle - Roadmaster', price: 900, imageData: null },
+          { id: 7, sellerId: 7, name: 'Shoes - Nike Air', price: 250, imageData: null },
+          { id: 8, sellerId: 8, name: 'Laptop HP Elitebook', price: 3500, imageData: null },
+          { id: 9, sellerId: 9, name: 'Fertilizer 50kg', price: 400, imageData: null },
+          { id: 10, sellerId: 10, name: 'Desk & Chair Set', price: 600, imageData: null },
+          { id: 11, sellerId: 11, name: 'Gas Cooker 2 Plate', price: 750, imageData: null },
+          { id: 12, sellerId: 12, name: 'Zambian Coffee 1kg', price: 85, imageData: null },
+          { id: 13, sellerId: 13, name: 'Backpack - Herschel', price: 280, imageData: null },
+          { id: 14, sellerId: 14, name: 'Electric Kettle', price: 110, imageData: null },
+          { id: 15, sellerId: 15, name: 'Mattress - Spring', price: 1200, imageData: null },
+          { id: 16, sellerId: 1, name: 'Groundnuts 5kg', price: 65, imageData: null },
+          { id: 17, sellerId: 2, name: 'Cooking Oil 2L', price: 140, imageData: null },
+          { id: 18, sellerId: 3, name: 'Rice 10kg', price: 95, imageData: null },
+          { id: 19, sellerId: 4, name: 'School Shoes', price: 210, imageData: null },
+          { id: 20, sellerId: 5, name: 'Washing Powder 2kg', price: 75, imageData: null },
+          { id: 21, sellerId: 6, name: 'Maize Grain 50kg', price: 230, imageData: null }
+        ];
+        localStorage.setItem('zedProducts', JSON.stringify(dummy));
+      }
+    }
+    seedProducts();
+
+    function getProducts() { return JSON.parse(localStorage.getItem('zedProducts')); }
+    function getUsers() { return JSON.parse(localStorage.getItem('zedUsers')) || []; }
+
+    function renderProducts() {
+      const products = getProducts();
+      const users = getUsers();
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = '';
+      products.forEach(p => {
+        const seller = users.find(u => u.id === p.sellerId) || { name: 'Unknown' };
+        const bgStyle = p.imageData ? `background-image:url(${p.imageData})` : '';
+        const card = document.createElement('div');
+        card.className = `card ${p.imageData ? '' : 'placeholder-bg'}`;
+        card.style = bgStyle;
+        card.innerHTML = `<div class="overlay"><div class="title">${p.name}</div><div class="seller">by ${seller.name}</div><div class="price">ZMW ${p.price}</div></div>`;
+        card.addEventListener('click', () => buyProduct(p.id));
+        grid.appendChild(card);
+      });
+    }
+
+    function buyProduct(id) {
+      let products = getProducts();
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+      if (product.sellerId === user.id) return showNotification("You can't buy your own product.");
+      if (user.balance < product.price) return showNotification("Insufficient balance.");
+
+      user.balance -= product.price;
+      saveCurrentUser(user);
+
+      let transactions = JSON.parse(localStorage.getItem('zedTransactions')) || [];
+      transactions.push({ buyerId: user.id, sellerId: product.sellerId, type: 'product', itemName: product.name, amount: product.price });
+      localStorage.setItem('zedTransactions', JSON.stringify(transactions));
+
+      showNotification("Your commodity will arrive soon. Seller notified.");
+    }
+
+    function saveCurrentUser(u) {
+      localStorage.setItem('zedCurrentUser', JSON.stringify(u));
+      const users = JSON.parse(localStorage.getItem('zedUsers'));
+      const idx = users.findIndex(us => us.id === u.id);
+      if (idx > -1) { users[idx] = u; localStorage.setItem('zedUsers', JSON.stringify(users)); }
+    }
+
+    function showNotification(msg) {
+      const n = document.getElementById('notify');
+      n.textContent = msg; n.style.display = 'block';
+      setTimeout(() => n.style.display = 'none', 4000);
+    }
+
+    function logout() { localStorage.removeItem('zedCurrentUser'); window.location.href = 'signin.html'; }
+
+    renderProducts();
+  </script>
+</body>
+
+</html>

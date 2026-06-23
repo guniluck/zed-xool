@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zed Kantemba – Sign In / Register</title>
+  <style>
+    :root {
+      --green-dark: #0a4f1c;
+      --green-mid: #228B22;
+      --green-bright: #32CD32;
+      --green-light: #e6ffe6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: #f4faf5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      margin: 1rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      padding: 2rem;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--green-dark);
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 0.6rem;
+      background: #e6ffe6;
+      color: var(--green-dark);
+      cursor: pointer;
+      border-radius: 6px 6px 0 0;
+      font-weight: 600;
+    }
+
+    .tab.active {
+      background: var(--green-mid);
+      color: white;
+    }
+
+    .form {
+      display: none;
+    }
+
+    .form.active {
+      display: block;
+    }
+
+    h2 {
+      color: var(--green-dark);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--green-mid);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #1e7b1e;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
+    .success {
+      color: var(--green-dark);
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
+    .fee-notice {
+      background: #e6ffe6;
+      padding: 0.8rem;
+      border-radius: 6px;
+      text-align: center;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="logo">Zed Kantemba</div>
+    <div class="card">
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('login')">Sign In</div>
+        <div class="tab" onclick="switchTab('register')">Register</div>
+      </div>
+
+      <!-- Login -->
+      <form id="loginForm" class="form active">
+        <h2>Welcome Back</h2>
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button type="submit" class="btn">Sign In</button>
+        <div class="error" id="loginError"></div>
+      </form>
+
+      <!-- Register -->
+      <form id="registerForm" class="form">
+        <h2>Create Account</h2>
+        <div class="fee-notice">Registration fee: <strong>50 Kwacha</strong> (simulated payment)</div>
+        <input type="text" id="regName" placeholder="Full Name" required>
+        <input type="email" id="regEmail" placeholder="Email" required>
+        <input type="text" id="regPhone" placeholder="Phone Number" required>
+        <input type="password" id="regPassword" placeholder="Password" required>
+        <input type="password" id="regPassword2" placeholder="Confirm Password" required>
+        <button type="submit" class="btn">Pay 50 Kwacha & Register</button>
+        <div class="error" id="regError"></div>
+        <div class="success" id="regSuccess"></div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const defaultUsers = [
+      { id: 0, name: 'Admin', email: 'admin@zed.com', password: '1234567890', balance: 0 },
+      { id: 1, name: 'Mwila Banda', email: 'mwila@zed.com', password: '1234567890', balance: 350 },
+      { id: 2, name: 'Chisomo Phiri', email: 'chisomo@zed.com', password: '1234567890', balance: 200 },
+      { id: 3, name: 'Thandiwe Mwale', email: 'thandiwe@zed.com', password: '1234567890', balance: 500 },
+      { id: 4, name: 'Kondwani Tembo', email: 'kondwani@zed.com', password: '1234567890', balance: 800 },
+      { id: 5, name: 'Natasha Lungu', email: 'natasha@zed.com', password: '1234567890', balance: 420 },
+      { id: 6, name: 'Moses Zulu', email: 'moses@zed.com', password: '1234567890', balance: 670 },
+      { id: 7, name: 'Grace Mwanza', email: 'grace@zed.com', password: '1234567890', balance: 300 },
+      { id: 8, name: 'Kennedy Banda', email: 'kennedy@zed.com', password: '1234567890', balance: 950 },
+      { id: 9, name: 'Agness Mulenga', email: 'agness@zed.com', password: '1234567890', balance: 150 },
+      { id: 10, name: 'Innocent Simwinga', email: 'innocent@zed.com', password: '1234567890', balance: 580 },
+      { id: 11, name: 'Mercy Chirwa', email: 'mercy@zed.com', password: '1234567890', balance: 720 },
+      { id: 12, name: 'Alick Nkhoma', email: 'alick@zed.com', password: '1234567890', balance: 440 },
+      { id: 13, name: 'Prisca Mwansa', email: 'prisca@zed.com', password: '1234567890', balance: 310 },
+      { id: 14, name: 'Emmanuel Tembo', email: 'emmanuel@zed.com', password: '1234567890', balance: 600 },
+      { id: 15, name: 'Bupe Chanda', email: 'bupe@zed.com', password: '1234567890', balance: 890 }
+    ];
+
+    function getUsers() {
+      let users = localStorage.getItem('zedUsers');
+      if (!users) { localStorage.setItem('zedUsers', JSON.stringify(defaultUsers)); return defaultUsers; }
+      return JSON.parse(users);
+    }
+    function saveUsers(users) { localStorage.setItem('zedUsers', JSON.stringify(users)); }
+
+    function getTransactions() {
+      let tx = localStorage.getItem('zedTransactions');
+      return tx ? JSON.parse(tx) : [];
+    }
+    function saveTransactions(tx) { localStorage.setItem('zedTransactions', JSON.stringify(tx)); }
+
+    window.switchTab = function (tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
+      if (tab === 'login') {
+        document.querySelector('.tab:first-child').classList.add('active');
+        document.getElementById('loginForm').classList.add('active');
+      } else {
+        document.querySelector('.tab:last-child').classList.add('active');
+        document.getElementById('registerForm').classList.add('active');
+      }
+    };
+
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const users = getUsers();
+      const user = users.find(u => u.email === email && u.password === password);
+      if (!user) { document.getElementById('loginError').textContent = 'Invalid email or password.'; return; }
+      localStorage.setItem('zedCurrentUser', JSON.stringify(user));
+      window.location.href = 'dashboard.html';
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const phone = document.getElementById('regPhone').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const password2 = document.getElementById('regPassword2').value;
+      const regError = document.getElementById('regError');
+      const regSuccess = document.getElementById('regSuccess');
+      regError.textContent = ''; regSuccess.textContent = '';
+
+      if (password !== password2) { regError.textContent = 'Passwords do not match.'; return; }
+      if (password.length < 6) { regError.textContent = 'Password must be at least 6 characters.'; return; }
+
+      let users = getUsers();
+      if (users.find(u => u.email === email)) {
+        regError.textContent = 'An account with this email already exists.';
+        return;
+      }
+
+      // Simulate payment – always succeeds
+      const newId = users.length ? Math.max(...users.map(u => u.id)) + 1 : 1;
+      const newUser = {
+        id: newId,
+        name,
+        email,
+        phone,
+        password,
+        balance: 0
+      };
+      users.push(newUser);
+      saveUsers(users);
+
+      // Credit admin 50 Kwacha
+      const admin = users.find(u => u.id === 0);
+      if (admin) {
+        admin.balance += 50;
+        saveUsers(users);
+      }
+
+      // Record registration fee transaction
+      const tx = getTransactions();
+      tx.push({
+        buyerId: newId,
+        sellerId: 0,
+        type: 'registration',
+        itemName: 'Registration Fee',
+        amount: 50
+      });
+      saveTransactions(tx);
+
+      localStorage.setItem('zedCurrentUser', JSON.stringify(newUser));
+      regSuccess.textContent = 'Registration successful! 50 Kwacha fee paid. Redirecting...';
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+    });
+  </script>
+</body>
+
+</html>

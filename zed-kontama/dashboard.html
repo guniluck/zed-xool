@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard – Zed Kantemba</title>
+  <style>
+    :root {
+      --green-dark: #0a4f1c;
+      --green-mid: #228B22;
+      --green-bright: #32CD32;
+      --green-light: #e6ffe6;
+      --white: #fff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: #f4faf5;
+      color: #222;
+    }
+
+    header {
+      background: var(--green-dark);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    header .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    header nav a {
+      color: white;
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    header nav a:hover {
+      color: var(--green-bright);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .balance {
+      font-size: 2.5rem;
+      color: var(--green-dark);
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.6rem 1.5rem;
+      background: var(--green-mid);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #1e7b1e;
+    }
+
+    .btn-danger {
+      background: #c0392b;
+    }
+
+    .btn-danger:hover {
+      background: #a93226;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-card h3 {
+      font-size: 1.8rem;
+      color: var(--green-dark);
+    }
+
+    table {
+      width: 100%;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+
+    th {
+      background: var(--green-dark);
+      color: white;
+      padding: 0.8rem;
+    }
+
+    td {
+      padding: 0.8rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .topup {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .topup input {
+      padding: 0.6rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      width: 120px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">Zed Kantemba</div>
+    <nav>
+      <a href="market.html">Market</a>
+      <a href="library.html">Library</a>
+      <a href="upload.html">Upload</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Welcome, <span id="userName"></span></h2>
+    <p class="balance">ZMW <span id="balanceDisplay">0.00</span></p>
+    <div class="topup">
+      <input type="number" id="topupAmount" placeholder="Amount" step="0.01" min="1">
+      <button class="btn" onclick="topUp()">Add Funds</button>
+    </div>
+
+    <div class="grid">
+      <div class="stat-card">
+        <h3 id="purchaseCount">0</h3>Purchases
+      </div>
+      <div class="stat-card">
+        <h3 id="salesCount">0</h3>Sales
+      </div>
+      <div class="stat-card">
+        <h3 id="productCount">0</h3>Products
+      </div>
+      <div class="stat-card">
+        <h3 id="libraryCount">0</h3>Library Items
+      </div>
+    </div>
+
+    <h3>My Products</h3>
+    <table id="myProductsTable">
+      <tr>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Action</th>
+      </tr>
+    </table>
+
+    <h3>My Library Items</h3>
+    <table id="myLibraryTable">
+      <tr>
+        <th>Cover</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Action</th>
+      </tr>
+    </table>
+
+    <h3>Purchase History</h3>
+    <table id="purchasesTable">
+      <tr>
+        <th>Item</th>
+        <th>Type</th>
+        <th>Amount</th>
+      </tr>
+    </table>
+
+    <h3>Sales History</h3>
+    <table id="salesTable">
+      <tr>
+        <th>Item</th>
+        <th>Type</th>
+        <th>Amount</th>
+      </tr>
+    </table>
+  </div>
+
+  <script>
+    function getCurrentUser() {
+      return JSON.parse(localStorage.getItem('zedCurrentUser'));
+    }
+    function saveCurrentUser(user) {
+      localStorage.setItem('zedCurrentUser', JSON.stringify(user));
+      const users = JSON.parse(localStorage.getItem('zedUsers'));
+      const idx = users.findIndex(u => u.id === user.id);
+      if (idx > -1) { users[idx] = user; localStorage.setItem('zedUsers', JSON.stringify(users)); }
+    }
+    function logout() { localStorage.removeItem('zedCurrentUser'); window.location.href = 'signin.html'; }
+
+    const user = getCurrentUser();
+    if (!user) window.location.href = 'signin.html';
+    document.getElementById('userName').textContent = user.name;
+    document.getElementById('balanceDisplay').textContent = user.balance.toFixed(2);
+
+    window.topUp = function () {
+      const amt = parseFloat(document.getElementById('topupAmount').value);
+      if (isNaN(amt) || amt <= 0) return alert('Enter valid amount');
+      user.balance += amt;
+      saveCurrentUser(user);
+      location.reload();
+    };
+
+    const products = JSON.parse(localStorage.getItem('zedProducts')) || [];
+    const libraryItems = JSON.parse(localStorage.getItem('zedLibrary')) || [];
+    const transactions = JSON.parse(localStorage.getItem('zedTransactions')) || [];
+
+    const myProducts = products.filter(p => p.sellerId === user.id);
+    const myLibrary = libraryItems.filter(l => l.uploaderId === user.id);
+    document.getElementById('productCount').textContent = myProducts.length;
+    document.getElementById('libraryCount').textContent = myLibrary.length;
+    const myPurchases = transactions.filter(t => t.buyerId === user.id);
+    const mySales = transactions.filter(t => t.sellerId === user.id);
+    document.getElementById('purchaseCount').textContent = myPurchases.length;
+    document.getElementById('salesCount').textContent = mySales.length;
+
+    const prodTable = document.getElementById('myProductsTable');
+    myProducts.forEach(p => {
+      const img = p.imageData ? `<img src="${p.imageData}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">` : '—';
+      prodTable.innerHTML += `<tr><td>${img}</td><td>${p.name}</td><td>ZMW ${p.price}</td><td><button class="btn btn-danger" onclick="deleteProduct(${p.id})">Delete</button></td></tr>`;
+    });
+    const libTable = document.getElementById('myLibraryTable');
+    myLibrary.forEach(l => {
+      const cover = l.imageData ? `<img src="${l.imageData}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">` : '—';
+      libTable.innerHTML += `<tr><td>${cover}</td><td>${l.title}</td><td>ZMW ${l.price}</td><td><button class="btn btn-danger" onclick="deleteLibrary(${l.id})">Delete</button></td></tr>`;
+    });
+    myPurchases.forEach(t => {
+      document.getElementById('purchasesTable').innerHTML += `<tr><td>${t.itemName}</td><td>${t.type}</td><td>ZMW ${t.amount.toFixed(2)}</td></tr>`;
+    });
+    mySales.forEach(t => {
+      document.getElementById('salesTable').innerHTML += `<tr><td>${t.itemName}</td><td>${t.type}</td><td>ZMW ${t.amount.toFixed(2)}</td></tr>`;
+    });
+
+    window.deleteProduct = function (id) {
+      let prods = JSON.parse(localStorage.getItem('zedProducts'));
+      prods = prods.filter(p => !(p.id === id && p.sellerId === user.id));
+      localStorage.setItem('zedProducts', JSON.stringify(prods));
+      location.reload();
+    };
+    window.deleteLibrary = function (id) {
+      let libs = JSON.parse(localStorage.getItem('zedLibrary'));
+      libs = libs.filter(l => !(l.id === id && l.uploaderId === user.id));
+      localStorage.setItem('zedLibrary', JSON.stringify(libs));
+      location.reload();
+    };
+  </script>
+</body>
+
+</html>
