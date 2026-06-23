@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - MMSS | Margaret Mwachiyeya Secondary School</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --red: #b71c1c;
+      --red-mid: #c62828;
+      --red-light: #e53935;
+      --blue: #0d2b52;
+      --blue-mid: #1a3c6e;
+      --blue-light: #2563eb;
+      --white: #ffffff;
+      --off-white: #f8f9fa;
+      --text-dark: #1a1a2e;
+      --text-light: #6b7280;
+      --gold: #f59e0b;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+      --radius: 20px;
+      --transition: 0.35s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+      background: var(--off-white);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      background: linear-gradient(135deg, rgba(13, 43, 82, 0.94), rgba(26, 60, 110, 0.93), rgba(150, 30, 30, 0.9), rgba(183, 28, 28, 0.88));
+      backdrop-filter: blur(16px);
+      padding: 10px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+      transition: 0.3s;
+    }
+
+    .navbar.scrolled {
+      background: linear-gradient(135deg, rgba(13, 43, 82, 0.97), rgba(183, 28, 28, 0.93));
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .logo img {
+      height: 42px;
+      border-radius: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: 0.3s;
+      padding: 6px 2px;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2.5px;
+      border-radius: 4px;
+      background: #fff;
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a.active {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .nav-links a.active::after {
+      width: 100%;
+      background: var(--gold);
+      height: 3px;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    /* Page header */
+    .page-header {
+      padding: 120px 20px 40px;
+      text-align: center;
+      background: var(--white);
+    }
+
+    .page-header h1 {
+      color: var(--blue);
+      font-size: 2.8rem;
+      font-weight: 800;
+    }
+
+    .page-header p {
+      color: var(--text-light);
+      font-size: 1.1rem;
+    }
+
+    /* Stats */
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      padding: 40px 20px;
+      background: var(--off-white);
+    }
+
+    .stat-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 30px 35px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: 0.3s;
+      min-width: 180px;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .stat-number {
+      font-size: 2.8rem;
+      font-weight: 800;
+    }
+
+    .stat-pass .stat-number {
+      background: linear-gradient(135deg, var(--blue), var(--red-mid));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-teachers .stat-number {
+      color: var(--blue);
+    }
+
+    .stat-pupils .stat-number {
+      color: var(--red);
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-light);
+    }
+
+    /* Motto cards with silver shine */
+    .motto-section {
+      padding: 60px 20px;
+      background: var(--white);
+      text-align: center;
+    }
+
+    .motto-cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      max-width: 900px;
+      margin: 30px auto;
+    }
+
+    .motto-card {
+      flex: 1 1 240px;
+      max-width: 260px;
+      background: var(--blue);
+      border-radius: var(--radius);
+      padding: 40px 20px;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(13, 43, 82, 0.3);
+      transition: 0.3s;
+      cursor: default;
+    }
+
+    .motto-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 45px rgba(13, 43, 82, 0.5);
+    }
+
+    /* Silver shine animation */
+    .motto-card::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+      animation: shine 3s infinite linear;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    @keyframes shine {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+
+      100% {
+        transform: translate(50%, 50%) rotate(0deg);
+      }
+    }
+
+    .motto-card .motto-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .motto-card h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 2;
+      letter-spacing: 1px;
+    }
+
+    .motto-card p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-top: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Leadership cards */
+    .leadership-section {
+      padding: 60px 20px;
+      background: var(--off-white);
+    }
+
+    .leadership-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .leader-card {
+      width: 300px;
+      height: 380px;
+      border-radius: var(--radius);
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      transition: 0.3s;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .leader-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .leader-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.2) 60%, transparent);
+      z-index: 1;
+    }
+
+    .leader-info {
+      position: relative;
+      z-index: 2;
+      padding: 25px;
+      color: #fff;
+    }
+
+    .leader-info h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .leader-info .role {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* Fallback letter for missing image */
+    .letter-fallback {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.3);
+      background: var(--blue-mid);
+      z-index: 0;
+      text-transform: uppercase;
+    }
+
+    /* HOD cards */
+    .hod-section {
+      padding: 60px 20px;
+      background: var(--white);
+    }
+
+    .hod-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 25px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hod-card {
+      height: 350px;
+      border-radius: var(--radius);
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: 0.3s;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .hod-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .hod-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.2) 60%, transparent);
+      z-index: 1;
+    }
+
+    .hod-info {
+      position: relative;
+      z-index: 2;
+      padding: 20px;
+      color: #fff;
+    }
+
+    .hod-info h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    .hod-info .dept {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* Slogan card */
+    .slogan-section {
+      padding: 60px 20px;
+      background: var(--off-white);
+    }
+
+    .slogan-card {
+      max-width: 500px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, var(--blue), var(--red-mid));
+      border-radius: var(--radius);
+      padding: 40px 30px;
+      text-align: center;
+      color: #fff;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+      transition: 0.3s;
+    }
+
+    .slogan-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .slogan-card h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .slogan-card p {
+      font-size: 1rem;
+      margin-top: 10px;
+      opacity: 0.9;
+    }
+
+    /* Footer */
+    .footer {
+      background: #0f172a;
+      padding: 30px 20px;
+      text-align: center;
+      color: #cbd5e1;
+      margin-top: 40px;
+    }
+
+    .footer p {
+      margin: 5px 0;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width:768px) {
+      .navbar {
+        padding: 10px 20px;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: linear-gradient(180deg, rgba(13, 43, 82, 0.98), rgba(183, 28, 28, 0.95));
+        flex-direction: column;
+        padding: 0;
+        border-radius: 0 0 16px 16px;
+        overflow: hidden;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-links a {
+        padding: 14px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .nav-links a::after {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .leader-card {
+        width: 260px;
+        height: 340px;
+      }
+
+      .hod-card {
+        height: 300px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="logo"><img src="logo.jpg" alt="MMSS"><span>MMSS</span></a>
+    <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="admission.html">Admission</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="portal.html">Portal</a></li>
+    </ul>
+  </nav>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <h1>About Our School</h1>
+    <p>Margaret Mwachiyeya Secondary School – Chongwe</p>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats-row">
+    <div class="stat-card stat-pass">
+      <div class="stat-number">98.9%</div>
+      <div class="stat-label">Pass Rate</div>
+    </div>
+    <div class="stat-card stat-teachers">
+      <div class="stat-number">45+</div>
+      <div class="stat-label">Teachers</div>
+    </div>
+    <div class="stat-card stat-pupils">
+      <div class="stat-number">1300+</div>
+      <div class="stat-label">Pupils</div>
+    </div>
+  </section>
+
+  <!-- Motto with silver shine -->
+  <section class="motto-section">
+    <h2 style="color:var(--blue); font-size:2rem;">School Motto</h2>
+    <div class="motto-cards">
+      <div class="motto-card">
+        <div class="motto-icon"><i class="fas fa-lightbulb"></i></div>
+        <h3>THINK</h3>
+        <p>Cultivate critical thinking and curiosity.</p>
+      </div>
+      <div class="motto-card">
+        <div class="motto-icon"><i class="fas fa-sync-alt"></i></div>
+        <h3>CHANGE</h3>
+        <p>Embrace transformation and growth.</p>
+      </div>
+      <div class="motto-card">
+        <div class="motto-icon"><i class="fas fa-bolt"></i></div>
+        <h3>DO</h3>
+        <p>Take action with integrity and purpose.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Leadership -->
+  <section class="leadership-section">
+    <h2 style="text-align:center; color:var(--blue); font-size:2rem; margin-bottom:30px;">School Leadership</h2>
+    <div class="leadership-grid" id="leadershipGrid"></div>
+  </section>
+
+  <!-- Heads of Department -->
+  <section class="hod-section">
+    <h2 style="text-align:center; color:var(--blue); font-size:2rem; margin-bottom:30px;">Heads of Departments</h2>
+    <div class="hod-grid" id="hodGrid"></div>
+  </section>
+
+  <!-- Slogan -->
+  <section class="slogan-section">
+    <div class="slogan-card">
+      <h2>MMSS</h2>
+      <p>The School of Excellence</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p><strong>Margaret Mwachiyeya Secondary School</strong> – Chongwe</p>
+    <p>Est. 2016 · School of Excellence & Holistic Education</p>
+    <p>&copy; 2026 MMSS</p>
+  </footer>
+
+  <script>
+    // Mobile menu
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      const icon = menuToggle.querySelector('i');
+      icon.classList.toggle('fa-bars');
+      icon.classList.toggle('fa-times');
+    });
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Helper: create a card with background image, or fallback to first letter
+    function createPersonCard(data) {
+      const { name, role, image } = data;
+      const card = document.createElement('div');
+      card.className = data.type === 'leader' ? 'leader-card' : 'hod-card';
+
+      // Add fallback letter
+      const fallback = document.createElement('div');
+      fallback.className = 'letter-fallback';
+      fallback.textContent = name.charAt(0);
+      card.appendChild(fallback);
+
+      // Set background image if provided
+      if (image) {
+        card.style.backgroundImage = `url('${image}')`;
+        // If image loads, the letter will be hidden behind the gradient overlay anyway (z-index0 behind ::after)
+        // We don't need to remove it.
+      }
+
+      // Info overlay
+      const info = document.createElement('div');
+      info.className = data.type === 'leader' ? 'leader-info' : 'hod-info';
+      info.innerHTML = `<h3>${name}</h3><div class="${data.type === 'leader' ? 'role' : 'dept'}">${role}</div>`;
+      card.appendChild(info);
+
+      return card;
+    }
+
+    // Leadership data
+    const leaders = [
+      { name: 'Mrs. Moono', role: 'Headteacher', image: 'pics/mrs_moono.jpg', type: 'leader' },
+      { name: 'Mr. Chilimboyi', role: 'Deputy Headteacher', image: 'pics/mr_chilimboyi.jpg', type: 'leader' }
+    ];
+    const leadershipGrid = document.getElementById('leadershipGrid');
+    leaders.forEach(l => leadershipGrid.appendChild(createPersonCard(l)));
+
+    // HOD data
+    const hods = [
+      { name: 'Mr. Mwamba', role: 'Mathematics', image: 'pics/mr_mwamba.jpg', type: 'hod' },
+      { name: 'Mr. Munga', role: 'Linguistics', image: 'pics/mr_munga.jpg', type: 'hod' },
+      { name: 'Mrs. Lutangu', role: 'Social Sciences', image: 'pics/mrs_lutangu.jpg', type: 'hod' },
+      { name: 'Mr. Chansa', role: 'Music', image: 'pics/mr_chansa.jpg', type: 'hod' },
+      { name: 'Mrs. Lumgu', role: 'Food & Nutrition', image: 'pics/mrs_lumgu.jpg', type: 'hod' },
+      { name: 'Mr. Sichalwe', role: 'ICT & CS', image: 'pics/mr_sichalwe.jpg', type: 'hod' },
+      { name: 'Mr. Bakuluma', role: 'Natural Science', image: 'pics/mr_bakuluma.jpg', type: 'hod' }
+    ];
+    const hodGrid = document.getElementById('hodGrid');
+    hods.forEach(h => hodGrid.appendChild(createPersonCard(h)));
+  </script>
+</body>
+
+</html>

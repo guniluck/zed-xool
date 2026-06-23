@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MMSS | Margaret Mwachiyeya Secondary School – Chongwe</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --red: #b71c1c;
+      --red-mid: #c62828;
+      --red-light: #e53935;
+      --blue: #0d2b52;
+      --blue-mid: #1a3c6e;
+      --blue-light: #2563eb;
+      --white: #ffffff;
+      --off-white: #f8f9fa;
+      --text-dark: #1a1a2e;
+      --text-light: #6b7280;
+      --gold: #f59e0b;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.18);
+      --radius: 20px;
+      --transition: 0.35s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+      background: var(--off-white);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ========== LOADING SCREEN ========== */
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0d2b52, #1a3c6e, #b71c1c);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    #loading-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader {
+      width: 80px;
+      height: 80px;
+      border: 8px solid rgba(255, 255, 255, 0.3);
+      border-top: 8px solid #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ========== NAVBAR ========== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      background: linear-gradient(135deg,
+          rgba(13, 43, 82, 0.94) 0%,
+          rgba(26, 60, 110, 0.93) 35%,
+          rgba(150, 30, 30, 0.9) 75%,
+          rgba(183, 28, 28, 0.88) 100%);
+      backdrop-filter: blur(16px);
+      padding: 10px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .navbar.scrolled {
+      background: linear-gradient(135deg,
+          rgba(13, 43, 82, 0.97) 0%,
+          rgba(26, 60, 110, 0.96) 35%,
+          rgba(150, 30, 30, 0.94) 75%,
+          rgba(183, 28, 28, 0.93) 100%);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: 0.5px;
+    }
+
+    .logo img {
+      height: 42px;
+      border-radius: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: var(--transition);
+      position: relative;
+      padding: 6px 2px;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2.5px;
+      border-radius: 4px;
+      background: #fff;
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a.active {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .nav-links a.active::after {
+      width: 100%;
+      background: var(--gold);
+      height: 3px;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    /* ========== HERO SLIDER ========== */
+    .hero-slider {
+      margin-top: 66px;
+      position: relative;
+      width: 100%;
+      height: 85vh;
+      overflow: hidden;
+    }
+
+    .slides {
+      display: flex;
+      transition: transform 0.6s ease-in-out;
+      height: 100%;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.2) 60%);
+      z-index: 1;
+    }
+
+    .slide-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: #fff;
+      max-width: 700px;
+      padding: 20px;
+    }
+
+    .slide-content h2 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .slide-content p {
+      font-size: 1.2rem;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.25);
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      padding: 10px 16px;
+      cursor: pointer;
+      z-index: 3;
+      border-radius: 50%;
+      transition: var(--transition);
+    }
+
+    .slider-btn:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .prev {
+      left: 20px;
+    }
+
+    .next {
+      right: 20px;
+    }
+
+    .dots {
+      position: absolute;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 3;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .dot.active {
+      background: #fff;
+      transform: scale(1.3);
+    }
+
+    /* ========== SCROLLABLE ROWS ========== */
+    .scroll-row {
+      padding: 60px 0;
+      background: var(--white);
+    }
+
+    .scroll-row:nth-child(even) {
+      background: var(--off-white);
+    }
+
+    .row-header {
+      text-align: center;
+      margin-bottom: 35px;
+      color: var(--blue);
+      font-size: 2rem;
+      font-weight: 700;
+      position: relative;
+    }
+
+    .row-header::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      border-radius: 4px;
+      background: var(--red);
+    }
+
+    .scroll-container {
+      display: flex;
+      overflow-x: auto;
+      gap: 25px;
+      padding: 0 40px 20px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Custom scrollbar */
+    .scroll-container::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .scroll-container::-webkit-scrollbar-track {
+      background: #f0f0f0;
+      border-radius: 10px;
+    }
+
+    .scroll-container::-webkit-scrollbar-thumb {
+      background: var(--blue-mid);
+      border-radius: 10px;
+    }
+
+    .person-card {
+      flex: 0 0 280px;
+      height: 360px;
+      border-radius: var(--radius);
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition);
+      cursor: default;
+    }
+
+    .person-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top,
+          rgba(0, 0, 0, 0.85) 0%,
+          rgba(0, 0, 0, 0.4) 40%,
+          transparent 100%);
+      z-index: 1;
+      transition: var(--transition);
+    }
+
+    .person-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .person-card:hover::after {
+      background: linear-gradient(to top,
+          rgba(0, 0, 0, 0.9) 0%,
+          rgba(0, 0, 0, 0.5) 40%,
+          transparent 100%);
+    }
+
+    .card-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      padding: 25px 20px;
+      color: #fff;
+    }
+
+    .card-info h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    }
+
+    .card-info .role {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--gold);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      background: #0f172a;
+      padding: 30px 20px;
+      text-align: center;
+      color: #cbd5e1;
+      margin-top: 40px;
+    }
+
+    .footer p {
+      margin: 5px 0;
+      font-size: 0.9rem;
+    }
+
+    /* ========== CHAT (Uncle John) ========== */
+    .chat-trigger {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 58px;
+      height: 58px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .chat-trigger:hover {
+      background: var(--red-light);
+      transform: scale(1.05);
+    }
+
+    .chat-panel {
+      position: fixed;
+      bottom: 95px;
+      right: 25px;
+      width: 320px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+      z-index: 1999;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-panel.open {
+      display: flex;
+    }
+
+    .chat-header {
+      background: linear-gradient(135deg, var(--blue), var(--red));
+      color: #fff;
+      padding: 15px 20px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-header button {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .chat-body {
+      padding: 15px;
+      height: 250px;
+      overflow-y: auto;
+      background: #f9f9f9;
+    }
+
+    .chat-message {
+      margin-bottom: 12px;
+      display: flex;
+    }
+
+    .chat-message.bot {
+      justify-content: flex-start;
+    }
+
+    .chat-message.user {
+      justify-content: flex-end;
+    }
+
+    .chat-message span {
+      padding: 10px 14px;
+      border-radius: 18px;
+      max-width: 80%;
+      font-size: 0.85rem;
+    }
+
+    .bot span {
+      background: #e0e7ff;
+      color: #1e3a8a;
+    }
+
+    .user span {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #eee;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 25px;
+      outline: none;
+    }
+
+    .chat-input button {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin-left: 8px;
+      cursor: pointer;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 10px 20px;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: linear-gradient(180deg, rgba(13, 43, 82, 0.98), rgba(183, 28, 28, 0.95));
+        flex-direction: column;
+        padding: 0;
+        border-radius: 0 0 16px 16px;
+        overflow: hidden;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-links a {
+        padding: 14px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .nav-links a::after {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .hero-slider {
+        height: 60vh;
+      }
+
+      .slide-content h2 {
+        font-size: 1.8rem;
+      }
+
+      .scroll-container {
+        padding: 0 20px 20px;
+      }
+
+      .person-card {
+        flex: 0 0 240px;
+        height: 320px;
+      }
+
+      .card-info h3 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="loader"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="logo">
+      <img src="logo.jpg" alt="MMSS Logo">
+      <span>MMSS</span>
+    </a>
+    <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="admission.html">Admission</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="portal.html">Portal</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Slider -->
+  <section class="hero-slider" id="heroSlider">
+    <div class="slides" id="slides">
+      <div class="slide" style="background-image: url('admin/goodluck/mmsslogo.jpg');">
+        <div class="slide-content">
+          <h2>Welcome to MMSS</h2>
+          <p>THINK CHANG DO</p>
+        </div>
+      </div>
+      <div class="slide" style="background-image: url('headteacher.jpg');">
+        <div class="slide-content">
+          <h2>Academic Excellence</h2>
+          <p>98.8% pass rate for we are in the hands of a great leader</p>
+        </div>
+      </div>
+      <div class="slide" style="background-image: url('admin/goodluck/cadet.jpg');">
+        <div class="slide-content">
+          <h2>Holistic Education</h2>
+          <p>WE ARE NOT JUST INTO SUBJECTS WE ARE IN ALL AREAS</p>
+        </div>
+      </div>
+      <div class="slide" style="background-image: url('admin/goodluck/teachers.jpg');">
+        <div class="slide-content">
+          <h2>45+ Expert Teachers</h2>
+          <p>Dedicated to your success</p>
+        </div>
+      </div>
+      <div class="slide" style="background-image: url('admin/goodluck/pupils.jpg');">
+        <div class="slide-content">
+          <h2>1200+ Learners</h2>
+          <p>Join our vibrant community</p>
+        </div>
+      </div>
+    </div>
+    <button class="slider-btn prev" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+    <button class="slider-btn next" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+    <div class="dots" id="dots"></div>
+  </section>
+
+  <!-- Best Teachers Row -->
+  <section class="scroll-row">
+    <h2 class="row-header">Best Teachers</h2>
+    <div class="scroll-container" id="teachersRow">
+      <!-- Cards inserted via JavaScript for consistency, but we can hardcode for simplicity -->
+    </div>
+  </section>
+
+  <!-- Best Pupils Row -->
+  <section class="scroll-row">
+    <h2 class="row-header">Best Pupils</h2>
+    <div class="scroll-container" id="pupilsRow"></div>
+  </section>
+
+  <!-- Best Prefects Row -->
+  <section class="scroll-row">
+    <h2 class="row-header">Best Prefects</h2>
+    <div class="scroll-container" id="prefectsRow"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p><strong>Margaret Mwachiyeya Secondary School</strong> – Chongwe</p>
+    <p>Est. 2016 · School of Excellence & Holistic Education</p>
+    <p>© 2026 MMSS</p>
+  </footer>
+
+  <!-- Chat Assistant (Uncle John) -->
+  <button class="chat-trigger" id="chatTrigger"><i class="fas fa-comment-dots"></i></button>
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-header">
+      <span>👋 Uncle John</span>
+      <button id="chatClose"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div class="chat-message bot"><span>Hello! I'm Uncle John. Ask me about admissions, news, or the school.</span>
+      </div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="chatInput" placeholder="Type a message...">
+      <button id="chatSend"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <script>
+    // ---------- LOADING ANIMATION ----------
+    window.addEventListener('load', function () {
+      setTimeout(() => {
+        document.getElementById('loading-screen').classList.add('hidden');
+      }, 600);
+    });
+
+    // ---------- MOBILE MENU ----------
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      const icon = menuToggle.querySelector('i');
+      icon.classList.toggle('fa-bars');
+      icon.classList.toggle('fa-times');
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        const icon = menuToggle.querySelector('i');
+        icon.classList.add('fa-bars');
+        icon.classList.remove('fa-times');
+      });
+    });
+
+    // ---------- HERO SLIDER ----------
+    const slides = document.getElementById('slides');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const dotsContainer = document.getElementById('dots');
+    const slideCount = document.querySelectorAll('.slide').length;
+    let currentSlide = 0;
+    function updateSlider() {
+      slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+      document.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
+    }
+    for (let i = 0; i < slideCount; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.addEventListener('click', () => { currentSlide = i; updateSlider(); });
+      dotsContainer.appendChild(dot);
+    }
+    nextBtn.addEventListener('click', () => { currentSlide = (currentSlide + 1) % slideCount; updateSlider(); });
+    prevBtn.addEventListener('click', () => { currentSlide = (currentSlide - 1 + slideCount) % slideCount; updateSlider(); });
+    setInterval(() => { currentSlide = (currentSlide + 1) % slideCount; updateSlider(); }, 5000);
+
+    // ---------- FILL SCROLLABLE ROWS ----------
+    const teachersData = [
+      { name: 'Mr. kajiko', role: 'Best Teacher 2025', img: 'admin/goodluck/songs (2).jpg' },
+      { name: 'Mr. Simakumba', role: 'Excellence in Sciences', img: 'admin/goodluck/songs (1).jpg' },
+      { name: 'Mrs. Tembo', role: 'Mathematics', img: 'admin/goodluck/tembo.jpg' },
+      { name: 'Madam Moono', role: 'Headteacher', img: 'headteacher.jpg' },
+      { name: 'Mr. Chimwanga', role: 'Physics teacher', img: 'admin/goodluck/chimwanga.jpeg' },
+    ];
+    const pupilsData = [
+      { name: 'salome phiri', role: 'Best Pupil 2025', img: 'admin/goodluck/salome.jpg' },
+      { name: 'chimuka Loobwe', role: 'Top Grade 12', img: 'admin/goodluck/chimukaa.jpg' },
+      { name: 'Roseti Kaputo', role: '', img: 'admin/goodluck/roset.jpg' },
+      { name: 'Akson lungu', role: 'Jets president', img: 'admin/goodluck/ackson.jpg' },
+    ];
+    const prefectsData = [
+      { name: 'Chisomo Phiri', role: 'Head Boy', img: '' },
+      { name: 'Sandu sandu', role: 'vice Head Boy', img: '' },
+      { name: 'Meek mwemba', role: 'Sports Captain', img: '' },
+      { name: 'Elisha Mwale', role: 'Dining Hall Prefect', img: '' },
+    ];
+
+    function createCards(containerId, dataArray) {
+      const container = document.getElementById(containerId);
+      dataArray.forEach(person => {
+        const card = document.createElement('div');
+        card.className = 'person-card';
+        card.style.backgroundImage = `url('${person.img}')`;
+        card.innerHTML = `
+                    <div class="card-info">
+                        <h3>${person.name}</h3>
+                        <div class="role">${person.role}</div>
+                    </div>`;
+        container.appendChild(card);
+      });
+    }
+    createCards('teachersRow', teachersData);
+    createCards('pupilsRow', pupilsData);
+    createCards('prefectsRow', prefectsData);
+
+    // ---------- CHAT ASSISTANT ----------
+    const chatTrigger = document.getElementById('chatTrigger');
+    const chatPanel = document.getElementById('chatPanel');
+    const chatClose = document.getElementById('chatClose');
+    const chatBody = document.getElementById('chatBody');
+    const chatInput = document.getElementById('chatInput');
+    const chatSend = document.getElementById('chatSend');
+    chatTrigger.addEventListener('click', () => chatPanel.classList.toggle('open'));
+    chatClose.addEventListener('click', () => chatPanel.classList.remove('open'));
+    function addMessage(text, type) {
+      const msg = document.createElement('div');
+      msg.className = 'chat-message ' + type;
+      msg.innerHTML = `<span>${text}</span>`;
+      chatBody.appendChild(msg);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+    function botReply(userMsg) {
+      const msg = userMsg.toLowerCase();
+      if (msg.includes('hello') || msg.includes('hi')) return "Hello! How can I help you today?";
+      if (msg.includes('admission')) return "Admissions are open! Visit the Admission page to apply.";
+      if (msg.includes('news')) return "We have Visitation Day, JETS Fair, and Elections coming up.";
+      if (msg.includes('contact')) return "You can reach us at mmss@chongwe.edu or visit the school in Chongwe.";
+      return "I'm still learning, but I'll pass your message to the office. Ask me about admissions!";
+    }
+    chatSend.addEventListener('click', () => {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      addMessage(text, 'user');
+      chatInput.value = '';
+      setTimeout(() => addMessage(botReply(text), 'bot'), 600);
+    });
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') chatSend.click();
+    });
+
+    // ---------- NAV SCROLL SHADOW ----------
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
+</body>
+
+</html>

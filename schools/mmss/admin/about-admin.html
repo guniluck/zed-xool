@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Page Admin – MMSS</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f9;
+      color: #333;
+      padding: 1rem
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto
+    }
+
+    h1 {
+      color: #c0392b;
+      text-align: center;
+      margin-bottom: 2rem
+    }
+
+    .section {
+      background: white;
+      border-radius: 18px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05)
+    }
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 1rem
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      flex-direction: column
+    }
+
+    @media(max-width:600px) {
+      .form-row {
+        flex-direction: column;
+        gap: 0.5rem
+      }
+
+      .form-group {
+        min-width: 100%
+      }
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: #2c3e50
+    }
+
+    input,
+    textarea,
+    select {
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 0.6rem;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.2s;
+      width: 100%
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #3498db
+    }
+
+    button {
+      padding: 0.6rem 1.5rem;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+      width: auto
+    }
+
+    button:hover {
+      opacity: 0.9
+    }
+
+    button.danger {
+      background: #c0392b
+    }
+
+    button.secondary {
+      background: #7f8c8d
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      background: #fafafa;
+      flex-wrap: wrap;
+      gap: 0.5rem
+    }
+
+    .list-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-right: 1rem
+    }
+
+    .list-item .info {
+      flex: 1;
+      min-width: 150px
+    }
+
+    .edit-form {
+      display: none;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #f9f9f9;
+      border-radius: 8px
+    }
+
+    .edit-form input,
+    .edit-form textarea {
+      width: 100%;
+      margin-bottom: 0.5rem
+    }
+
+    hr {
+      margin: 1.5rem 0;
+      border: 0;
+      border-top: 1px solid #eee
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap
+    }
+
+    @media(max-width:480px) {
+      .container {
+        padding: 0.5rem
+      }
+
+      .section {
+        padding: 1rem
+      }
+
+      h1 {
+        font-size: 1.5rem
+      }
+
+      button {
+        width: 100%;
+        margin-bottom: 0.3rem
+      }
+
+      .return-btn {
+        color: red;
+        width: 130px;
+        height: 40px;
+        border: none;
+        border-radius: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>about page</h1><a href="index.html" class="return-btn">back to DB</a>
+
+    <!-- Headteacher -->
+    <div class="section">
+      <h2>cards form</h2>
+      <div id="headteacherForm"></div>
+    </div>
+
+    <!-- Deputy Headteacher -->
+    <div class="section">
+      <h2>Deputy Headteacher</h2>
+      <div id="deputyForm"></div>
+    </div>
+
+    <!-- Secretary -->
+    <div class="section">
+      <h2>Secretary</h2>
+      <div id="secretaryForm"></div>
+    </div>
+
+    <!-- HODs -->
+    <div class="section">
+      <h2>Heads of Department (HODs)</h2>
+      <div id="hodsList"></div>
+      <button onclick="addHod()" style="margin-top:1rem;">➕ Add HOD</button>
+    </div>
+
+    <!-- Stats & Motto -->
+    <div class="section">
+      <h2>School Statistics & Motto</h2>
+      <div class="form-row">
+        <div class="form-group"><label>Total Pupils</label><input type="number" id="totalPupils"></div>
+        <div class="form-group"><label>Total Teachers</label><input type="number" id="totalTeachers"></div>
+        <div class="form-group"><label>Pass Rate (%)</label><input type="number" step="0.1" id="passRate"></div>
+      </div>
+      <div class="form-group"><label>School Motto</label><input type="text" id="motto"></div>
+      <button onclick="saveStats()">💾 Save Stats & Motto</button>
+    </div>
+  </div>
+
+  <script>
+    const PREFIX = 'mmss_';
+    function getD(k, d) { try { return JSON.parse(localStorage.getItem(PREFIX + k)) || d } catch (e) { return d } }
+    function setD(k, v) { localStorage.setItem(PREFIX + k, JSON.stringify(v)) }
+
+    function getPersonnel() {
+      return getD('about_personnel', {
+        headteacher: { name: '', title: 'Headteacher', image_url: '', qualification: '', years_in_field: '', age: '', bio: '' },
+        deputy_headteacher: { name: '', title: 'Deputy Headteacher', image_url: '', qualification: '', years_in_field: '', age: '', bio: '' },
+        secretary: { name: '', title: 'Secretary', image_url: '', qualification: '', years_in_field: '', age: '', bio: '' },
+        hods: []
+      });
+    }
+
+    function saveRole(role) {
+      const personnel = getPersonnel();
+      const obj = {};
+      ['name', 'title', 'qualification', 'years_in_field', 'age', 'bio'].forEach(f => {
+        obj[f] = document.getElementById(`${role}_${f}`).value;
+      });
+      const file = document.getElementById(`${role}_imgFile`).files[0];
+      const url = document.getElementById(`${role}_imgUrl`).value;
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          obj.image_url = e.target.result;
+          personnel[role] = obj;
+          setD('about_personnel', personnel);
+          alert(`${role} saved!`);
+          renderAll();
+        };
+        reader.readAsDataURL(file);
+      } else {
+        obj.image_url = url || '';
+        personnel[role] = obj;
+        setD('about_personnel', personnel);
+        alert(`${role} saved!`);
+        renderAll();
+      }
+    }
+
+    function renderRoleForm(role, label) {
+      const personnel = getPersonnel();
+      const p = personnel[role] || {};
+      let html = '';
+      html += `<div class="form-row">
+        <div class="form-group"><label>Name</label><input id="${role}_name" value="${p.name || ''}"></div>
+        <div class="form-group"><label>Title</label><input id="${role}_title" value="${p.title || label}"></div>
+      </div>`;
+      html += `<div class="form-row">
+        <div class="form-group"><label>Qualification</label><input id="${role}_qualification" value="${p.qualification || ''}"></div>
+        <div class="form-group"><label>Years in Field</label><input id="${role}_years_in_field" value="${p.years_in_field || ''}"></div>
+        <div class="form-group"><label>Age</label><input id="${role}_age" value="${p.age || ''}"></div>
+      </div>`;
+      html += `<div class="form-group"><label>Bio</label><textarea id="${role}_bio">${p.bio || ''}</textarea></div>`;
+      html += `<div class="form-row">
+        <div class="form-group"><label>Image URL</label><input id="${role}_imgUrl" value="${p.image_url || ''}"></div>
+        <div class="form-group"><label>Or upload</label><input type="file" id="${role}_imgFile" accept="image/*"></div>
+      </div>`;
+      html += `<button onclick="saveRole('${role}')">💾 Save ${label}</button>`;
+      return html;
+    }
+
+    function renderAll() {
+      document.getElementById('headteacherForm').innerHTML = renderRoleForm('headteacher', 'Headteacher');
+      document.getElementById('deputyForm').innerHTML = renderRoleForm('deputy_headteacher', 'Deputy Headteacher');
+      document.getElementById('secretaryForm').innerHTML = renderRoleForm('secretary', 'Secretary');
+      renderHods();
+      loadStats();
+    }
+
+    // ========== HODS ==========
+    function renderHods() {
+      const personnel = getPersonnel();
+      const container = document.getElementById('hodsList');
+      let html = '';
+      if (!personnel.hods.length) html = '<p style="color:#999;">No HODs added yet.</p>';
+      else {
+        personnel.hods.forEach(hod => {
+          html += `
+            <div class="list-item" id="hod-item-${hod.id}">
+              <img src="${hod.image_url || 'https://via.placeholder.com/60'}" onerror="this.src='https://via.placeholder.com/60'">
+              <div class="info"><strong>${hod.name}</strong> – ${hod.department}</div>
+              <div class="btn-row">
+                <button onclick="editHod(${hod.id})">Edit</button>
+                <button class="danger" onclick="deleteHod(${hod.id})">Delete</button>
+              </div>
+            </div>
+            <div class="edit-form" id="edit-hod-${hod.id}">
+              <div class="form-row">
+                <div class="form-group"><label>Name</label><input id="hod_name_${hod.id}" value="${hod.name}"></div>
+                <div class="form-group"><label>Department</label><input id="hod_dept_${hod.id}" value="${hod.department}"></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>Qualification</label><input id="hod_qual_${hod.id}" value="${hod.qualification || ''}"></div>
+                <div class="form-group"><label>Years in Field</label><input id="hod_years_${hod.id}" value="${hod.years_in_field || ''}"></div>
+                <div class="form-group"><label>Age</label><input id="hod_age_${hod.id}" value="${hod.age || ''}"></div>
+              </div>
+              <div class="form-group"><label>Bio</label><textarea id="hod_bio_${hod.id}">${hod.bio || ''}</textarea></div>
+              <div class="form-row">
+                <div class="form-group"><label>Image URL</label><input id="hod_imgUrl_${hod.id}" value="${hod.image_url || ''}"></div>
+                <div class="form-group"><label>Or upload</label><input type="file" id="hod_imgFile_${hod.id}"></div>
+              </div>
+              <button onclick="saveHod(${hod.id})">Save</button>
+              <button class="secondary" onclick="cancelEditHod(${hod.id})">Cancel</button>
+            </div>`;
+        });
+      }
+      container.innerHTML = html;
+    }
+
+    window.addHod = function () {
+      const name = prompt('HOD Name:'); if (!name) return;
+      const dept = prompt('Department:'); if (!dept) return;
+      const personnel = getPersonnel();
+      personnel.hods.push({ id: Date.now(), name, department: dept, image_url: '', qualification: '', years_in_field: '', age: '', bio: '' });
+      setD('about_personnel', personnel);
+      renderAll();
+    };
+
+    window.editHod = function (id) {
+      document.getElementById(`hod-item-${id}`).style.display = 'none';
+      document.getElementById(`edit-hod-${id}`).style.display = 'block';
+    };
+
+    window.cancelEditHod = function (id) {
+      document.getElementById(`hod-item-${id}`).style.display = 'flex';
+      document.getElementById(`edit-hod-${id}`).style.display = 'none';
+    };
+
+    window.saveHod = function (id) {
+      const personnel = getPersonnel();
+      const hod = personnel.hods.find(h => h.id === id);
+      if (!hod) return;
+      hod.name = document.getElementById(`hod_name_${id}`).value;
+      hod.department = document.getElementById(`hod_dept_${id}`).value;
+      hod.qualification = document.getElementById(`hod_qual_${id}`).value;
+      hod.years_in_field = document.getElementById(`hod_years_${id}`).value;
+      hod.age = document.getElementById(`hod_age_${id}`).value;
+      hod.bio = document.getElementById(`hod_bio_${id}`).value;
+      const file = document.getElementById(`hod_imgFile_${id}`).files[0];
+      const url = document.getElementById(`hod_imgUrl_${id}`).value;
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          hod.image_url = e.target.result;
+          setD('about_personnel', personnel);
+          renderAll();
+        };
+        reader.readAsDataURL(file);
+      } else {
+        hod.image_url = url || '';
+        setD('about_personnel', personnel);
+        renderAll();
+      }
+    };
+
+    window.deleteHod = function (id) {
+      if (!confirm('Delete this HOD?')) return;
+      const personnel = getPersonnel();
+      personnel.hods = personnel.hods.filter(h => h.id !== id);
+      setD('about_personnel', personnel);
+      renderAll();
+    };
+
+    // ========== STATS & MOTTO ==========
+    function loadStats() {
+      const stats = getD('school_stats', { total_pupils: 1250, total_teachers: 65, pass_rate: 94 });
+      const motto = getD('school_motto', 'Think · Change · Do');
+      document.getElementById('totalPupils').value = stats.total_pupils;
+      document.getElementById('totalTeachers').value = stats.total_teachers;
+      document.getElementById('passRate').value = stats.pass_rate;
+      document.getElementById('motto').value = motto;
+    }
+
+    window.saveStats = function () {
+      setD('school_stats', {
+        total_pupils: parseInt(document.getElementById('totalPupils').value) || 0,
+        total_teachers: parseInt(document.getElementById('totalTeachers').value) || 0,
+        pass_rate: parseFloat(document.getElementById('passRate').value) || 0
+      });
+      setD('school_motto', document.getElementById('motto').value.trim());
+      alert('Stats & Motto saved!');
+    };
+
+    renderAll();
+  </script>
+</body>
+
+</html>

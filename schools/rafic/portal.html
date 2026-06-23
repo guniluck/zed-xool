@@ -1,0 +1,2979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rafiki Secondary & Primary School</title>
+<script>
+  // ============================================================
+  // OFFLINE / localStorage MODE — no backend required.
+  // All data is stored in the browser's localStorage.
+  // ============================================================
+  window.MMSS_OFFLINE = true;
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #7C3AED;       /* purple as primary */
+    --red-dark: #5B21B6;
+    --red-light: #8B5CF6;
+    --sky: #EA580C;       /* orange as accent */
+    --sky-dark: #9A3412;
+    --sky-light: #FB923C;
+    --sky-pale: #FFF7ED;
+    --white: #FFFFFF;
+    --off-white: #F8FAFC;
+    --gray: #64748B;
+    --gray-light: #E2E8F0;
+    --gray-dark: #1E293B;
+    --gold: #F59E0B;
+    --green: #10B981;
+    --purple: #8B5CF6;
+    --shadow: 0 4px 24px rgba(0,0,0,0.10);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.16);
+    --radius: 16px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: var(--off-white); color: var(--gray-dark); min-height: 100vh; }
+
+  /* ===== LANDING PAGE ===== */
+  #landing { display: flex; flex-direction: column; min-height: 100vh; }
+  .land-header {
+    background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 40%, var(--sky-dark) 100%);
+    color: white; padding: 18px 40px; display: flex; align-items: center; gap: 18px;
+    box-shadow: var(--shadow);
+  }
+  .school-crest {
+    width: 64px; height: 64px; background: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .school-title h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; letter-spacing: 0.5px; }
+  .school-title p { font-size: 0.85rem; opacity: 0.85; margin-top: 2px; }
+
+  .land-hero {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: linear-gradient(160deg, #fff 0%, var(--sky-pale) 60%, #fce4e4 100%);
+    padding: 50px 20px;
+  }
+  .land-hero h2 { font-family: 'Playfair Display', serif; font-size: 2.4rem; text-align: center; color: var(--red-dark); margin-bottom: 10px; }
+  .land-hero p { color: var(--gray); font-size: 1.05rem; text-align: center; max-width: 520px; margin-bottom: 40px; }
+
+  .portal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 22px; max-width: 900px; width: 100%; }
+  .portal-card {
+    background: white; border-radius: var(--radius); padding: 32px 20px; text-align: center;
+    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: var(--shadow); border-top: 5px solid var(--sky);
+    position: relative; overflow: hidden;
+  }
+  .portal-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+  .portal-card.red-top { border-top-color: var(--red); }
+  .portal-card.gold-top { border-top-color: var(--gold); }
+  .portal-card.green-top { border-top-color: var(--green); }
+  .portal-card .p-icon { font-size: 3rem; margin-bottom: 12px; }
+  .portal-card h3 { font-size: 1.2rem; font-weight: 800; color: var(--gray-dark); margin-bottom: 6px; }
+  .portal-card p { font-size: 0.82rem; color: var(--gray); }
+  .portal-card .p-action {
+    margin-top: 16px; display: inline-block; padding: 8px 22px; border-radius: 50px;
+    background: var(--sky); color: white; font-weight: 700; font-size: 0.85rem; transition: background 0.2s;
+  }
+  .portal-card.red-top .p-action { background: var(--red); }
+  .portal-card.gold-top .p-action { background: var(--gold); }
+  .portal-card.green-top .p-action { background: var(--green); }
+
+  /* ===== AUTH MODAL ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    z-index: 1000; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: white; border-radius: var(--radius); padding: 36px; max-width: 500px; width: 100%;
+    box-shadow: var(--shadow-lg); position: relative; max-height: 90vh; overflow-y: auto;
+  }
+  .modal-close {
+    position: absolute; top: 14px; right: 18px; font-size: 1.4rem; cursor: pointer;
+    color: var(--gray); background: none; border: none;
+  }
+  .modal h2 { font-family: 'Playfair Display', serif; color: var(--red-dark); margin-bottom: 6px; }
+  .modal .sub { color: var(--gray); font-size: 0.88rem; margin-bottom: 22px; }
+  .tab-row { display: flex; gap: 0; margin-bottom: 24px; border-radius: var(--radius-sm); overflow: hidden; border: 2px solid var(--gray-light); }
+  .tab-btn {
+    flex: 1; padding: 10px; border: none; background: white; cursor: pointer; font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 0.9rem; color: var(--gray); transition: all 0.2s;
+  }
+  .tab-btn.active { background: var(--sky); color: white; }
+  .tab-btn.red-tab.active { background: var(--red); }
+
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--gray-dark); margin-bottom: 5px; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 10px 14px; border: 2px solid var(--gray-light); border-radius: var(--radius-sm);
+    font-family: 'Nunito', sans-serif; font-size: 0.9rem; color: var(--gray-dark);
+    transition: border-color 0.2s; background: white;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--sky);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .btn {
+    width: 100%; padding: 12px; border: none; border-radius: var(--radius-sm); cursor: pointer;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; transition: all 0.2s;
+  }
+  .btn-sky { background: var(--sky); color: white; }
+  .btn-sky:hover { background: var(--sky-dark); }
+  .btn-red { background: var(--red); color: white; }
+  .btn-red:hover { background: var(--red-dark); }
+  .btn-green { background: var(--green); color: white; }
+  .btn-gold { background: var(--gold); color: white; }
+  .btn-outline { background: transparent; border: 2px solid var(--sky); color: var(--sky); }
+  .btn-sm { width: auto; padding: 7px 16px; font-size: 0.82rem; }
+  .btn-xs { width: auto; padding: 4px 11px; font-size: 0.76rem; border-radius: 6px; }
+
+  /* ===== DASHBOARD SHELL ===== */
+  #app { display: none; min-height: 100vh; flex-direction: column; }
+  #app.active { display: flex; }
+  .app-header {
+    background: linear-gradient(90deg, var(--red-dark) 0%, var(--red) 50%, var(--sky-dark) 100%);
+    color: white; padding: 0 28px; display: flex; align-items: center; height: 60px;
+    box-shadow: var(--shadow); position: sticky; top: 0; z-index: 500;
+  }
+  .app-header .logo { font-family: 'Playfair Display', serif; font-size: 1.1rem; flex: 1; }
+  .app-header .user-badge {
+    background: rgba(255,255,255,0.18); border-radius: 50px; padding: 5px 14px;
+    font-size: 0.82rem; font-weight: 700; margin-right: 12px;
+  }
+  .app-header button { background: rgba(255,255,255,0.18); border: none; color: white; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.82rem; font-weight: 700; }
+  .app-header button:hover { background: rgba(255,255,255,0.3); }
+
+  .app-body { display: flex; flex: 1; }
+  .sidebar {
+    width: 240px; background: white; border-right: 2px solid var(--gray-light);
+    padding: 20px 0; flex-shrink: 0; position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto;
+  }
+  .sidebar-section { padding: 8px 20px 4px; font-size: 0.7rem; font-weight: 800; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 11px 22px; cursor: pointer;
+    font-weight: 600; font-size: 0.9rem; color: var(--gray-dark); transition: all 0.15s;
+    border-left: 3px solid transparent;
+  }
+  .nav-item:hover { background: var(--sky-pale); color: var(--sky-dark); border-left-color: var(--sky); }
+  .nav-item.active { background: var(--sky-pale); color: var(--sky-dark); border-left-color: var(--sky); font-weight: 800; }
+  .nav-item .icon { font-size: 1.1rem; width: 22px; text-align: center; }
+
+  .main-content { flex: 1; padding: 28px; overflow-y: auto; max-height: calc(100vh - 60px); }
+
+  /* ===== CARDS & PANELS ===== */
+  .page-title { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: var(--red-dark); margin-bottom: 4px; }
+  .page-sub { color: var(--gray); font-size: 0.9rem; margin-bottom: 24px; }
+  .card { background: white; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .card-title { font-weight: 800; font-size: 1rem; color: var(--gray-dark); }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .stat-card {
+    background: white; border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
+    border-left: 4px solid var(--sky); text-align: center;
+  }
+  .stat-card.red { border-left-color: var(--red); }
+  .stat-card.gold { border-left-color: var(--gold); }
+  .stat-card.green { border-left-color: var(--green); }
+  .stat-card .s-num { font-size: 2rem; font-weight: 800; color: var(--gray-dark); }
+  .stat-card .s-label { font-size: 0.78rem; color: var(--gray); margin-top: 2px; }
+
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; }
+  .badge-sky { background: var(--sky-pale); color: var(--sky-dark); }
+  .badge-red { background: #fde8e8; color: var(--red-dark); }
+  .badge-green { background: #d1fae5; color: #065f46; }
+  .badge-gold { background: #fef3c7; color: #92400e; }
+  .badge-gray { background: var(--gray-light); color: var(--gray); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  th { background: var(--sky-pale); color: var(--sky-dark); padding: 10px 14px; text-align: left; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--gray-light); vertical-align: middle; }
+  tr:hover td { background: var(--sky-pale); }
+
+  /* ===== WORK/ASSIGNMENT FORMS ===== */
+  .work-card {
+    background: white; border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow);
+    margin-bottom: 16px; border-left: 4px solid var(--sky);
+  }
+  .work-card.assignment { border-left-color: var(--sky); }
+  .work-card.test { border-left-color: var(--gold); }
+  .work-card.exam { border-left-color: var(--red); }
+  .work-card .w-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+  .work-card .w-title { font-weight: 800; font-size: 1rem; color: var(--gray-dark); margin-bottom: 6px; }
+  .work-card .w-body { color: var(--gray-dark); font-size: 0.9rem; line-height: 1.6; }
+
+  .mc-option { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
+  .mc-option input[type=radio], .mc-option input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--sky); }
+
+  /* ===== LIVE BOARD ===== */
+  .board-container { background: #1a1a2e; border-radius: var(--radius); padding: 0; overflow: hidden; min-height: 400px; display: flex; flex-direction: column; }
+  .board-toolbar { background: #16213e; padding: 10px 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .board-btn { background: rgba(255,255,255,0.1); border: none; color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 700; transition: background 0.2s; }
+  .board-btn:hover { background: rgba(255,255,255,0.2); }
+  .board-btn.active-color { box-shadow: 0 0 0 2px white; }
+  #liveBoard { flex: 1; min-height: 360px; background: white; cursor: crosshair; display: block; width: 100%; }
+  .color-swatch { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+  .color-swatch.active { border-color: white; }
+
+  /* ===== DRAGGABLE TOOLS ===== */
+  .tools-fab {
+    position: fixed; bottom: 28px; right: 28px; z-index: 900;
+    background: linear-gradient(135deg, var(--red), var(--sky-dark));
+    color: white; width: 58px; height: 58px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer;
+    box-shadow: var(--shadow-lg); border: none; transition: transform 0.2s;
+  }
+  .tools-fab:hover { transform: scale(1.1); }
+  .tools-menu {
+    position: fixed; bottom: 96px; right: 28px; z-index: 900;
+    background: white; border-radius: var(--radius); box-shadow: var(--shadow-lg);
+    padding: 10px; display: none; flex-direction: column; gap: 6px; width: 180px;
+  }
+  .tools-menu.open { display: flex; }
+  .tool-item { padding: 10px 14px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; gap: 10px; transition: background 0.15s; }
+  .tool-item:hover { background: var(--sky-pale); color: var(--sky-dark); }
+
+  .tool-window {
+    position: fixed; z-index: 950; background: white; border-radius: var(--radius);
+    box-shadow: var(--shadow-lg); display: none; flex-direction: column;
+    resize: both; overflow: hidden; min-width: 280px; min-height: 300px;
+  }
+  .tool-window.open { display: flex; }
+  .tool-win-header {
+    background: linear-gradient(90deg, var(--red), var(--sky-dark));
+    color: white; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;
+    cursor: move; user-select: none;
+  }
+  .tool-win-header span { font-weight: 800; font-size: 0.9rem; }
+  .tool-win-close { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; }
+  .tool-win-body { flex: 1; overflow: auto; padding: 16px; }
+
+  /* ===== CALCULATOR ===== */
+  .calc-display { background: var(--gray-dark); color: white; padding: 14px; border-radius: var(--radius-sm); text-align: right; font-size: 1.6rem; font-weight: 700; margin-bottom: 10px; word-break: break-all; min-height: 54px; }
+  .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .calc-btn { padding: 12px; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 1rem; font-weight: 700; transition: transform 0.1s; font-family: 'Nunito', sans-serif; }
+  .calc-btn:active { transform: scale(0.94); }
+  .calc-btn.op { background: var(--sky); color: white; }
+  .calc-btn.eq { background: var(--red); color: white; }
+  .calc-btn.num { background: var(--gray-light); color: var(--gray-dark); }
+  .calc-btn.clr { background: var(--gold); color: white; }
+  .calc-btn.wide { grid-column: span 2; }
+
+  /* ===== PERIODIC TABLE ===== */
+  .pt-grid { display: grid; grid-template-columns: repeat(18, 1fr); gap: 2px; font-size: 0.55rem; }
+  .elem {
+    background: var(--sky-pale); border-radius: 4px; padding: 3px 2px; text-align: center; cursor: pointer;
+    border: 1px solid var(--gray-light); transition: transform 0.15s;
+  }
+  .elem:hover { transform: scale(1.3); z-index: 10; background: var(--sky); color: white; }
+  .elem .sym { font-weight: 800; font-size: 0.8rem; }
+  .elem .num { font-size: 0.5rem; color: var(--gray); }
+  .elem.alkali { background: #fef3c7; } .elem.alkali-earth { background: #fde8e8; }
+  .elem.transition { background: #e0f2fe; } .elem.nonmetal { background: #d1fae5; }
+  .elem.noble { background: #ede9fe; } .elem.halogen { background: #fce7f3; }
+
+  /* ===== PAYMENT ===== */
+  .pay-child-card {
+    background: white; border-radius: var(--radius-sm); padding: 16px; border: 2px solid var(--gray-light);
+    margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  }
+  .pay-child-card.paid { border-color: var(--green); background: #f0fdf4; }
+  .pay-child-card .child-info { font-weight: 700; font-size: 0.9rem; }
+  .pay-child-card .child-meta { font-size: 0.78rem; color: var(--gray); margin-top: 2px; }
+  .pay-method-select { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .pay-method-btn {
+    flex: 1; min-width: 120px; padding: 14px 10px; border-radius: var(--radius-sm); border: 2px solid var(--gray-light);
+    background: white; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.88rem;
+    text-align: center; transition: all 0.2s;
+  }
+  .pay-method-btn:hover, .pay-method-btn.selected { border-color: var(--sky); background: var(--sky-pale); color: var(--sky-dark); }
+  .pay-method-btn .pm-icon { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+  .pay-summary-bar {
+    background: linear-gradient(135deg, var(--sky-dark), var(--green)); color: white;
+    border-radius: var(--radius-sm); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
+  }
+  .pay-summary-bar .ps-amount { font-size: 1.6rem; font-weight: 900; font-family: 'Playfair Display', serif; }
+  .pay-summary-bar .ps-label { font-size: 0.82rem; opacity: 0.85; }
+  .admin-pay-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--gray-light); }
+  .admin-pay-row:last-child { border-bottom: none; }
+  .class-checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; margin-top: 8px; }
+  .class-checkbox-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border: 2px solid var(--gray-light); border-radius: var(--radius-sm); cursor: pointer; transition: all 0.15s; }
+  .class-checkbox-item:has(input:checked) { border-color: var(--sky); background: var(--sky-pale); }
+  .class-checkbox-item input { accent-color: var(--sky); width: 16px; height: 16px; }
+  .class-checkbox-item label { font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+
+  /* ===== TTS ===== */
+  .tts-area { width: 100%; border: 2px solid var(--gray-light); border-radius: var(--radius-sm); padding: 12px; min-height: 80px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; resize: vertical; }
+  .tts-controls { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+  .tts-slider { width: 100%; }
+
+  /* ===== TABLE BUILDER ===== */
+  .table-builder-grid { border-collapse: collapse; width: 100%; }
+  .table-builder-grid td { border: 2px solid var(--sky); padding: 0; }
+  .table-builder-grid td input { width: 100%; border: none; padding: 8px; font-family: 'Nunito', sans-serif; font-size: 0.88rem; background: transparent; outline: none; }
+  .table-builder-grid th { background: var(--sky-pale); border: 2px solid var(--sky); }
+  .table-builder-grid th input { width: 100%; border: none; padding: 8px; font-family: 'Nunito', sans-serif; font-size: 0.88rem; font-weight: 800; background: transparent; outline: none; color: var(--sky-dark); }
+
+  /* ===== MESSAGES ===== */
+  .msg-thread { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; padding: 10px 0; }
+  .msg-bubble { max-width: 75%; padding: 10px 14px; border-radius: 16px; font-size: 0.88rem; line-height: 1.5; }
+  .msg-bubble.sent { background: var(--sky); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .msg-bubble.recv { background: var(--gray-light); color: var(--gray-dark); align-self: flex-start; border-bottom-left-radius: 4px; }
+  .msg-meta { font-size: 0.7rem; opacity: 0.65; margin-top: 3px; }
+  .msg-input-row { display: flex; gap: 10px; margin-top: 14px; }
+  .msg-input-row input { flex: 1; padding: 10px 14px; border: 2px solid var(--gray-light); border-radius: 50px; font-family: 'Nunito', sans-serif; font-size: 0.88rem; }
+  .msg-input-row input:focus { outline: none; border-color: var(--sky); }
+
+  /* ===== REGISTER ===== */
+  .register-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+  .reg-student { background: white; border-radius: var(--radius-sm); padding: 12px; box-shadow: var(--shadow); text-align: center; border-top: 3px solid var(--sky); }
+  .reg-student .s-name { font-weight: 700; font-size: 0.88rem; margin-bottom: 6px; }
+  .reg-student .s-id { font-size: 0.72rem; color: var(--gray); margin-bottom: 8px; }
+  .attendance-btn { display: flex; gap: 6px; justify-content: center; }
+
+  /* ===== RESULTS ===== */
+  .result-bar-wrap { margin: 4px 0; }
+  .result-bar-bg { background: var(--gray-light); border-radius: 50px; height: 10px; }
+  .result-bar { height: 10px; border-radius: 50px; background: linear-gradient(90deg, var(--sky), var(--green)); }
+
+  /* ===== FILE UPLOAD ===== */
+  .file-drop {
+    border: 2px dashed var(--sky); border-radius: var(--radius); padding: 28px;
+    text-align: center; cursor: pointer; transition: background 0.2s; color: var(--gray);
+  }
+  .file-drop:hover { background: var(--sky-pale); }
+  .file-drop .icon { font-size: 2rem; margin-bottom: 8px; display: block; }
+
+  /* ===== NOTIFICATION ===== */
+  .notif {
+    position: fixed; top: 72px; right: 20px; z-index: 2000; background: var(--green);
+    color: white; padding: 12px 20px; border-radius: var(--radius-sm); font-weight: 700;
+    font-size: 0.9rem; box-shadow: var(--shadow-lg); display: none;
+  }
+  .notif.show { display: block; animation: slideIn 0.3s ease; }
+  .notif.error { background: var(--red); }
+  @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .app-header .logo { font-size: 0.9rem; }
+    .land-hero h2 { font-size: 1.7rem; }
+    .portal-grid { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .main-content { padding: 16px; }
+  }
+
+  /* ===== HIDDEN HELPER ===== */
+  .hidden { display: none !important; }
+  .section-page { display: none; }
+  .section-page.active { display: block; }
+  .flex-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .mt-10 { margin-top: 10px; }
+  .mb-10 { margin-bottom: 10px; }
+
+  /* ===== REPORT CARD ===== */
+  .report-card { background: white; border: 3px solid var(--red); border-radius: var(--radius); padding: 28px; max-width: 600px; }
+  .report-header { text-align: center; border-bottom: 2px solid var(--red); padding-bottom: 16px; margin-bottom: 16px; }
+  .report-header h2 { font-family: 'Playfair Display', serif; color: var(--red-dark); }
+  .report-table { width: 100%; border-collapse: collapse; }
+  .report-table th, .report-table td { border: 1px solid var(--gray-light); padding: 8px 12px; font-size: 0.88rem; }
+  .report-table th { background: var(--sky-pale); color: var(--sky-dark); }
+
+  /* Welcome banner */
+  .welcome-banner {
+    background: linear-gradient(135deg, var(--red-dark), var(--sky-dark));
+    color: white; border-radius: var(--radius); padding: 24px 28px; margin-bottom: 24px;
+  }
+  .welcome-banner h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; }
+  .welcome-banner p { opacity: 0.85; font-size: 0.9rem; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif"></div>
+
+<!-- ===== LANDING PAGE ===== -->
+<div id="landing">
+  <header class="land-header">
+    <div class="school-crest">🏫</div>
+    <div class="school-title">
+      <h1>Rafiki Secondary & Primary School</h1>
+      <p>LEARN · GROW · SUCCEED</p>
+    </div>
+  </header>
+  <div class="land-hero">
+    <h2>Welcome to Our School Portal</h2>
+    <p>Rafiki Secondary & Primary School — a nurturing community where every learner thrives from primary through secondary level.</p>
+    <div class="portal-grid">
+      <div class="portal-card gold-top" onclick="openAuthModal('admin')">
+        <div class="p-icon">🏛️</div>
+        <h3>Admin Portal</h3>
+        <p>School administration and management</p>
+        <span class="p-action btn-gold">Enter</span>
+      </div>
+      <div class="portal-card" onclick="openAuthModal('pupil')">
+        <div class="p-icon">🎓</div>
+        <h3>Secondary Pupil</h3>
+        <p>Secondary students — classes, work & learning</p>
+        <span class="p-action">Enter</span>
+      </div>
+      <div class="portal-card" style="border-top-color:#EA580C;" onclick="openAuthModal('primary')">
+        <div class="p-icon">🌟</div>
+        <h3>Primary Pupil</h3>
+        <p>Primary students — lessons, activities & progress</p>
+        <span class="p-action" style="background:#EA580C;">Enter</span>
+      </div>
+      <div class="portal-card red-top" onclick="openAuthModal('teacher')">
+        <div class="p-icon">📚</div>
+        <h3>Teacher Portal</h3>
+        <p>Educators manage classes, send work and mark</p>
+        <span class="p-action btn-red">Enter</span>
+      </div>
+      <div class="portal-card green-top" onclick="openAuthModal('parent')">
+        <div class="p-icon">👨‍👩‍👧</div>
+        <h3>Parent Portal</h3>
+        <p>Track your child's progress and communicate</p>
+        <span class="p-action btn-green">Enter</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AUTH MODAL ===== -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+    <h2 id="authTitle">Sign In</h2>
+    <p class="sub" id="authSub">Access your portal</p>
+    <div class="tab-row" id="authTabs">
+      <button class="tab-btn active" onclick="switchAuthTab('login')">Login</button>
+      <button class="tab-btn" onclick="switchAuthTab('register')" id="regTabBtn">Register</button>
+    </div>
+    <div id="loginForm"></div>
+    <div id="registerForm" class="hidden"></div>
+  </div>
+</div>
+
+<!-- ===== APP SHELL ===== -->
+<div id="app">
+  <header class="app-header">
+    <div class="logo">🏫 Rafiki Sec & Primary</div>
+    <span class="user-badge" id="headerBadge"></span>
+    <button onclick="logout()">Logout</button>
+  </header>
+  <div class="app-body">
+    <nav class="sidebar" id="sidebar"></nav>
+    <main class="main-content" id="mainContent"></main>
+  </div>
+</div>
+
+<!-- ===== TOOL WINDOWS ===== -->
+<div class="tool-window" id="calcWin" style="bottom:100px;right:220px;width:320px;height:560px;">
+  <div class="tool-win-header" onmousedown="dragStart(event,'calcWin')">
+    <span>🔬 Scientific Calculator</span>
+    <button class="tool-win-close" onclick="closeToolWin('calcWin')">✕</button>
+  </div>
+  <div class="tool-win-body">
+    <div id="calcGrid"></div>
+  </div>
+</div>
+
+<div class="tool-window" id="ptWin" style="bottom:100px;right:220px;width:700px;height:420px;">
+  <div class="tool-win-header" onmousedown="dragStart(event,'ptWin')">
+    <span>⚗️ Periodic Table</span>
+    <button class="tool-win-close" onclick="closeToolWin('ptWin')">✕</button>
+  </div>
+  <div class="tool-win-body" id="ptBody"></div>
+</div>
+
+<div class="tool-window" id="ttsWin" style="bottom:100px;right:220px;width:320px;height:300px;">
+  <div class="tool-win-header" onmousedown="dragStart(event,'ttsWin')">
+    <span>🔊 Talking Mercy (TTS)</span>
+    <button class="tool-win-close" onclick="closeToolWin('ttsWin')">✕</button>
+  </div>
+  <div class="tool-win-body">
+    <textarea class="tts-area" id="ttsText" placeholder="Type text here to be spoken..."></textarea>
+    <div style="margin-top:10px;">
+      <label style="font-size:0.78rem;font-weight:700;">Speed</label>
+      <input type="range" class="tts-slider" id="ttsRate" min="0.5" max="2" step="0.1" value="1">
+    </div>
+    <div style="margin-top:6px;">
+      <label style="font-size:0.78rem;font-weight:700;">Pitch</label>
+      <input type="range" class="tts-slider" id="ttsPitch" min="0.5" max="2" step="0.1" value="1">
+    </div>
+    <div class="tts-controls">
+      <button class="btn btn-sky btn-sm" onclick="ttsSpeakStart()">▶ Speak</button>
+      <button class="btn btn-outline btn-sm" onclick="ttsPause()">⏸ Pause</button>
+      <button class="btn btn-red btn-sm" onclick="ttsStop()">⏹ Stop</button>
+    </div>
+  </div>
+</div>
+
+<div class="tool-window" id="tableWin" style="bottom:100px;right:220px;width:500px;height:400px;">
+  <div class="tool-win-header" onmousedown="dragStart(event,'tableWin')">
+    <span>📊 Table Builder</span>
+    <button class="tool-win-close" onclick="closeToolWin('tableWin')">✕</button>
+  </div>
+  <div class="tool-win-body">
+    <div class="form-group">
+      <label>Table Title</label>
+      <input type="text" id="tableTitle" placeholder="e.g. Income Statement">
+    </div>
+    <div class="flex-row mb-10">
+      <label style="font-size:0.82rem;font-weight:700;">Rows:</label>
+      <input type="number" id="tableRows" value="4" min="1" max="20" style="width:60px;padding:5px;border:2px solid var(--gray-light);border-radius:6px;">
+      <label style="font-size:0.82rem;font-weight:700;">Cols:</label>
+      <input type="number" id="tableCols" value="3" min="1" max="10" style="width:60px;padding:5px;border:2px solid var(--gray-light);border-radius:6px;">
+      <button class="btn btn-sky btn-sm" onclick="buildTable()">Build</button>
+    </div>
+    <div id="tableBuilderArea" style="overflow:auto;max-height:200px;"></div>
+    <button class="btn btn-green btn-sm mt-10" onclick="copyTableToSubmission()">✓ Add to Submission</button>
+  </div>
+</div>
+
+<!-- FAB Tools -->
+<button class="tools-fab hidden" id="toolsFab" onclick="toggleToolsMenu()">🛠️</button>
+<div class="tools-menu" id="toolsMenu">
+  <div class="tool-item" onclick="openToolWin('calcWin')">🔬 Scientific Calc</div>
+  <div class="tool-item" onclick="openToolWin('ptWin')">⚗️ Periodic Table</div>
+  <div class="tool-item" onclick="openToolWin('ttsWin')">🔊 Talking Mercy</div>
+  <div class="tool-item" onclick="openToolWin('tableWin')">📊 Table Builder</div>
+</div>
+
+<script>
+// ============================================================
+// LOCALSTORAGE DATA STORE
+// ============================================================
+const LS_PREFIX = 'rafiki_'; // Rafiki Secondary & Primary
+
+const LSStore = {
+  get(key) {
+    try { return JSON.parse(localStorage.getItem(LS_PREFIX + key) || 'null'); } catch { return null; }
+  },
+  set(key, val) {
+    try { localStorage.setItem(LS_PREFIX + key, JSON.stringify(val)); } catch(e) {}
+  },
+  getArr(key) { return this.get(key) || []; },
+  pushItem(key, item) {
+    const arr = this.getArr(key);
+    arr.push(item);
+    this.set(key, arr);
+    return item;
+  },
+  updateItem(key, id, patch) {
+    const arr = this.getArr(key);
+    const idx = arr.findIndex(x => x.id === id);
+    if (idx !== -1) { arr[idx] = {...arr[idx], ...patch}; this.set(key, arr); return arr[idx]; }
+    return null;
+  },
+  removeItem(key, id) {
+    const arr = this.getArr(key).filter(x => x.id !== id);
+    this.set(key, arr);
+  },
+};
+
+// ─── Seed the built-in admin account ───────────────────────────────────────
+(function seedAdmin() {
+  const admins = LSStore.getArr('admins');
+  if (!admins.find(a => a.email === 'guni@gmail.com')) {
+    admins.push({ id: 'ADM001', name: 'Guni Admin', email: 'guni@gmail.com', password: 'salome', role: 'admin' });
+    LSStore.set('admins', admins);
+  }
+})();
+
+// ─── ID generators ─────────────────────────────────────────────────────────
+function genId(prefix) {
+  return prefix + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2,5).toUpperCase();
+}
+
+// ─── Fake "api" object backed by localStorage ──────────────────────────────
+const API_BASE = '';
+const UPLOADS_BASE = '';
+
+const api = {
+  // ── AUTH ──
+  async post(path, body) {
+    await new Promise(r => setTimeout(r, 80)); // small fake latency
+
+    // ---------- REGISTER ----------
+    if (path === '/auth/register/pupil') {
+      const pupils = LSStore.getArr('pupils');
+      if (pupils.find(p => p.phone === body.phone)) throw new Error('Phone already registered');
+      const id = genId('STU');
+      const p = { id, fname: body.fname, lname: body.lname, dob: body.dob, gender: body.gender,
+        level: body.level, form_grade: body.formGrade, class: body.class,
+        parent_phone: body.parentPhone, phone: body.phone, password: body.password, role: 'pupil' };
+      LSStore.pushItem('pupils', p);
+      return { message: 'Registered successfully! Please login.' };
+    }
+    if (path === '/auth/register/teacher') {
+      const teachers = LSStore.getArr('teachers');
+      if (teachers.find(t => t.email === body.email)) throw new Error('Email already registered');
+      const id = genId('TCH');
+      const t = { id, fname: body.fname, lname: body.lname, email: body.email, phone: body.phone,
+        subjects: body.subjects, level: body.level, form_grade: body.formGrade, class: body.class,
+        teaching_classes: body.teachingClasses, password: body.password, role: 'teacher' };
+      LSStore.pushItem('teachers', t);
+      return { message: 'Registered successfully! Please login.' };
+    }
+    if (path === '/auth/register/parent') {
+      const parents = LSStore.getArr('parents');
+      if (parents.find(p => p.phone === body.phone)) throw new Error('Phone already registered');
+      const id = genId('PAR');
+      const p = { id, name: `${body.fname} ${body.lname}`, fname: body.fname, lname: body.lname,
+        phone: body.phone, password: body.password, role: 'parent' };
+      LSStore.pushItem('parents', p);
+      return { message: 'Registered successfully! Please login.' };
+    }
+
+    // ---------- LOGIN ----------
+    if (path === '/auth/login') {
+      const { role, identifier, password } = body;
+      let user = null;
+      if (role === 'admin') {
+        user = LSStore.getArr('admins').find(a => a.email === identifier && a.password === password);
+      } else if (role === 'pupil') {
+        // includes primary-level pupils
+        user = LSStore.getArr('pupils').find(p => (p.phone === identifier || p.email === identifier) && p.password === password);
+      } else if (role === 'teacher') {
+        user = LSStore.getArr('teachers').find(t => (t.email === identifier || t.phone === identifier) && t.password === password);
+      } else if (role === 'parent') {
+        user = LSStore.getArr('parents').find(p => p.phone === identifier && p.password === password);
+      }
+      if (!user) throw new Error('Invalid credentials');
+      return { role, user };
+    }
+
+    // ---------- ATTENDANCE ----------
+    if (path === '/attendance/self') {
+      const today = new Date().toISOString().slice(0,10);
+      const arr = LSStore.getArr('attendance');
+      const existing = arr.find(a => a.student_id === body.studentId && a.date === today);
+      if (existing) { LSStore.updateItem('attendance', existing.id, { status: body.status }); }
+      else { LSStore.pushItem('attendance', { id: genId('ATT'), student_id: body.studentId, date: today, status: body.status, marked_by: 'self', marked_at: new Date().toISOString() }); }
+      return { message: 'Attendance recorded!' };
+    }
+    if (path === '/attendance/teacher-mark') {
+      const today = new Date().toISOString().slice(0,10);
+      const arr = LSStore.getArr('attendance');
+      const existing = arr.find(a => a.student_id === body.studentId && a.date === today);
+      if (existing) { LSStore.updateItem('attendance', existing.id, { status: body.status, marked_by: body.teacherId }); }
+      else { LSStore.pushItem('attendance', { id: genId('ATT'), student_id: body.studentId, date: today, status: body.status, marked_by: body.teacherId, marked_at: new Date().toISOString() }); }
+      return { message: 'Attendance updated!' };
+    }
+
+    // ---------- ASSIGNMENTS ----------
+    if (path === '/assignments') {
+      const a = { id: genId('ASN'), teacher_id: body.teacherId, title: body.title, type: body.type,
+        subject: body.subject, description: body.description, total_marks: body.totalMarks,
+        format: body.format, questions: body.questions || [], files: [],
+        teacher_level: body.teacherLevel, teacher_form_grade: body.teacherFormGrade,
+        teacher_class: body.teacherClass, target: body.target,
+        created_at: new Date().toISOString() };
+      LSStore.pushItem('assignments', a);
+      return { message: 'Assignment posted!', assignment: a };
+    }
+
+    // ---------- SUBMISSIONS ----------
+    if (path === '/submissions') {
+      const existing = LSStore.getArr('submissions').find(s => s.assignment_id === body.assignId && s.student_id === body.studentId);
+      if (existing) throw new Error('Already submitted');
+      const s = { id: genId('SUB'), assignment_id: body.assignId, student_id: body.studentId,
+        teacher_id: body.teacherId, answer: body.answer, answers: body.answers || {},
+        mark: null, comment: null, submitted_at: new Date().toISOString(), files: [] };
+      LSStore.pushItem('submissions', s);
+      return { message: 'Submitted!', submission: s };
+    }
+
+    // ---------- MARK ----------
+    if (path.startsWith('/submissions/') && path.endsWith('/mark')) {
+      const id = path.split('/')[2];
+      const subs = LSStore.getArr('submissions');
+      const idx = subs.findIndex(s => s.id === id);
+      if (idx !== -1) { subs[idx].mark = body.mark; subs[idx].comment = body.comment; LSStore.set('submissions', subs); }
+      return { message: 'Marked!' };
+    }
+
+    // ---------- MESSAGES ----------
+    if (path === '/messages') {
+      const m = { id: genId('MSG'), from_id: body.fromId, to_id: body.toId, text: body.text, sent_at: new Date().toISOString() };
+      LSStore.pushItem('messages', m);
+      return { message: 'Sent!' };
+    }
+
+    // ---------- PERIOD LOG ----------
+    if (path === '/period-log') {
+      LSStore.pushItem('periodLog', { id: genId('PLG'), student_id: body.studentId, period: body.period, topic: body.topic, log_date: new Date().toISOString().slice(0,10), logged_at: new Date().toISOString() });
+      return { message: 'Period confirmed!' };
+    }
+
+    // ---------- TEACHING AIDS ----------
+    if (path === '/teaching-aids') {
+      const a = { id: genId('AID'), teacher_id: body.teacherId, title: body.title, description: body.description, files: [], created_at: new Date().toISOString() };
+      LSStore.pushItem('teachingAids', a);
+      return { message: 'Aid posted!', aid: a };
+    }
+
+    // ---------- BOARD STATE ----------
+    if (path === '/board') {
+      LSStore.set('boardState', body.state);
+      return { message: 'Board saved!' };
+    }
+
+    throw new Error(`Unknown POST path: ${path}`);
+  },
+
+  async get(path) {
+    await new Promise(r => setTimeout(r, 30));
+
+    if (path === '/users/pupils') return LSStore.getArr('pupils');
+    if (path === '/users/teachers') return LSStore.getArr('teachers');
+    if (path === '/users/parents') return LSStore.getArr('parents');
+    if (path === '/users/admins') return LSStore.getArr('admins');
+    if (path === '/attendance') return LSStore.getArr('attendance');
+    if (path === '/assignments') return LSStore.getArr('assignments');
+    if (path === '/submissions') return LSStore.getArr('submissions');
+    if (path === '/messages') return LSStore.getArr('messages');
+    if (path === '/teaching-aids') return LSStore.getArr('teachingAids');
+    if (path === '/period-log') return LSStore.getArr('periodLog');
+    if (path === '/board') return { state: LSStore.get('boardState') };
+
+    // by-teacher / by-student filters
+    const m = path.match(/^\/assignments\/by-teacher\/(.+)$/);
+    if (m) return LSStore.getArr('assignments').filter(a => a.teacher_id === m[1]);
+
+    const m2 = path.match(/^\/submissions\/by-teacher\/(.+)$/);
+    if (m2) {
+      const tAssigns = LSStore.getArr('assignments').filter(a => a.teacher_id === m2[1]).map(a => a.id);
+      return LSStore.getArr('submissions').filter(s => tAssigns.includes(s.assignment_id));
+    }
+
+    const m3 = path.match(/^\/submissions\/by-student\/(.+)$/);
+    if (m3) return LSStore.getArr('submissions').filter(s => s.student_id === m3[1]);
+
+    const m4 = path.match(/^\/assignments\/for-student\/(.+)$/);
+    if (m4) {
+      const pupil = LSStore.getArr('pupils').find(p => p.id === m4[1]);
+      if (!pupil) return [];
+      return LSStore.getArr('assignments').filter(a => matchesStudentRaw(a, pupil));
+    }
+
+    const m5 = path.match(/^\/users\/parents\/(.+)\/children$/);
+    if (m5) return LSStore.getArr('pupils').filter(p => p.parent_phone === m5[1]);
+
+    const m6 = path.match(/^\/messages\/inbox\/(.+)$/);
+    if (m6) return LSStore.getArr('messages').filter(msg => msg.to_id === m6[1] || msg.from_id === m6[1]);
+
+    const m7 = path.match(/^\/attendance\/student\/(.+)$/);
+    if (m7) return LSStore.getArr('attendance').filter(a => a.student_id === m7[1]);
+
+    const m8 = path.match(/^\/reports\/report-card\/(.+)$/);
+    if (m8) {
+      const studentId = m8[1];
+      const student = LSStore.getArr('pupils').find(p => p.id === studentId);
+      if (!student) throw new Error('Student not found');
+      const subs = LSStore.getArr('submissions').filter(s => s.student_id === studentId && s.mark !== null && s.mark !== undefined);
+      const assignments = LSStore.getArr('assignments');
+      const results = subs.map(s => {
+        const a = assignments.find(x => x.id === s.assignment_id);
+        if (!a) return null;
+        const total = a.total_marks || 100;
+        const pct = Math.round((s.mark / total) * 100);
+        const grade = pct >= 80 ? 'A' : pct >= 70 ? 'B' : pct >= 60 ? 'C' : pct >= 50 ? 'D' : 'F';
+        return { title: a.title, type: a.type, mark: s.mark, totalMarks: total, percentage: pct, grade, comment: s.comment };
+      }).filter(Boolean);
+      const avg = results.length ? Math.round(results.reduce((s,r) => s + r.percentage, 0) / results.length) : 0;
+      const overallGrade = avg >= 80 ? 'A' : avg >= 70 ? 'B' : avg >= 60 ? 'C' : avg >= 50 ? 'D' : 'F';
+      const remark = avg >= 80 ? 'Excellent' : avg >= 70 ? 'Good' : avg >= 60 ? 'Satisfactory' : avg >= 50 ? 'Needs Improvement' : 'Unsatisfactory';
+      return { student, results, average: avg, overallGrade, remark };
+    }
+
+    const m9 = path.match(/^\/teaching-aids\/by-teacher\/(.+)$/);
+    if (m9) return LSStore.getArr('teachingAids').filter(a => a.teacher_id === m9[1]);
+
+    throw new Error(`Unknown GET path: ${path}`);
+  },
+
+  async patch(path, body) {
+    await new Promise(r => setTimeout(r, 30));
+    const mMark = path.match(/^\/submissions\/(.+)\/mark$/);
+    if (mMark) {
+      const subs = LSStore.getArr('submissions');
+      const idx = subs.findIndex(s => s.id === mMark[1]);
+      if (idx !== -1) { subs[idx].mark = body.mark; subs[idx].comment = body.comment; LSStore.set('submissions', subs); }
+      return { message: 'Marked!' };
+    }
+    throw new Error(`Unknown PATCH path: ${path}`);
+  },
+
+  async put(path, body) { return this.patch(path, body); },
+  async del(path) {
+    await new Promise(r => setTimeout(r, 30));
+    return { message: 'Deleted' };
+  },
+};
+
+// Helper: check if an assignment targets a student (raw DB format)
+function matchesStudentRaw(a, pupil) {
+  if (!a || !pupil) return false;
+  if (a.target === 'all') return true;
+  if (a.teacher_level !== pupil.level) return false;
+  if (a.teacher_form_grade !== pupil.form_grade) return false;
+  if (a.target === 'class' && a.teacher_class !== pupil.class) return false;
+  return true;
+}
+
+// ============================================================
+// FIELD NORMALIZATION
+// Backend returns snake_case columns; the original UI code (kept as-is
+// below) expects the original camelCase field names. We normalize once
+// when data enters the local cache so every render function downstream
+// works completely unmodified.
+// ============================================================
+function normPupil(p) {
+  if (!p) return p;
+  return {
+    id: p.id, fname: p.fname, lname: p.lname, dob: p.dob, gender: p.gender,
+    level: p.level, formGrade: p.form_grade, class: p.class,
+    parentPhone: p.parent_phone, phone: p.phone, role: 'pupil',
+  };
+}
+function normTeacher(t) {
+  if (!t) return t;
+  return {
+    id: t.id, fname: t.fname, lname: t.lname, email: t.email, phone: t.phone,
+    subjects: t.subjects, level: t.level, formGrade: t.form_grade, class: t.class,
+    role: 'teacher',
+  };
+}
+function normParent(p) {
+  if (!p) return p;
+  return {
+    id: p.id, phone: p.phone, name: p.name, linkedStudentId: p.linked_student_id,
+    role: 'parent',
+  };
+}
+function normAdmin(a) {
+  if (!a) return a;
+  return { id: a.id, name: a.name, email: a.email, role: 'admin' };
+}
+function fileUrl(u) {
+  if (!u) return u;
+  return u.startsWith('http') ? u : `${UPLOADS_BASE}${u}`;
+}
+function normAssignment(a) {
+  if (!a) return a;
+  return {
+    id: a.id, title: a.title, type: a.type, subject: a.subject,
+    description: a.description, totalMarks: a.total_marks, format: a.format,
+    questions: a.questions || [],
+    files: (a.files || []).map(f => ({ name: f.name, type: f.type, url: fileUrl(f.url) })),
+    teacherId: a.teacher_id, teacherLevel: a.teacher_level,
+    teacherFormGrade: a.teacher_form_grade, teacherClass: a.teacher_class,
+    target: a.target, date: a.created_at ? new Date(a.created_at).toLocaleDateString() : '',
+  };
+}
+function normSubmission(s) {
+  if (!s) return s;
+  return {
+    id: s.id, assignId: s.assignment_id, studentId: s.student_id, teacherId: s.teacher_id,
+    answer: s.answer, answers: s.answers || {},
+    mark: s.mark === null || s.mark === undefined ? undefined : s.mark,
+    comment: s.comment,
+    submittedAt: s.submitted_at ? new Date(s.submitted_at).toLocaleString() : '',
+    files: (s.files || []).map(f => ({ name: f.name, type: f.type, url: fileUrl(f.url) })),
+  };
+}
+function normAttendance(a) {
+  if (!a) return a;
+  // Backend returns DATE as 'YYYY-MM-DD'; the original UI code compares
+  // dates using JS's `new Date().toDateString()` format (e.g. "Sun Jun 21 2026"),
+  // so we convert here to keep all the unmodified render functions working.
+  let displayDate = a.date;
+  if (a.date && /^\d{4}-\d{2}-\d{2}$/.test(a.date)) {
+    const [y, m, d] = a.date.split('-').map(Number);
+    displayDate = new Date(y, m - 1, d).toDateString();
+  }
+  return {
+    studentId: a.student_id, date: displayDate, status: a.status,
+    markedBy: a.marked_by, time: a.marked_at ? new Date(a.marked_at).toLocaleTimeString() : '',
+  };
+}
+function normPeriodLog(p) {
+  if (!p) return p;
+  return {
+    studentId: p.student_id, period: p.period, topic: p.topic,
+    time: p.logged_at ? new Date(p.logged_at).toLocaleTimeString() : '',
+    date: p.log_date,
+  };
+}
+function normAid(a) {
+  if (!a) return a;
+  return {
+    id: a.id, teacherId: a.teacher_id, title: a.title, desc: a.description,
+    files: (a.files || []).map(f => ({ name: f.name, type: f.type, url: fileUrl(f.url) })),
+    date: a.created_at ? new Date(a.created_at).toLocaleDateString() : '',
+  };
+}
+function normMessage(m) {
+  if (!m) return m;
+  return { from: m.from_id, to: m.to_id, text: m.text, time: m.sent_at ? new Date(m.sent_at).toLocaleTimeString() : '' };
+}
+
+// ============================================================
+// LOCAL CACHE LAYER
+// All the original page-render functions read data synchronously via
+// DB.getArr('key'). We keep that exact synchronous interface, but now
+// the cache is populated by real API calls (see refreshCacheForPage).
+// ============================================================
+const DB = {
+  _cache: {
+    pupils: [], teachers: [], parents: [], admins: [],
+    assignments: [], submissions: [], attendance: [], periodLog: [],
+    teachingAids: [], messages: [], boardState: null,
+  },
+  getArr(k) { return this._cache[k] || []; },
+  get(k) { return this._cache[k]; },
+  // Local-only mutation helpers used as optimistic UI updates; the real
+  // source of truth is always re-fetched from the server on navigate().
+  _setArr(k, v) { this._cache[k] = v; },
+  _set(k, v) { this._cache[k] = v; },
+};
+
+let currentUser = null;
+let currentRole = null;
+
+// ============================================================
+// AUTH MODAL (unchanged UI logic from original)
+// ============================================================
+function openAuthModal(role) {
+  currentRole = role;
+  const titles = { pupil:'Secondary Pupil Portal', primary:'Primary Pupil Portal', teacher:'Teacher Portal', admin:'Admin Portal', parent:'Parent Portal' };
+  document.getElementById('authTitle').textContent = titles[role] || 'Sign In';
+  document.getElementById('authSub').textContent = `Sign in or register as a ${role === 'primary' ? 'primary pupil' : role}`;
+  document.getElementById('authModal').classList.add('active');
+  document.getElementById('regTabBtn').style.display = (role === 'admin') ? 'none' : '';
+  switchAuthTab('login');
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+let authTabActive = 'login';
+function switchAuthTab(tab) {
+  authTabActive = tab;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (i===0 && tab==='login')||(i===1 && tab==='register')));
+  document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+  if (tab === 'login') renderLoginForm();
+  else renderRegisterForm();
+}
+
+function renderLoginForm() {
+  const isParent = currentRole === 'parent';
+  document.getElementById('loginForm').innerHTML = `
+    <div class="form-group">
+      <label>${isParent ? 'Phone Number (used as ID)' : 'Email / Phone'}</label>
+      <input type="text" id="liEmail" placeholder="${isParent ? '0977XXXXXX' : 'Enter email or phone'}">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="liPass" placeholder="Your password">
+    </div>
+    <button class="btn btn-sky mt-10" onclick="doLogin()">Login</button>
+  `;
+}
+
+function renderRegisterForm() {
+  if (currentRole === 'pupil' || currentRole === 'primary') {
+    const isPrimary = currentRole === 'primary';
+    document.getElementById('registerForm').innerHTML = `
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" id="rFname" placeholder="First Name"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="rLname" placeholder="Last Name"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Date of Birth</label><input type="date" id="rDob"></div>
+        <div class="form-group"><label>Gender</label>
+          <select id="rGender"><option value="">Select</option><option>Male</option><option>Female</option></select>
+        </div>
+      </div>
+      ${isPrimary ? `
+      <div class="form-group"><label>Grade</label>
+        <select id="rFormGrade">
+          <option value="">Select Grade</option>
+          ${[1,2,3,4,5,6,7].map(g=>`<option value="grade${g}">Grade ${g}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label>Class (Section)</label>
+        <select id="rClass"><option value="A">A</option><option value="B">B</option><option value="C">C</option></select>
+      </div>
+      <input type="hidden" id="rLevel" value="primary">
+      ` : `
+      <div class="form-row">
+        <div class="form-group"><label>Level</label>
+          <select id="rLevel" onchange="updateClassOptions()">
+            <option value="">Select Level</option>
+            <option value="form">Form (1-2)</option>
+            <option value="grade">Grade (10-12)</option>
+          </select>
+        </div>
+        <div class="form-group"><label id="formGradeLabel">Form/Grade</label>
+          <select id="rFormGrade"><option value="">Select Level First</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Class</label>
+        <select id="rClass"><option value="">Select Form/Grade First</option></select>
+      </div>
+      `}
+      <div class="form-row">
+        <div class="form-group"><label>Parent Phone No.</label><input type="text" id="rParentPhone" placeholder="0977XXXXXX"></div>
+        <div class="form-group"><label>Your Phone No.</label><input type="text" id="rPhone" placeholder="0977XXXXXX"></div>
+      </div>
+      <div class="form-group"><label>Password</label><input type="password" id="rPass" placeholder="Create password"></div>
+      <button class="btn btn-sky mt-10" onclick="doRegisterPupil()">Create Account</button>
+    `;
+  } else if (currentRole === 'teacher') {
+    document.getElementById('registerForm').innerHTML = `
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" id="rFname" placeholder="First Name"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="rLname" placeholder="Last Name"></div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" id="rEmail" placeholder="teacher@email.com"></div>
+      <div class="form-group"><label>Phone</label><input type="text" id="rPhone" placeholder="0977XXXXXX"></div>
+      <div class="form-group"><label>Subjects Taught</label><input type="text" id="rSubjects" placeholder="e.g. Mathematics, Science"></div>
+      <div class="form-group">
+        <label>Classes You Teach <span style="font-size:0.75rem;color:var(--gray);font-weight:400;">(Select up to 5)</span></label>
+        <div class="class-checkbox-grid" id="teacherClassGrid">
+          ${['Form 1 A','Form 1 B','Form 1 C','Form 2 A','Form 2 B','Form 2 C','Grade 10 Gold','Grade 10 Red','Grade 10 Blue','Grade 11 Gold','Grade 11 Red','Grade 11 Blue','Grade 12 Gold','Grade 12 Red','Grade 12 Blue'].map(cls => `
+            <div class="class-checkbox-item">
+              <input type="checkbox" id="cls_${cls.replace(/ /g,'_')}" value="${cls}" onchange="limitTeacherClasses(this)">
+              <label for="cls_${cls.replace(/ /g,'_')}">${cls}</label>
+            </div>`).join('')}
+        </div>
+        <div id="classLimitNote" style="font-size:0.75rem;color:var(--red);margin-top:5px;display:none;">Maximum 5 classes selected.</div>
+      </div>
+      <div class="form-group"><label>Password</label><input type="password" id="rPass" placeholder="Create password"></div>
+      <button class="btn btn-red mt-10" onclick="doRegisterTeacher()">Create Account</button>
+    `;
+  } else if (currentRole === 'parent') {
+    document.getElementById('registerForm').innerHTML = `
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" id="rFname" placeholder="First Name"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="rLname" placeholder="Last Name"></div>
+      </div>
+      <div class="form-group"><label>Phone Number (This is your login ID)</label><input type="text" id="rPhone" placeholder="0977XXXXXX"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="rPass" placeholder="Create password"></div>
+      <button class="btn btn-green mt-10" onclick="doRegisterParent()">Create Account</button>
+    `;
+  }
+}
+
+function updateClassOptions() {
+  const level = document.getElementById('rLevel').value;
+  const fg = document.getElementById('rFormGrade');
+  const cls = document.getElementById('rClass');
+  const lbl = document.getElementById('formGradeLabel');
+  if (level === 'form') {
+    lbl.textContent = 'Form';
+    fg.innerHTML = '<option value="">Select Form</option><option value="form1">Form 1</option><option value="form2">Form 2</option>';
+  } else if (level === 'grade') {
+    lbl.textContent = 'Grade';
+    fg.innerHTML = '<option value="">Select Grade</option><option value="grade10">Grade 10</option><option value="grade11">Grade 11</option><option value="grade12">Grade 12</option>';
+  }
+  fg.onchange = () => {
+    const v = fg.value;
+    const classOpts = level === 'form' ? ['A','B','C'] : ['Gold','Red','Blue'];
+    cls.innerHTML = '<option value="">Select Class</option>' + classOpts.map(c=>`<option value="${c}">${c}</option>`).join('');
+  };
+  cls.innerHTML = '<option value="">Select Form/Grade First</option>';
+}
+
+function updateClassForTeacher() {
+  const fg = document.getElementById('rFormGrade').value;
+  const level = document.getElementById('rLevel').value;
+  const cls = document.getElementById('rClass');
+  const classOpts = level === 'form' ? ['A','B','C'] : ['Gold','Red','Blue'];
+  cls.innerHTML = '<option value="">Select Class</option>' + classOpts.map(c=>`<option value="${c}">${c}</option>`).join('');
+}
+
+async function doRegisterPupil() {
+  const fname = document.getElementById('rFname').value.trim();
+  const lname = document.getElementById('rLname').value.trim();
+  const dob = document.getElementById('rDob').value;
+  const gender = document.getElementById('rGender').value;
+  const isPrimary = currentRole === 'primary';
+  const level = isPrimary ? 'primary' : document.getElementById('rLevel').value;
+  const formGrade = document.getElementById('rFormGrade').value;
+  const cls = document.getElementById('rClass').value;
+  const parentPhone = document.getElementById('rParentPhone').value.trim();
+  const phone = document.getElementById('rPhone').value.trim();
+  const password = document.getElementById('rPass').value;
+  if (!fname||!lname||!formGrade||!cls||!parentPhone||!phone||!password) return notify('Fill all fields','error');
+  try {
+    const result = await api.post('/auth/register/pupil', { fname, lname, dob, gender, level, formGrade, class: cls, parentPhone, phone, password });
+    notify(result.message);
+    switchAuthTab('login');
+  } catch (err) {
+    notify(err.message, 'error');
+  }
+}
+
+function limitTeacherClasses(checkbox) {
+  const all = document.querySelectorAll('#teacherClassGrid input[type=checkbox]');
+  const checked = Array.from(all).filter(c=>c.checked);
+  const note = document.getElementById('classLimitNote');
+  if (checked.length > 5) { checkbox.checked = false; note.style.display='block'; }
+  else { note.style.display = checked.length === 5 ? 'block' : 'none'; }
+}
+
+async function doRegisterTeacher() {
+  const fname = document.getElementById('rFname').value.trim();
+  const lname = document.getElementById('rLname').value.trim();
+  const email = document.getElementById('rEmail').value.trim();
+  const phone = document.getElementById('rPhone').value.trim();
+  const subjects = document.getElementById('rSubjects').value.trim();
+  const password = document.getElementById('rPass').value;
+  // Collect selected classes (up to 5)
+  const classCheckboxes = document.querySelectorAll('#teacherClassGrid input[type=checkbox]:checked');
+  const teachingClasses = Array.from(classCheckboxes).map(c=>c.value);
+  if (!fname||!lname||!email||!password) return notify('Fill required fields','error');
+  if (teachingClasses.length === 0) return notify('Select at least one class to teach','error');
+  // Derive level/formGrade/class from the first selected class for backward compat
+  const firstCls = teachingClasses[0];
+  let level = firstCls.startsWith('Form') ? 'form' : 'grade';
+  const fgNum = firstCls.match(/\d+/)?.[0];
+  const formGrade = level === 'form' ? `form${fgNum}` : `grade${fgNum}`;
+  const cls = firstCls.split(' ').pop();
+  try {
+    const result = await api.post('/auth/register/teacher', { fname, lname, email, phone, subjects, level, formGrade, class: cls, teachingClasses: JSON.stringify(teachingClasses), password });
+    notify(result.message);
+    switchAuthTab('login');
+  } catch (err) {
+    notify(err.message, 'error');
+  }
+}
+
+async function doRegisterParent() {
+  const fname = document.getElementById('rFname').value.trim();
+  const lname = document.getElementById('rLname').value.trim();
+  const phone = document.getElementById('rPhone').value.trim();
+  const password = document.getElementById('rPass').value;
+  if (!fname||!phone||!password) return notify('Fill all fields','error');
+  try {
+    const result = await api.post('/auth/register/parent', { fname, lname, phone, password });
+    notify(result.message);
+    switchAuthTab('login');
+  } catch (err) {
+    notify(err.message, 'error');
+  }
+}
+
+async function doLogin() {
+  const identifier = document.getElementById('liEmail').value.trim();
+  const password = document.getElementById('liPass').value;
+  if (!identifier || !password) return notify('Enter credentials','error');
+  try {
+    // primary pupils are stored as 'pupil' with level='primary'
+    const loginRole = currentRole === 'primary' ? 'pupil' : currentRole;
+    const result = await api.post('/auth/login', { role: loginRole, identifier, password });
+    const role = result.role;
+    const u = result.user;
+    if (role === 'pupil') {
+      currentUser = normPupil(u);
+      // distinguish primary vs secondary by level
+      const effectiveRole = currentUser.level === 'primary' ? 'primary' : 'pupil';
+      await loginSuccess(effectiveRole);
+    } else if (role === 'teacher') {
+      currentUser = normTeacher(u);
+      await loginSuccess(role);
+    } else if (role === 'parent') {
+      currentUser = normParent(u);
+      await loginSuccess(role);
+    } else if (role === 'admin') {
+      currentUser = normAdmin(u);
+      await loginSuccess(role);
+    }
+  } catch (err) {
+    notify(err.message, 'error');
+  }
+}
+
+async function loginSuccess(role) {
+  currentRole = role;
+  localStorage.setItem('rafiki_session', JSON.stringify({ user: currentUser, role }));
+  closeModal('authModal');
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('app').classList.add('active');
+  const name = currentUser.fname ? `${currentUser.fname} ${currentUser.lname}` : currentUser.name;
+  document.getElementById('headerBadge').textContent = `${name} · ${role.toUpperCase()}`;
+  buildSidebar(role);
+  if (role === 'pupil' || role === 'primary') { document.getElementById('toolsFab').classList.remove('hidden'); }
+  await navigate('dashboard');
+}
+
+function logout() {
+  localStorage.removeItem('rafiki_session');
+  currentUser = null; currentRole = null;
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('landing').style.display = 'flex';
+  document.getElementById('toolsFab').classList.add('hidden');
+  notify('Logged out successfully');
+}
+
+// ============================================================
+// SIDEBAR
+// ============================================================
+function buildSidebar(role) {
+  let items = [];
+  if (role === 'pupil') {
+    items = [
+      { icon:'🏠', label:'Dashboard', page:'dashboard' },
+      { icon:'📝', label:'My Work', page:'my-work' },
+      { icon:'📤', label:'Submissions', page:'submissions' },
+      { icon:'📋', label:'Register', page:'register' },
+      { icon:'📊', label:'My Results', page:'results' },
+      { icon:'💬', label:'Messages', page:'messages' },
+      { icon:'🖥️', label:'Live Board', page:'board' },
+    ];
+  } else if (role === 'primary') {
+    items = [
+      { icon:'🏠', label:'Dashboard', page:'dashboard' },
+      { icon:'📝', label:'My Work', page:'my-work' },
+      { icon:'📤', label:'Submissions', page:'submissions' },
+      { icon:'📋', label:'Register', page:'register' },
+      { icon:'📊', label:'My Results', page:'results' },
+      { icon:'💬', label:'Messages', page:'messages' },
+      { icon:'🖥️', label:'Live Board', page:'board' },
+    ];
+  } else if (role === 'teacher') {
+    items = [
+      { icon:'🏠', label:'Dashboard', page:'dashboard' },
+      { icon:'👥', label:'My Students', page:'students' },
+      { icon:'📤', label:'Send Work', page:'send-work' },
+      { icon:'📁', label:'Teaching Aids', page:'aids' },
+      { icon:'📝', label:'Mark Work', page:'mark-work' },
+      { icon:'📋', label:'Attendance', page:'attendance' },
+      { icon:'🖥️', label:'Live Board', page:'board' },
+      { icon:'💬', label:'Messages', page:'messages' },
+    ];
+  } else if (role === 'admin') {
+    items = [
+      { icon:'🏠', label:'Dashboard', page:'dashboard' },
+      { icon:'👥', label:'All Students', page:'students' },
+      { icon:'👨‍🏫', label:'Teachers', page:'teachers' },
+      { icon:'📊', label:'Results & Reports', page:'results' },
+      { icon:'📋', label:'Attendance', page:'attendance' },
+      { icon:'💬', label:'Messages', page:'messages' },
+      { icon:'📄', label:'Report Cards', page:'reportcards' },
+      { icon:'💳', label:'Payments', page:'payments' },
+    ];
+  } else if (role === 'parent') {
+    items = [
+      { icon:'🏠', label:'Dashboard', page:'dashboard' },
+      { icon:'📊', label:'Child Results', page:'results' },
+      { icon:'💬', label:'Messages', page:'messages' },
+      { icon:'📄', label:'Report Cards', page:'reportcards' },
+      { icon:'💳', label:'Payments', page:'payments' },
+    ];
+  }
+  const sb = document.getElementById('sidebar');
+  sb.innerHTML = `<div class="sidebar-section">Navigation</div>` +
+    items.map(i=>`<div class="nav-item" id="nav-${i.page}" onclick="navigate('${i.page}')"><span class="icon">${i.icon}</span>${i.label}</div>`).join('');
+}
+
+// ============================================================
+// CACHE REFRESH
+// Fetches everything the current role/page combination needs from the
+// API and populates DB._cache so the (unmodified) render functions can
+// keep reading data synchronously via DB.getArr(...).
+// ============================================================
+async function refreshCacheForRole() {
+  const u = currentUser;
+  try {
+    if (currentRole === 'pupil' || currentRole === 'primary') {
+      const [assignments, submissions, attendance] = await Promise.all([
+        api.get(`/assignments/for-student/${u.id}`),
+        api.get(`/submissions/by-student/${u.id}`),
+        api.get(`/attendance/student/${u.id}`),
+      ]);
+      DB._setArr('assignments', assignments.map(normAssignment));
+      DB._setArr('submissions', submissions.map(normSubmission));
+      DB._setArr('attendance', attendance.map(normAttendance));
+      const teachers = await api.get('/users/teachers');
+      DB._setArr('teachers', teachers.map(normTeacher));
+    } else if (currentRole === 'teacher') {
+      const [pupils, assignments, submissions, aids, admins] = await Promise.all([
+        api.get(`/users/pupils?level=${u.level}&formGrade=${u.formGrade}&class=${encodeURIComponent(u.class)}`),
+        api.get(`/assignments/by-teacher/${u.id}`),
+        api.get(`/submissions/by-teacher/${u.id}`),
+        api.get(`/teaching-aids/by-teacher/${u.id}`),
+        api.get('/users/admins'),
+      ]);
+      DB._setArr('pupils', pupils.map(normPupil));
+      DB._setArr('assignments', assignments.map(normAssignment));
+      DB._setArr('submissions', submissions.map(normSubmission));
+      DB._setArr('teachingAids', aids.map(normAid));
+      DB._setArr('admins', admins.map(normAdmin));
+      const [attendance, periodLog] = await Promise.all([
+        api.get(`/attendance/class?level=${u.level}&formGrade=${u.formGrade}&class=${encodeURIComponent(u.class)}`),
+        api.get(`/period-log/by-teacher/${u.id}`),
+      ]);
+      DB._setArr('attendance', attendance.map(normAttendance));
+      DB._setArr('periodLog', periodLog.map(normPeriodLog));
+    } else if (currentRole === 'admin') {
+      // Restore persisted payment records from this session
+      try {
+        const storedPay = JSON.parse(localStorage.getItem('rafiki_payments') || '{}');
+        if (!DB._cache.payments) DB._cache.payments = {};
+        Object.assign(DB._cache.payments, storedPay);
+        DB._set('payments', DB._cache.payments);
+      } catch(e) {}
+      const [pupils, teachers, parents, admins, attendance] = await Promise.all([
+        api.get('/users/pupils'),
+        api.get('/users/teachers'),
+        api.get('/users/parents'),
+        api.get('/users/admins'),
+        api.get('/attendance'),
+      ]);
+      DB._setArr('pupils', pupils.map(normPupil));
+      DB._setArr('teachers', teachers.map(normTeacher));
+      DB._setArr('parents', parents.map(normParent));
+      DB._setArr('admins', admins.map(normAdmin));
+      DB._setArr('attendance', attendance.map(normAttendance));
+      // For results/report-cards we need every submission + assignment
+      const allSubs = [];
+      const allAssigns = [];
+      for (const t of teachers) {
+        const subs = await api.get(`/submissions/by-teacher/${t.id}`);
+        allSubs.push(...subs.map(normSubmission));
+      }
+      DB._setArr('submissions', allSubs);
+      const assignMap = {};
+      for (const t of teachers) {
+        const assigns = await api.get(`/assignments/by-teacher/${t.id}`);
+        assigns.forEach(a => { assignMap[a.id] = normAssignment(a); });
+      }
+      DB._setArr('assignments', Object.values(assignMap));
+    } else if (currentRole === 'parent') {
+      // Restore persisted payment records from this session
+      try {
+        const storedPay = JSON.parse(localStorage.getItem('rafiki_payments') || '{}');
+        if (!DB._cache.payments) DB._cache.payments = {};
+        Object.assign(DB._cache.payments, storedPay);
+        DB._set('payments', DB._cache.payments);
+      } catch(e) {}
+      const children = await api.get(`/users/parents/${u.phone}/children`);
+      DB._setArr('pupils', children.map(normPupil));
+      const teachers = await api.get('/users/teachers');
+      DB._setArr('teachers', teachers.map(normTeacher));
+      const admins = await api.get('/users/admins');
+      DB._setArr('admins', admins.map(normAdmin));
+      // Fetch submissions + assignments for each linked child
+      const allSubs = [];
+      const assignMap = {};
+      for (const c of children) {
+        const subs = await api.get(`/submissions/by-student/${c.id}`);
+        allSubs.push(...subs.map(normSubmission));
+        const assigns = await api.get(`/assignments/for-student/${c.id}`);
+        assigns.forEach(a => { assignMap[a.id] = normAssignment(a); });
+      }
+      DB._setArr('submissions', allSubs);
+      DB._setArr('assignments', Object.values(assignMap));
+    }
+
+    // Messages always loaded for the current user (used by Messages page)
+    const inbox = await api.get(`/messages/inbox/${currentUser.id}`);
+    DB._setArr('messages', inbox.map(normMessage));
+  } catch (err) {
+    notify(err.message, 'error');
+  }
+}
+
+async function navigate(page) {
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const el = document.getElementById('nav-'+page);
+  if (el) el.classList.add('active');
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = '<div class="card"><p style="color:var(--gray);text-align:center;padding:30px;">Loading…</p></div>';
+  await refreshCacheForRole();
+  mc.innerHTML = renderPage(page);
+  initPage(page);
+}
+
+// ============================================================
+// PAGE RENDERER
+// ============================================================
+function renderPage(page) {
+  if (currentRole === 'pupil' || currentRole === 'primary') return renderPupilPage(page);
+  if (currentRole === 'teacher') return renderTeacherPage(page);
+  if (currentRole === 'admin') return renderAdminPage(page);
+  if (currentRole === 'parent') return renderParentPage(page);
+  return '<p>Page not found</p>';
+}
+function renderPupilPage(page) {
+  const u = currentUser;
+  const classLabel = u.level === 'primary'
+    ? `Grade ${(u.formGrade||'').replace('grade','')} ${u.class}`
+    : `${u.level==='form'?'Form':'Grade'} ${(u.formGrade||'').replace('form','').replace('grade','')} ${u.class}`;
+
+  if (page === 'dashboard') {
+    const myWork = DB.getArr('assignments').filter(a => matchesStudent(a, u));
+    const pending = myWork.filter(a => !DB.getArr('submissions').find(s=>s.assignId===a.id&&s.studentId===u.id));
+    return `
+      <div class="welcome-banner">
+        <h2>Welcome, ${u.fname}! 👋</h2>
+        <p>Class: ${classLabel} · ID: ${u.id}</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="s-num">${myWork.length}</div><div class="s-label">Total Work Received</div></div>
+        <div class="stat-card red"><div class="s-num">${pending.length}</div><div class="s-label">Pending Submissions</div></div>
+        <div class="stat-card green"><div class="s-num">${myWork.length - pending.length}</div><div class="s-label">Submitted</div></div>
+        <div class="stat-card gold"><div class="s-num">${classLabel}</div><div class="s-label">My Class</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">📬 Latest Work</span></div>
+        ${myWork.slice(-3).reverse().map(a=>`
+          <div class="work-card ${a.type}">
+            <div class="w-meta">
+              <span class="badge badge-${a.type==='assignment'?'sky':a.type==='test'?'gold':'red'}">${a.type.toUpperCase()}</span>
+              <span class="badge badge-gray">${a.subject}</span>
+            </div>
+            <div class="w-title">${a.title}</div>
+            <div class="w-body">${a.description||''}</div>
+            <button class="btn btn-sky btn-sm mt-10" onclick="navigate('my-work')">Open →</button>
+          </div>`).join('') || '<p style="color:var(--gray)">No work yet.</p>'}
+      </div>`;
+  }
+
+  if (page === 'my-work') {
+    const myWork = DB.getArr('assignments').filter(a => matchesStudent(a, u));
+    return `
+      <h1 class="page-title">My Work</h1>
+      <p class="page-sub">Assignments, tests and exams sent to your class</p>
+      ${myWork.length === 0 ? '<div class="card"><p style="color:var(--gray)">No work has been sent to your class yet.</p></div>' :
+        myWork.map(a => {
+          const sub = DB.getArr('submissions').find(s=>s.assignId===a.id&&s.studentId===u.id);
+          return `<div class="work-card ${a.type}">
+            <div class="w-meta">
+              <span class="badge badge-${a.type==='assignment'?'sky':a.type==='test'?'gold':'red'}">${a.type.toUpperCase()}</span>
+              <span class="badge badge-gray">${a.subject}</span>
+              ${sub ? `<span class="badge badge-green">✓ Submitted</span>` : `<span class="badge badge-red">Pending</span>`}
+              ${sub && sub.mark !== undefined ? `<span class="badge badge-sky">Mark: ${sub.mark}/${a.totalMarks||100}</span>` : ''}
+            </div>
+            <div class="w-title">${a.title}</div>
+            <div class="w-body">${a.description||''}</div>
+            ${a.type === 'written' || !a.questions ? `<textarea id="ans_${a.id}" placeholder="Type your answer here..." style="width:100%;margin-top:12px;padding:12px;border:2px solid var(--gray-light);border-radius:8px;min-height:100px;font-family:'Nunito',sans-serif;" ${sub?'disabled':''}>${sub?sub.answer:''}</textarea>` :
+              `<div style="margin-top:12px;">${a.questions.map((q,qi)=>`
+                <div style="margin-bottom:12px;"><strong>${qi+1}. ${q.text}</strong>
+                  ${q.options.map((o,oi)=>`
+                    <div class="mc-option">
+                      <input type="radio" name="q_${a.id}_${qi}" value="${oi}" ${sub&&sub.answers&&sub.answers[qi]==oi?'checked':''} ${sub?'disabled':''}>
+                      <label>${o}</label>
+                    </div>`).join('')}
+                </div>`).join('')}
+              </div>`}
+            ${a.files&&a.files.length ? `<div style="margin-top:10px;">${a.files.map(f=>`<span class="badge badge-sky" style="margin-right:6px;">📎 ${f.name}</span>`).join('')}</div>` : ''}
+            ${!sub ? `<button class="btn btn-sky btn-sm mt-10" onclick="submitWork('${a.id}')">Submit Work</button>` : ''}
+          </div>`;
+        }).join('')}`;
+  }
+
+  if (page === 'submissions') {
+    const subs = DB.getArr('submissions').filter(s=>s.studentId===u.id);
+    return `
+      <h1 class="page-title">My Submissions</h1>
+      <p class="page-sub">All work you have submitted</p>
+      <div class="card">
+        <div class="table-wrap">
+          <table><thead><tr><th>Title</th><th>Type</th><th>Submitted</th><th>Mark</th><th>Teacher Comment</th></tr></thead>
+          <tbody>${subs.map(s=>{
+            const a = DB.getArr('assignments').find(x=>x.id===s.assignId);
+            return `<tr>
+              <td>${a?a.title:'Unknown'}</td>
+              <td><span class="badge badge-sky">${a?a.type:''}</span></td>
+              <td>${s.submittedAt}</td>
+              <td>${s.mark !== undefined ? `${s.mark}/${a&&a.totalMarks?a.totalMarks:100}` : '<span class="badge badge-gray">Pending</span>'}</td>
+              <td>${s.comment||'-'}</td>
+            </tr>`;
+          }).join('')}</tbody></table>
+        </div>
+      </div>`;
+  }
+
+  if (page === 'register') {
+    const today = new Date().toDateString();
+    const existing = DB.getArr('attendance').find(a=>a.studentId===u.id&&a.date===today);
+    return `
+      <h1 class="page-title">Class Register</h1>
+      <p class="page-sub">Today: ${today} · Class: ${classLabel}</p>
+      <div class="card">
+        ${existing ? `<p>✅ You have already registered today. Status: <strong>${existing.status}</strong></p>` :
+          `<p style="margin-bottom:16px;">Mark your attendance for today:</p>
+          <div style="display:flex;gap:12px;">
+            <button class="btn btn-green btn-sm" onclick="markAttendance('present')">✓ I am Present</button>
+            <button class="btn btn-red btn-sm" onclick="markAttendance('late')">⏰ I am Late</button>
+          </div>`}
+      </div>
+      <div class="card">
+        <div class="card-title mb-10">Period Confirmation</div>
+        <p style="font-size:0.88rem;color:var(--gray);margin-bottom:14px;">Confirm topics covered in each period today</p>
+        ${['Period 1','Period 2','Period 3','Period 4','Period 5'].map((p,i)=>`
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+            <span style="width:80px;font-weight:700;font-size:0.88rem;">${p}</span>
+            <input type="text" id="period_${i}" placeholder="Topic covered" style="flex:1;padding:8px;border:2px solid var(--gray-light);border-radius:8px;font-family:'Nunito',sans-serif;font-size:0.85rem;">
+            <button class="btn btn-sky btn-xs" onclick="confirmPeriod(${i})">Confirm</button>
+          </div>`).join('')}
+      </div>`;
+  }
+
+  if (page === 'results') {
+    const subs = DB.getArr('submissions').filter(s=>s.studentId===u.id&&s.mark!==undefined);
+    return `
+      <h1 class="page-title">My Results</h1>
+      <p class="page-sub">Your academic performance</p>
+      <div class="card">
+        ${subs.length === 0 ? '<p style="color:var(--gray)">No marked work yet.</p>' :
+          subs.map(s=>{
+            const a = DB.getArr('assignments').find(x=>x.id===s.assignId);
+            const pct = Math.round((s.mark/(a&&a.totalMarks?a.totalMarks:100))*100);
+            return `<div style="margin-bottom:14px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                <span style="font-weight:700;font-size:0.9rem;">${a?a.title:'Work'}</span>
+                <span style="font-weight:800;color:${pct>=75?'var(--green)':pct>=50?'var(--gold)':'var(--red)'};">${s.mark}/${a&&a.totalMarks?a.totalMarks:100} (${pct}%)</span>
+              </div>
+              <div class="result-bar-bg"><div class="result-bar" style="width:${pct}%;background:${pct>=75?'var(--green)':pct>=50?'linear-gradient(90deg,var(--gold),var(--sky))':'var(--red)'}"></div></div>
+            </div>`;
+          }).join('')}
+      </div>`;
+  }
+
+  if (page === 'messages') return renderMessagesPage();
+  if (page === 'board') return renderBoardPage(false);
+  return '<p>Page not found</p>';
+}
+
+// ============================================================
+// TEACHER PAGES
+// ============================================================
+function renderTeacherPage(page) {
+  const u = currentUser;
+  const myStudents = DB.getArr('pupils').filter(p => matchesTeacher(p, u));
+
+  if (page === 'dashboard') {
+    const assignments = DB.getArr('assignments').filter(a=>a.teacherId===u.id);
+    const pendingMark = DB.getArr('submissions').filter(s=>s.teacherId===u.id&&s.mark===undefined).length;
+    return `
+      <div class="welcome-banner">
+        <h2>Welcome, ${u.fname}! 📚</h2>
+        <p>Class: ${u.level==='form'?'Form':'Grade'} ${(u.formGrade||'').replace('form','').replace('grade','')} ${u.class||''} · Subjects: ${u.subjects||''}</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="s-num">${myStudents.length}</div><div class="s-label">My Students</div></div>
+        <div class="stat-card red"><div class="s-num">${assignments.length}</div><div class="s-label">Work Sent</div></div>
+        <div class="stat-card gold"><div class="s-num">${pendingMark}</div><div class="s-label">To Be Marked</div></div>
+        <div class="stat-card green"><div class="s-num">${assignments.length - pendingMark}</div><div class="s-label">Marked</div></div>
+      </div>`;
+  }
+
+  if (page === 'students') {
+    return `
+      <h1 class="page-title">My Students</h1>
+      <p class="page-sub">${myStudents.length} students in your class</p>
+      <div class="card">
+        <div class="table-wrap">
+          <table><thead><tr><th>Student ID</th><th>Name</th><th>Level</th><th>Class</th><th>Parent Phone</th></tr></thead>
+          <tbody>${myStudents.map(s=>`<tr>
+            <td><code>${s.id}</code></td>
+            <td>${s.fname} ${s.lname}</td>
+            <td><span class="badge badge-sky">${s.level==='form'?'Form':'Grade'} ${(s.formGrade||'').replace('form','').replace('grade','')}</span></td>
+            <td><span class="badge badge-gray">${s.class}</span></td>
+            <td>${s.parentPhone}</td>
+          </tr>`).join('')}</tbody></table>
+        </div>
+      </div>`;
+  }
+
+  if (page === 'send-work') {
+    return `
+      <h1 class="page-title">Send Work</h1>
+      <p class="page-sub">Create and send assignments, tests or exams to your students</p>
+      <div class="card">
+        <div class="form-group"><label>Work Title</label><input type="text" id="wTitle" placeholder="e.g. Chapter 3 Assignment"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Type</label>
+            <select id="wType">
+              <option value="assignment">Assignment</option>
+              <option value="test">Test</option>
+              <option value="exam">Exam</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Subject</label><input type="text" id="wSubject" placeholder="e.g. Mathematics"></div>
+        </div>
+        <div class="form-group"><label>Description / Written Question</label>
+          <textarea id="wDesc" placeholder="Write the question or instructions here..." style="min-height:100px;width:100%;padding:12px;border:2px solid var(--gray-light);border-radius:8px;font-family:'Nunito',sans-serif;"></textarea>
+        </div>
+        <div class="form-group"><label>Total Marks</label><input type="number" id="wMarks" value="100" min="1"></div>
+        <div class="form-group"><label>Format</label>
+          <select id="wFormat" onchange="toggleMCSection()">
+            <option value="written">Written</option>
+            <option value="mc">Multiple Choice</option>
+            <option value="both">Both</option>
+          </select>
+        </div>
+        <div id="mcSection" class="hidden">
+          <div class="card-title mb-10">Multiple Choice Questions</div>
+          <div id="mcQuestions"></div>
+          <button class="btn btn-outline btn-sm mb-10" onclick="addMCQuestion()">+ Add Question</button>
+        </div>
+        <div class="form-group">
+          <label>Attach File (PDF/Word/Video/Audio)</label>
+          <div class="file-drop" onclick="document.getElementById('wFile').click()">
+            <span class="icon">📎</span>
+            <p>Click to attach a file</p>
+            <input type="file" id="wFile" style="display:none" multiple accept=".pdf,.doc,.docx,.mp4,.mp3,.wav,.png,.jpg" onchange="previewFiles(this)">
+          </div>
+          <div id="filePreview"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Send To</label>
+            <select id="wTarget">
+              <option value="class">My Entire Class</option>
+              ${myStudents.map(s=>`<option value="student_${s.id}">${s.fname} ${s.lname}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-red mt-10" onclick="sendWork()">📤 Send Work</button>
+      </div>`;
+  }
+
+  if (page === 'aids') {
+    const aids = DB.getArr('teachingAids').filter(a=>a.teacherId===u.id);
+    return `
+      <h1 class="page-title">Teaching Aids</h1>
+      <p class="page-sub">Upload and manage resources for your students</p>
+      <div class="card">
+        <div class="form-group"><label>Title</label><input type="text" id="aidTitle" placeholder="Resource title"></div>
+        <div class="form-group"><label>Description</label><input type="text" id="aidDesc" placeholder="Brief description"></div>
+        <div class="file-drop" onclick="document.getElementById('aidFile').click()">
+          <span class="icon">📂</span>
+          <p>Click to upload PDF, Word, Video, or Audio</p>
+          <input type="file" id="aidFile" style="display:none" multiple accept=".pdf,.doc,.docx,.mp4,.mp3,.wav,.png,.jpg" onchange="previewAidFile(this)">
+        </div>
+        <div id="aidPreview"></div>
+        <button class="btn btn-sky mt-10" onclick="uploadAid()">Upload Resource</button>
+      </div>
+      <div class="card">
+        <div class="card-title mb-10">Uploaded Resources</div>
+        ${aids.map(a=>`
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--gray-light);">
+            <div>
+              <div style="font-weight:700;">${a.title}</div>
+              <div style="font-size:0.78rem;color:var(--gray);">${a.desc} · ${a.date}</div>
+            </div>
+            <span class="badge badge-sky">📎 ${a.files?a.files.length:0} file(s)</span>
+          </div>`).join('') || '<p style="color:var(--gray)">No resources yet.</p>'}
+      </div>`;
+  }
+
+  if (page === 'mark-work') {
+    const subs = DB.getArr('submissions').filter(s=>s.teacherId===u.id);
+    return `
+      <h1 class="page-title">Mark Work</h1>
+      <p class="page-sub">Review and mark student submissions</p>
+      ${subs.length === 0 ? '<div class="card"><p style="color:var(--gray)">No submissions yet.</p></div>' :
+        subs.map(s=>{
+          const a = DB.getArr('assignments').find(x=>x.id===s.assignId);
+          const student = DB.getArr('pupils').find(p=>p.id===s.studentId);
+          return `<div class="work-card">
+            <div class="w-meta">
+              <span class="badge badge-sky">${a?a.title:''}</span>
+              <span class="badge badge-gray">${student?`${student.fname} ${student.lname}`:s.studentId}</span>
+              ${s.mark !== undefined ? `<span class="badge badge-green">Marked: ${s.mark}</span>` : '<span class="badge badge-red">Unmarked</span>'}
+            </div>
+            <div class="w-body" style="background:var(--off-white);padding:12px;border-radius:8px;margin:10px 0;">${s.answer||JSON.stringify(s.answers)||'(File submission)'}</div>
+            ${s.mark === undefined ? `
+              <div class="flex-row mt-10">
+                <input type="number" id="mark_${s.id}" placeholder="Mark (/${a&&a.totalMarks?a.totalMarks:100})" style="width:120px;padding:8px;border:2px solid var(--gray-light);border-radius:8px;font-family:'Nunito',sans-serif;" min="0" max="${a&&a.totalMarks?a.totalMarks:100}">
+                <input type="text" id="comment_${s.id}" placeholder="Comment..." style="flex:1;padding:8px;border:2px solid var(--gray-light);border-radius:8px;font-family:'Nunito',sans-serif;">
+                <button class="btn btn-green btn-sm" onclick="markSubmission('${s.id}','${s.studentId}','${s.assignId}')">✓ Mark</button>
+              </div>` : `<div style="margin-top:8px;"><strong>Mark:</strong> ${s.mark} | <strong>Comment:</strong> ${s.comment||'-'}</div>`}
+          </div>`;
+        }).join('')}`;
+  }
+
+  if (page === 'attendance') {
+    const today = new Date().toDateString();
+    const todayAtt = DB.getArr('attendance').filter(a=>a.date===today&&myStudents.find(s=>s.id===a.studentId));
+    return `
+      <h1 class="page-title">Attendance Register</h1>
+      <p class="page-sub">Today: ${today}</p>
+      <div class="card">
+        <div class="register-grid">
+          ${myStudents.map(s=>{
+            const att = todayAtt.find(a=>a.studentId===s.id);
+            return `<div class="reg-student">
+              <div class="s-name">${s.fname} ${s.lname}</div>
+              <div class="s-id">ID: ${s.id}</div>
+              <div class="attendance-btn">
+                <button class="btn btn-xs ${att&&att.status==='present'?'btn-green':'btn-outline'}" onclick="teacherMarkAtt('${s.id}','present')">✓</button>
+                <button class="btn btn-xs ${att&&att.status==='absent'?'btn-red':'btn-outline'}" onclick="teacherMarkAtt('${s.id}','absent')">✗</button>
+                <button class="btn btn-xs ${att&&att.status==='late'?'btn-gold':'btn-outline'}" onclick="teacherMarkAtt('${s.id}','late')">L</button>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title mb-10">Period Log (Student Confirmations)</div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Student</th><th>Period</th><th>Topic</th><th>Time</th></tr></thead>
+          <tbody>
+            ${DB.getArr('periodLog').filter(p=>myStudents.find(s=>s.id===p.studentId)).map(p=>{
+              const s = DB.getArr('pupils').find(x=>x.id===p.studentId);
+              return `<tr><td>${s?`${s.fname} ${s.lname}`:p.studentId}</td><td>${p.period}</td><td>${p.topic}</td><td>${p.time}</td></tr>`;
+            }).join('')}
+          </tbody></table>
+        </div>
+      </div>`;
+  }
+
+  if (page === 'messages') return renderMessagesPage();
+  if (page === 'board') return renderBoardPage(true);
+  return '<p>Page not found</p>';
+}
+
+// ============================================================
+// ADMIN PAGES
+// ============================================================
+function renderAdminPage(page) {
+  if (page === 'dashboard') {
+    const pupils = DB.getArr('pupils');
+    const teachers = DB.getArr('teachers');
+    const assignments = DB.getArr('assignments');
+    const submissions = DB.getArr('submissions');
+    return `
+      <div class="welcome-banner"><h2>Admin Dashboard 🏛️</h2><p>Rafiki Secondary & Primary School Management</p></div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="s-num">${pupils.length}</div><div class="s-label">Total Students</div></div>
+        <div class="stat-card red"><div class="s-num">${teachers.length}</div><div class="s-label">Teachers</div></div>
+        <div class="stat-card gold"><div class="s-num">${assignments.length}</div><div class="s-label">Assignments</div></div>
+        <div class="stat-card green"><div class="s-num">${submissions.length}</div><div class="s-label">Submissions</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title mb-10">Students by Level</div>
+        ${['form1','form2','grade10','grade11','grade12'].map(fg=>{
+          const count = pupils.filter(p=>p.formGrade===fg).length;
+          const label = fg.startsWith('form') ? `Form ${fg.replace('form','')}` : `Grade ${fg.replace('grade','')}`;
+          return `<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+            <span style="width:80px;font-size:0.88rem;font-weight:700;">${label}</span>
+            <div style="flex:1;background:var(--gray-light);border-radius:50px;height:12px;">
+              <div style="width:${pupils.length?Math.round(count/pupils.length*100):0}%;background:linear-gradient(90deg,var(--sky),var(--green));height:12px;border-radius:50px;"></div>
+            </div>
+            <span style="font-weight:800;font-size:0.88rem;">${count}</span>
+          </div>`;
+        }).join('')}
+      </div>`;
+  }
+
+  if (page === 'students') {
+    const pupils = DB.getArr('pupils');
+    const filterLevel = document.getElementById('filterLevel') ? document.getElementById('filterLevel').value : '';
+    return `
+      <h1 class="page-title">All Students</h1>
+      <p class="page-sub">${pupils.length} registered students</p>
+      <div class="card">
+        <div class="table-wrap">
+          <table><thead><tr><th>ID</th><th>Name</th><th>Level</th><th>Class</th><th>Parent Phone</th></tr></thead>
+          <tbody>${pupils.map(s=>`<tr>
+            <td><code>${s.id}</code></td>
+            <td>${s.fname} ${s.lname}</td>
+            <td><span class="badge badge-sky">${s.level==='form'?'Form':'Grade'} ${(s.formGrade||'').replace('form','').replace('grade','')}</span></td>
+            <td><span class="badge badge-gray">${s.class}</span></td>
+            <td>${s.parentPhone}</td>
+          </tr>`).join('')}</tbody></table>
+        </div>
+      </div>`;
+  }
+
+  if (page === 'teachers') {
+    const teachers = DB.getArr('teachers');
+    return `
+      <h1 class="page-title">Teachers</h1>
+      <p class="page-sub">${teachers.length} registered teachers</p>
+      <div class="card">
+        <div class="table-wrap">
+          <table><thead><tr><th>Name</th><th>Email</th><th>Subjects</th><th>Class</th></tr></thead>
+          <tbody>${teachers.map(t=>`<tr>
+            <td>${t.fname} ${t.lname}</td>
+            <td>${t.email}</td>
+            <td>${t.subjects||'-'}</td>
+            <td>${t.level&&t.formGrade?`${t.level==='form'?'Form':'Grade'} ${(t.formGrade||'').replace('form','').replace('grade','')} ${t.class||''}`:'-'}</td>
+          </tr>`).join('')}</tbody></table>
+        </div>
+      </div>`;
+  }
+
+  if (page === 'results') {
+    const pupils = DB.getArr('pupils');
+    const submissions = DB.getArr('submissions').filter(s=>s.mark!==undefined);
+    return `
+      <h1 class="page-title">Results Overview</h1>
+      <p class="page-sub">All marked work and student performance</p>
+      ${pupils.map(p=>{
+        const pSubs = submissions.filter(s=>s.studentId===p.id);
+        if (!pSubs.length) return '';
+        const avg = Math.round(pSubs.reduce((acc,s)=>acc+(s.mark||0),0)/pSubs.length);
+        return `<div class="card" style="margin-bottom:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+            <div>
+              <div style="font-weight:800;">${p.fname} ${p.lname}</div>
+              <div style="font-size:0.78rem;color:var(--gray);">ID: ${p.id} · ${p.level==='form'?'Form':'Grade'} ${(p.formGrade||'').replace('form','').replace('grade','')} ${p.class}</div>
+            </div>
+            <span class="badge ${avg>=75?'badge-green':avg>=50?'badge-gold':'badge-red'}">Avg: ${avg}%</span>
+          </div>
+          <div style="margin-top:10px;">
+            ${pSubs.map(s=>{
+              const a = DB.getArr('assignments').find(x=>x.id===s.assignId);
+              const pct = Math.round((s.mark/(a&&a.totalMarks?a.totalMarks:100))*100);
+              return `<div style="font-size:0.82rem;display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--gray-light);">
+                <span>${a?a.title:'Work'}</span>
+                <strong style="color:${pct>=75?'var(--green)':pct>=50?'var(--gold)':'var(--red)'};">${s.mark}% · ${s.comment||''}</strong>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>`;
+      }).join('') || '<div class="card"><p style="color:var(--gray)">No marked results yet.</p></div>'}`;
+  }
+
+  if (page === 'attendance') {
+    const att = DB.getArr('attendance');
+    const today = new Date().toDateString();
+    const todayAtt = att.filter(a=>a.date===today);
+    return `
+      <h1 class="page-title">Attendance Records</h1>
+      <p class="page-sub">Today: ${today} · ${todayAtt.length} records</p>
+      <div class="card">
+        <div class="table-wrap">
+          <table><thead><tr><th>Student</th><th>ID</th><th>Date</th><th>Status</th><th>Marked By</th></tr></thead>
+          <tbody>${att.slice(-50).reverse().map(a=>{
+            const s = DB.getArr('pupils').find(p=>p.id===a.studentId);
+            return `<tr>
+              <td>${s?`${s.fname} ${s.lname}`:a.studentId}</td>
+              <td><code>${a.studentId}</code></td>
+              <td>${a.date}</td>
+              <td><span class="badge ${a.status==='present'?'badge-green':a.status==='late'?'badge-gold':'badge-red'}">${a.status}</span></td>
+              <td>${a.markedBy||'Self'}</td>
+            </tr>`;
+          }).join('')}</tbody></table>
+        </div>
+      </div>`;
+  }
+
+  if (page === 'messages') return renderMessagesPage();
+
+  if (page === 'reportcards') {
+    const pupils = DB.getArr('pupils');
+    return `
+      <h1 class="page-title">Report Cards</h1>
+      <p class="page-sub">Generate and view student report cards</p>
+      <div class="card">
+        <div class="form-group"><label>Select Student</label>
+          <select id="rcStudent">
+            <option value="">-- Select Student --</option>
+            ${pupils.map(p=>`<option value="${p.id}">${p.fname} ${p.lname} (${p.id})</option>`).join('')}
+          </select>
+        </div>
+        <button class="btn btn-sky" onclick="generateReportCard()">Generate Report Card</button>
+      </div>
+      <div id="reportCardArea"></div>`;
+  }
+
+  if (page === 'payments') {
+    const pupils = DB.getArr('pupils');
+    const payments = DB.get('payments') || {};
+    const feePerChild = 500;
+    // Group children by parent phone
+    const parentGroups = {};
+    pupils.forEach(p => {
+      const phone = p.parentPhone || 'Unknown';
+      if (!parentGroups[phone]) parentGroups[phone] = [];
+      parentGroups[phone].push(p);
+    });
+    const totalExpected = pupils.length * feePerChild;
+    const paidPupils = pupils.filter(p => payments[p.id] && payments[p.id].paid);
+    const totalCollected = paidPupils.length * feePerChild;
+    const totalOutstanding = totalExpected - totalCollected;
+    return `
+      <h1 class="page-title">💳 Payments Overview</h1>
+      <p class="page-sub">School fees collection status — ZMW ${feePerChild} per student per term</p>
+      <div class="stat-grid">
+        <div class="stat-card green"><div class="s-num">ZMW ${totalCollected.toLocaleString()}</div><div class="s-label">Total Collected</div></div>
+        <div class="stat-card red"><div class="s-num">ZMW ${totalOutstanding.toLocaleString()}</div><div class="s-label">Outstanding</div></div>
+        <div class="stat-card"><div class="s-num">${paidPupils.length}/${pupils.length}</div><div class="s-label">Students Paid</div></div>
+        <div class="stat-card gold"><div class="s-num">ZMW ${totalExpected.toLocaleString()}</div><div class="s-label">Expected Total</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Payment Records by Parent</span>
+          <span class="badge badge-sky">${Object.keys(parentGroups).length} parent accounts</span>
+        </div>
+        ${Object.entries(parentGroups).map(([phone, children]) => {
+          const paidCount = children.filter(c => payments[c.id] && payments[c.id].paid).length;
+          const parentTotal = paidCount * feePerChild;
+          const allPaid = paidCount === children.length;
+          return `<div style="border:2px solid ${allPaid?'var(--green)':'var(--gray-light)'};border-radius:var(--radius-sm);padding:14px;margin-bottom:12px;background:${allPaid?'#f0fdf4':'white'};">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+              <div>
+                <span style="font-weight:800;">📱 ${phone}</span>
+                <span style="margin-left:10px;font-size:0.78rem;color:var(--gray);">${children.length} child(ren)</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-weight:800;color:var(--green);">ZMW ${parentTotal} paid</span>
+                ${allPaid ? `<span class="badge badge-green">ALL PAID</span>` : `<span class="badge badge-red">${children.length-paidCount} unpaid</span>`}
+              </div>
+            </div>
+            ${children.map(c => {
+              const isPaid = payments[c.id] && payments[c.id].paid;
+              return `<div class="admin-pay-row">
+                <div>
+                  <span style="font-weight:700;font-size:0.88rem;">${c.fname} ${c.lname}</span>
+                  <span style="font-size:0.75rem;color:var(--gray);margin-left:8px;">ID: ${c.id} · ${c.level==='form'?'Form':'Grade'} ${(c.formGrade||'').replace('form','').replace('grade','')} ${c.class}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  ${isPaid
+                    ? `<span style="font-size:0.75rem;color:var(--gray);">via ${payments[c.id].method} · ${payments[c.id].date}</span>
+                       <span class="badge badge-green">✅ ZMW ${feePerChild}</span>`
+                    : `<span class="badge badge-red">⏳ Unpaid</span>`
+                  }
+                </div>
+              </div>`;
+            }).join('')}
+          </div>`;
+        }).join('') || '<p style="color:var(--gray);">No students registered yet.</p>'}
+      </div>
+      <div class="card">
+        <div class="card-title mb-10">📊 Collection Progress</div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+          <span style="font-size:0.85rem;font-weight:700;width:80px;">${Math.round(paidPupils.length/Math.max(pupils.length,1)*100)}%</span>
+          <div style="flex:1;background:var(--gray-light);border-radius:50px;height:16px;">
+            <div style="width:${Math.round(paidPupils.length/Math.max(pupils.length,1)*100)}%;background:linear-gradient(90deg,var(--sky),var(--green));height:16px;border-radius:50px;transition:width 0.4s;"></div>
+          </div>
+          <span style="font-size:0.85rem;font-weight:700;">${paidPupils.length}/${pupils.length}</span>
+        </div>
+        <p style="font-size:0.82rem;color:var(--gray);">Payments refresh when you navigate back to this page.</p>
+      </div>`;
+  }
+
+  return '<p>Page not found</p>';
+}
+
+// ============================================================
+// PARENT PAGES
+// ============================================================
+function renderParentPage(page) {
+  const u = currentUser;
+  const child = DB.getArr('pupils').find(p=>p.parentPhone===u.phone||p.id===u.linkedStudentId);
+
+  if (page === 'dashboard') {
+    return `
+      <div class="welcome-banner">
+        <h2>Welcome, ${u.name}! 👨‍👩‍👧</h2>
+        <p>${child ? `Child: ${child.fname} ${child.lname} · ID: ${child.id}` : 'No child linked to your account yet'}</p>
+      </div>
+      ${child ? `
+        <div class="stat-grid">
+          <div class="stat-card"><div class="s-num">${child.level==='form'?'Form':'Grade'} ${(child.formGrade||'').replace('form','').replace('grade','')}</div><div class="s-label">Level</div></div>
+          <div class="stat-card red"><div class="s-num">${child.class}</div><div class="s-label">Class</div></div>
+          <div class="stat-card gold"><div class="s-num">${DB.getArr('submissions').filter(s=>s.studentId===child.id&&s.mark!==undefined).length}</div><div class="s-label">Marked Results</div></div>
+        </div>` : '<div class="card"><p>No student linked. Please ensure your phone number matches your child\'s registered parent number.</p></div>'}`;
+  }
+
+  if (page === 'results') {
+    if (!child) return '<div class="card"><p>No child linked to your account.</p></div>';
+    const subs = DB.getArr('submissions').filter(s=>s.studentId===child.id&&s.mark!==undefined);
+    return `
+      <h1 class="page-title">${child.fname}'s Results</h1>
+      <p class="page-sub">Academic performance overview</p>
+      <div class="card">
+        ${subs.length === 0 ? '<p style="color:var(--gray)">No marked results yet.</p>' :
+          subs.map(s=>{
+            const a = DB.getArr('assignments').find(x=>x.id===s.assignId);
+            const pct = Math.round((s.mark/(a&&a.totalMarks?a.totalMarks:100))*100);
+            return `<div style="margin-bottom:14px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                <span style="font-weight:700;">${a?a.title:'Work'} <span class="badge badge-gray">${a?a.subject:''}</span></span>
+                <span style="font-weight:800;color:${pct>=75?'var(--green)':pct>=50?'var(--gold)':'var(--red)'};">${s.mark}/${a&&a.totalMarks?a.totalMarks:100}</span>
+              </div>
+              <div class="result-bar-bg"><div class="result-bar" style="width:${pct}%;"></div></div>
+              ${s.comment?`<div style="font-size:0.78rem;color:var(--gray);margin-top:3px;">Teacher: "${s.comment}"</div>`:''}
+            </div>`;
+          }).join('')}
+      </div>`;
+  }
+
+  if (page === 'messages') return renderMessagesPage();
+
+  if (page === 'reportcards') {
+    if (!child) return '<div class="card"><p>No child linked.</p></div>';
+    return `
+      <h1 class="page-title">Report Cards</h1>
+      <div id="reportCardArea"></div>
+      <button class="btn btn-sky" onclick="generateReportCardForChild('${child.id}')">View Report Card</button>`;
+  }
+
+  if (page === 'payments') {
+    const allChildren = DB.getArr('pupils').filter(p => p.parentPhone === u.phone);
+    const payments = DB.get('payments') || {};
+    const feePerChild = 500; // ZMW per child per term
+    const totalOwed = allChildren.length * feePerChild;
+    const totalPaid = allChildren.filter(c => payments[c.id] && payments[c.id].paid).reduce((s) => s + feePerChild, 0);
+    return `
+      <h1 class="page-title">School Fees Payment</h1>
+      <p class="page-sub">Pay school fees for your children — up to 10 children per account</p>
+      <div class="pay-summary-bar">
+        <div>
+          <div class="ps-label">Total Balance</div>
+          <div class="ps-amount">ZMW ${totalOwed - totalPaid}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="ps-label">Children: ${allChildren.length} · Paid: ${allChildren.filter(c=>payments[c.id]&&payments[c.id].paid).length}</div>
+          <div style="font-size:0.85rem;margin-top:2px;">ZMW ${feePerChild} per child / term</div>
+        </div>
+      </div>
+      ${allChildren.length === 0 ? `<div class="card"><p style="color:var(--gray)">No children are linked to your phone number yet. Ensure your children registered with phone number <strong>${u.phone}</strong>.</p></div>` : `
+      <div class="card">
+        <div class="card-title mb-10">Select Payment Method</div>
+        <div class="pay-method-select" id="payMethodSelect">
+          <div class="pay-method-btn selected" onclick="selectPayMethod(this,'airtel')" data-method="airtel">
+            <span class="pm-icon">📱</span>Airtel Money
+          </div>
+          <div class="pay-method-btn" onclick="selectPayMethod(this,'mtn')" data-method="mtn">
+            <span class="pm-icon">📲</span>MTN Mobile Money
+          </div>
+          <div class="pay-method-btn" onclick="selectPayMethod(this,'zanaco')" data-method="zanaco">
+            <span class="pm-icon">🏦</span>Bank Transfer
+          </div>
+          <div class="pay-method-btn" onclick="selectPayMethod(this,'cash')" data-method="cash">
+            <span class="pm-icon">💵</span>Cash at School
+          </div>
+        </div>
+        <div id="payMethodDetails" style="background:var(--sky-pale);border-radius:var(--radius-sm);padding:14px;margin-bottom:18px;font-size:0.85rem;color:var(--sky-dark);">
+          <strong>Airtel Money:</strong> Dial *778# → Send Money → Enter <strong>0977-SCHOOL</strong> → Amount → Reference: your child's student ID.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title mb-10">Your Children (${allChildren.length}/10)</div>
+        ${allChildren.map(c => {
+          const isPaid = payments[c.id] && payments[c.id].paid;
+          const payDate = isPaid ? payments[c.id].date : null;
+          const payMethod = isPaid ? payments[c.id].method : null;
+          return `<div class="pay-child-card ${isPaid?'paid':''}">
+            <div>
+              <div class="child-info">
+                ${isPaid ? '✅' : '⏳'} ${c.fname} ${c.lname}
+              </div>
+              <div class="child-meta">ID: ${c.id} · ${c.level==='form'?'Form':'Grade'} ${(c.formGrade||'').replace('form','').replace('grade','')} ${c.class}</div>
+              ${isPaid ? `<div style="font-size:0.75rem;color:var(--green);margin-top:3px;font-weight:700;">Paid on ${payDate} via ${payMethod}</div>` : ''}
+            </div>
+            <div style="text-align:right;">
+              <div style="font-weight:800;font-size:1rem;color:${isPaid?'var(--green)':'var(--red)'};">ZMW ${feePerChild}</div>
+              ${isPaid
+                ? `<span class="badge badge-green" style="margin-top:6px;">PAID</span>`
+                : `<button class="btn btn-green btn-sm" style="margin-top:6px;" onclick="processPayment('${c.id}','${c.fname} ${c.lname}',${feePerChild})">Pay Now</button>`
+              }
+            </div>
+          </div>`;
+        }).join('')}
+        ${allChildren.filter(c=>!(payments[c.id]&&payments[c.id].paid)).length > 0 ? `
+        <button class="btn btn-sky mt-10" onclick="payAllChildren(${feePerChild})">💳 Pay All Unpaid — ZMW ${allChildren.filter(c=>!(payments[c.id]&&payments[c.id].paid)).length * feePerChild}</button>
+        ` : `<div style="text-align:center;color:var(--green);font-weight:800;margin-top:12px;">✅ All school fees paid for this term!</div>`}
+      </div>`}`;
+  }
+
+  return '<p>Page not found</p>';
+}
+
+// ============================================================
+// MESSAGES
+// ============================================================
+function renderMessagesPage() {
+  const threads = DB.getArr('messages');
+  const myThreadIds = threads.filter(m => m.from === currentUser.id || m.to === currentUser.id);
+  const participants = [...new Set(myThreadIds.flatMap(m=>[m.from,m.to]))].filter(id=>id!==currentUser.id);
+
+  let contacts = [];
+  if (currentRole === 'pupil') {
+    contacts = DB.getArr('teachers').map(t=>({id:t.id,name:`${t.fname} ${t.lname}`,role:'Teacher'}));
+  } else if (currentRole === 'teacher') {
+    contacts = [
+      ...DB.getArr('pupils').filter(p=>matchesTeacher(p,currentUser)).map(p=>({id:p.id,name:`${p.fname} ${p.lname}`,role:'Student'})),
+      ...DB.getArr('admins').map(a=>({id:a.id,name:a.name,role:'Admin'})),
+    ];
+  } else if (currentRole === 'admin') {
+    contacts = [
+      ...DB.getArr('teachers').map(t=>({id:t.id,name:`${t.fname} ${t.lname}`,role:'Teacher'})),
+      ...DB.getArr('pupils').map(p=>({id:p.id,name:`${p.fname} ${p.lname}`,role:'Student'})),
+      ...DB.getArr('parents').map(p=>({id:p.id,name:p.name,role:'Parent'})),
+    ];
+  } else if (currentRole === 'parent') {
+    contacts = [
+      ...DB.getArr('teachers').map(t=>({id:t.id,name:`${t.fname} ${t.lname}`,role:'Teacher'})),
+      ...DB.getArr('admins').map(a=>({id:a.id,name:a.name,role:'Admin'})),
+    ];
+  }
+
+  return `
+    <h1 class="page-title">Messages</h1>
+    <p class="page-sub">Communicate with teachers, students, parents and admin</p>
+    <div style="display:grid;grid-template-columns:260px 1fr;gap:16px;min-height:500px;">
+      <div class="card" style="padding:16px;">
+        <div class="card-title mb-10">Contacts</div>
+        ${contacts.map(c=>`
+          <div onclick="openChat('${c.id}','${c.name}','${c.role}')" style="padding:10px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:10px;margin-bottom:4px;border:2px solid transparent;transition:all 0.15s;" id="contact_${c.id}" onmouseover="this.style.background='var(--sky-pale)'" onmouseout="this.style.background=''">
+            <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--sky));color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.9rem;flex-shrink:0;">${c.name.charAt(0)}</div>
+            <div>
+              <div style="font-weight:700;font-size:0.88rem;">${c.name}</div>
+              <div style="font-size:0.72rem;color:var(--gray);">${c.role}</div>
+            </div>
+          </div>`).join('') || '<p style="font-size:0.82rem;color:var(--gray);">No contacts available</p>'}
+      </div>
+      <div class="card" style="padding:16px;display:flex;flex-direction:column;">
+        <div id="chatHeader" style="margin-bottom:12px;font-weight:800;color:var(--gray);">Select a contact to chat</div>
+        <div class="msg-thread" id="msgThread" style="flex:1;"></div>
+        <div class="msg-input-row hidden" id="msgInputRow">
+          <input type="text" id="msgInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMessage()">
+          <button class="btn btn-sky btn-sm" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+let chatTarget = null;
+async function openChat(id, name, role) {
+  chatTarget = { id, name, role };
+  document.getElementById('chatHeader').textContent = `💬 ${name} (${role})`;
+  document.getElementById('msgInputRow').classList.remove('hidden');
+  await renderChat();
+}
+
+async function renderChat() {
+  if (!chatTarget) return;
+  let msgs;
+  try {
+    const thread = await api.get(`/messages/thread?userA=${encodeURIComponent(currentUser.id)}&userB=${encodeURIComponent(chatTarget.id)}`);
+    msgs = thread.map(normMessage);
+  } catch (err) {
+    notify(err.message, 'error');
+    msgs = [];
+  }
+  const threadEl = document.getElementById('msgThread');
+  if (!threadEl) return;
+  threadEl.innerHTML = msgs.map(m=>`
+    <div>
+      <div class="msg-bubble ${m.from===currentUser.id?'sent':'recv'}">${m.text}</div>
+      <div class="msg-meta" style="text-align:${m.from===currentUser.id?'right':'left'}">${m.time}</div>
+    </div>`).join('') || '<p style="color:var(--gray);font-size:0.85rem;text-align:center;">No messages yet. Say hello!</p>';
+  threadEl.scrollTop = threadEl.scrollHeight;
+}
+
+async function sendMessage() {
+  if (!chatTarget) return;
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  if (!text) return;
+  try {
+    await api.post('/messages', { from: currentUser.id, to: chatTarget.id, text });
+    input.value = '';
+    await renderChat();
+  } catch (err) {
+    notify(err.message, 'error');
+  }
+}
+
+// ============================================================
+// LIVE BOARD
+// ============================================================
+function renderBoardPage(isTeacher) {
+  return `
+    <h1 class="page-title">🖥️ Live Board</h1>
+    <p class="page-sub">${isTeacher ? 'Draw and write — students see your board in real-time' : 'Watch the teacher\'s live board'}</p>
+    <div class="board-container">
+      <div class="board-toolbar">
+        <span style="color:white;font-size:0.78rem;font-weight:700;">Color:</span>
+        ${['#000000','#C0392B','#0EA5E9','#10B981','#F59E0B','#8B5CF6','#FFFFFF'].map(c=>
+          `<div class="color-swatch ${c==='#000000'?'active':''}" style="background:${c};" onclick="setBoardColor('${c}',this)"></div>`
+        ).join('')}
+        <span style="color:white;font-size:0.78rem;font-weight:700;margin-left:10px;">Size:</span>
+        <input type="range" min="1" max="30" value="3" id="brushSize" style="width:80px;" oninput="brushSize=+this.value">
+        <button class="board-btn" onclick="clearBoard()">🗑️ Clear</button>
+        <button class="board-btn" onclick="undoBoard()">↩ Undo</button>
+        ${isTeacher ? '<button class="board-btn" onclick="saveBoard()">💾 Save</button>' : ''}
+        <select id="boardTool" onchange="boardTool=this.value" style="background:rgba(255,255,255,0.15);color:white;border:none;border-radius:6px;padding:5px 10px;font-family:Nunito,sans-serif;font-size:0.8rem;">
+          <option value="pen">✏️ Pen</option>
+          <option value="eraser">🧹 Eraser</option>
+          <option value="text">T Text</option>
+          <option value="line">— Line</option>
+          <option value="rect">□ Rect</option>
+          <option value="circle">○ Circle</option>
+        </select>
+      </div>
+      <canvas id="liveBoard" width="1200" height="500"></canvas>
+    </div>`;
+}
+
+let boardCtx, boardColor = '#000000', brushSize = 3, boardTool = 'pen';
+let drawing = false, boardHistory = [], startX, startY;
+let boardPollTimer = null;
+
+async function initBoard() {
+  const canvas = document.getElementById('liveBoard');
+  if (!canvas) return;
+  boardCtx = canvas.getContext('2d');
+
+  // Load saved board from server
+  try {
+    const { imageData } = await api.get('/board');
+    if (imageData) {
+      const img = new Image();
+      img.onload = () => boardCtx.drawImage(img, 0, 0);
+      img.src = imageData;
+    }
+  } catch (err) {
+    notify(err.message, 'error');
+  }
+
+  canvas.addEventListener('mousedown', e=>{ drawing=true; startX=e.offsetX; startY=e.offsetY; boardHistory.push(boardCtx.getImageData(0,0,canvas.width,canvas.height)); if(boardTool==='pen'||boardTool==='eraser'){boardCtx.beginPath();boardCtx.moveTo(startX,startY);} });
+  canvas.addEventListener('mousemove', e=>{
+    if(!drawing)return;
+    if(boardTool==='pen'){boardCtx.globalCompositeOperation='source-over';boardCtx.strokeStyle=boardColor;boardCtx.lineWidth=brushSize;boardCtx.lineCap='round';boardCtx.lineTo(e.offsetX,e.offsetY);boardCtx.stroke();}
+    else if(boardTool==='eraser'){boardCtx.globalCompositeOperation='destination-out';boardCtx.lineWidth=brushSize*4;boardCtx.lineCap='round';boardCtx.lineTo(e.offsetX,e.offsetY);boardCtx.stroke();boardCtx.globalCompositeOperation='source-over';}
+  });
+  canvas.addEventListener('mouseup', e=>{
+    if(!drawing)return; drawing=false;
+    if(boardTool==='line'){boardCtx.strokeStyle=boardColor;boardCtx.lineWidth=brushSize;boardCtx.beginPath();boardCtx.moveTo(startX,startY);boardCtx.lineTo(e.offsetX,e.offsetY);boardCtx.stroke();}
+    else if(boardTool==='rect'){boardCtx.strokeStyle=boardColor;boardCtx.lineWidth=brushSize;boardCtx.strokeRect(startX,startY,e.offsetX-startX,e.offsetY-startY);}
+    else if(boardTool==='circle'){const r=Math.hypot(e.offsetX-startX,e.offsetY-startY);boardCtx.strokeStyle=boardColor;boardCtx.lineWidth=brushSize;boardCtx.beginPath();boardCtx.arc(startX,startY,r,0,Math.PI*2);boardCtx.stroke();}
+    else if(boardTool==='text'){const t=prompt('Enter text:');if(t){boardCtx.font=`${brushSize*8+12}px Nunito`;boardCtx.fillStyle=boardColor;boardCtx.fillText(t,startX,startY);}}
+    // Auto-save board
+    saveBoard(true);
+  });
+  // Touch support
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];canvas.dispatchEvent(new MouseEvent('mousedown',{offsetX:t.clientX-canvas.getBoundingClientRect().left,offsetY:t.clientY-canvas.getBoundingClientRect().top}));},{passive:false});
+  canvas.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0];canvas.dispatchEvent(new MouseEvent('mousemove',{offsetX:t.clientX-canvas.getBoundingClientRect().left,offsetY:t.clientY-canvas.getBoundingClientRect().top}));},{passive:false});
+  canvas.addEventListener('touchend',e=>{canvas.dispatchEvent(new MouseEvent('mouseup',{offsetX:0,offsetY:0}));});
+
+  // Students (read-only viewers) poll the server for board updates so they
+  // see the teacher's strokes without needing real-time sockets.
+  if (currentRole !== 'teacher') {
+    if (boardPollTimer) clearInterval(boardPollTimer);
+    boardPollTimer = setInterval(async () => {
+      if (!document.getElementById('liveBoard')) { clearInterval(boardPollTimer); return; }
+      try {
+        const { imageData } = await api.get('/board');
+        if (imageData) {
+          const img = new Image();
+          img.onload = () => { boardCtx.clearRect(0,0,canvas.width,canvas.height); boardCtx.drawImage(img,0,0); };
+          img.src = imageData;
+        }
+      } catch { /* silent - keep polling */ }
+    }, 4000);
+  }
+}
+
+function setBoardColor(c, el) { boardColor=c; document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active')); el.classList.add('active'); }
+function clearBoard() { if(boardCtx){boardCtx.clearRect(0,0,boardCtx.canvas.width,boardCtx.canvas.height);saveBoard(true);} }
+function undoBoard() { if(boardHistory.length&&boardCtx){boardCtx.putImageData(boardHistory.pop(),0,0);saveBoard(true);} }
+async function saveBoard(silent=false) {
+  if(!boardCtx)return;
+  try {
+    await api.put('/board', { imageData: boardCtx.canvas.toDataURL() });
+    if(!silent)notify('Board saved!');
+  } catch (err) {
+    if (!silent) notify(err.message, 'error');
+  }
+}
+// WORK / ASSIGNMENT LOGIC
+// ============================================================
+let mcQCount = 0;
+function toggleMCSection() {
+  const fmt = document.getElementById('wFormat').value;
+  document.getElementById('mcSection').classList.toggle('hidden', fmt === 'written');
+}
+
+function addMCQuestion() {
+  mcQCount++;
+  const container = document.getElementById('mcQuestions');
+  const div = document.createElement('div');
+  div.id = `mcq_${mcQCount}`;
+  div.style.cssText = 'background:var(--off-white);padding:12px;border-radius:8px;margin-bottom:10px;';
+  div.innerHTML = `
+    <div class="form-group"><label>Question ${mcQCount}</label>
+      <input type="text" id="mcqText_${mcQCount}" placeholder="Enter question text">
+    </div>
+    <div id="mcqOpts_${mcQCount}">
+      ${['A','B','C','D'].map((l,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <input type="radio" name="correct_${mcQCount}" value="${i}">
+        <span style="font-weight:700;font-size:0.82rem;">${l}.</span>
+        <input type="text" id="mcqOpt_${mcQCount}_${i}" placeholder="Option ${l}" style="flex:1;padding:7px;border:2px solid var(--gray-light);border-radius:6px;font-family:Nunito,sans-serif;font-size:0.85rem;">
+      </div>`).join('')}
+    </div>
+    <div style="font-size:0.75rem;color:var(--gray);">Mark the radio button next to the correct answer.</div>`;
+  container.appendChild(div);
+}
+
+function previewFiles(input) {
+  const preview = document.getElementById('filePreview');
+  preview.innerHTML = [...input.files].map(f=>`<span class="badge badge-sky" style="margin:4px 2px;">📎 ${f.name}</span>`).join('');
+}
+
+function previewAidFile(input) {
+  const preview = document.getElementById('aidPreview');
+  preview.innerHTML = [...input.files].map(f=>`<span class="badge badge-sky" style="margin:4px 2px;">📎 ${f.name}</span>`).join('');
+}
+
+
+function matchesStudent(assignment, student) {
+  if (assignment.target && assignment.target.startsWith('student_')) {
+    return assignment.target === `student_${student.id}`;
+  }
+  return assignment.teacherLevel === student.level &&
+    assignment.teacherFormGrade === student.formGrade &&
+    assignment.teacherClass === student.class;
+}
+
+function matchesTeacher(student, teacher) {
+  return teacher.level === student.level &&
+    teacher.formGrade === student.formGrade &&
+    teacher.class === student.class;
+}
+
+async function sendWork() {
+  const title = document.getElementById('wTitle').value.trim();
+  const type = document.getElementById('wType').value;
+  const subject = document.getElementById('wSubject').value.trim();
+  const desc = document.getElementById('wDesc').value.trim();
+  const marks = document.getElementById('wMarks').value;
+  const format = document.getElementById('wFormat').value;
+  const target = document.getElementById('wTarget').value;
+  if (!title||!subject) return notify('Fill required fields','error');
+
+  let questions = [];
+  if (format === 'mc' || format === 'both') {
+    for (let i=1;i<=mcQCount;i++) {
+      const el = document.getElementById(`mcqText_${i}`);
+      if (!el) continue;
+      const text = el.value.trim();
+      const opts = ['A','B','C','D'].map((_,oi)=>(document.getElementById(`mcqOpt_${i}_${oi}`)||{}).value||'').filter(Boolean);
+      const correctEl = document.querySelector(`input[name="correct_${i}"]:checked`);
+      if (text) questions.push({ text, options: opts, correct: correctEl ? parseInt(correctEl.value) : 0 });
+    }
+  }
+
+  const fileInput = document.getElementById('wFile');
+  const u = currentUser;
+
+  const formData = new FormData();
+  formData.append('title', title);
+  formData.append('type', type);
+  formData.append('subject', subject);
+  formData.append('description', desc);
+  formData.append('totalMarks', parseInt(marks)||100);
+  formData.append('format', format);
+  formData.append('target', target);
+  formData.append('questions', JSON.stringify(questions));
+  formData.append('teacherId', u.id);
+  formData.append('teacherLevel', u.level);
+  formData.append('teacherFormGrade', u.formGrade);
+  formData.append('teacherClass', u.class);
+  if (fileInput && fileInput.files) {
+    [...fileInput.files].forEach(f => formData.append('files', f));
+  }
+
+  try {
+    const result = await api.post('/assignments', formData, true);
+    notify(result.message);
+    await navigate('send-work');
+  } catch (err) {
+    notify(err.message, 'error');
+  }
+}
+
+async function submitWork(assignId) {
+  const a = DB.getArr('assignments').find(x=>x.id===assignId);
+  if (!a) return;
+  let answer = '', answers = {};
+
+  if (a.format === 'written' || a.format === 'both') {
+    const el = document.getElementById(`ans_${assignId}`);
+    answer = el ? el.value.trim() : '';
+    if (!answer && a.format==='written') return notify('Write your answer first','error');
+  }
+  if (a.format === 'mc' || a.format === 'both') {
+    (a.questions||[]).forEach((q,qi)=>{
+      const selected = document.querySelector(`input[name="q_${assignId}_${qi}"]:checked`);
+      if (selected) answers[qi] = parseInt(selected.value);
+    });
+  }
+
+  // Check table builder content
+  const tableExtra = localStorage.getItem('rafiki_tableSubmission_'+assignId);
+
+  try {
+    const result = await api.post('/submissions', {
+      assignId,
+      studentId: currentUser.id,
+      teacherId: assignment ? assignment.teacherId : '',
+      answer: answer + (tableExtra ? '\n\n[TABLE]\n'+tableExtra : ''),
+      answers,
+    });
+    notify(result.message);
+    if (tableExtra) localStorage.removeItem('rafiki_tableSubmission_'+assignId);
+    await navigate('my-work');
+  } catch (err) {
+    notify(err.message, 'error');
+  }
+}
+
+async function markSubmission(subId, studentId, assignId) {
+  const mark = parseInt(document.getElementById(`mark_${subId}`).value);
+  const comment = document.getElementById(`comment_${subId}`).value.trim();
+  if (isNaN(mark)) return notify('Enter a valid mark','error');
+
+  try {
+    const result = await api.patch(`/submissions/${subId}/mark`, { mark, comment });
+    notify(result.message);
+    await navigate('mark-work');
+  } catch (err) {
+    notify(err.message, 'error');
+  }
+}
+
+async function uploadAid() {
+  const title = document.getElementById('aidTitle').value.trim();
+  const desc = document.getElementById('aidDesc').value.trim();
+  const fileInput = document.getElementById('aidFile');
+  if (!title) return notify('Enter a title','error');
+
+  const formData = new FormData();
+  formData.append('teacherId', currentUser.id);
+  formData.append('title', title);
+  formData.append('description', desc);
+  if (fileInput && fileInput.files) {
+    [...fileInput.files].forEach(f => formData.append('files', f));
+  }
+
+  try {
+    const result = await api.post('/teaching-aids', formData, true);
+    notify(result.message);
+    await navigate('aids');
+  } catch (err) {
+    notify(err.message, 'error');
+  }
+}
+
+// ============================================================
+// ATTENDANCE
+// ============================================================
+async function markAttendance(status) {
+  try {
+    const result = await api.post('/attendance/self', { studentId: currentUser.id, status });
+    notify(result.message);
+    await navigate('register');
+  } catch (err) {
+    notify(err.message, 'error');
+  }
+}
+
+async function teacherMarkAtt(studentId, status) {
+  try {
+    const result = await api.post('/attendance/teacher-mark', { studentId, status, teacherId: currentUser.id });
+    notify(result.message);
+    await navigate('attendance');
+  } catch (err) {
+    notify(err.message, 'error');
+  }
+}
+
+async function confirmPeriod(idx) {
+  const topicEl = document.getElementById(`period_${idx}`);
+  const topic = topicEl ? topicEl.value.trim() : '';
+  if (!topic) return notify('Enter the topic first','error');
+  try {
+    await api.post('/period-log', { studentId: currentUser.id, period: `Period ${idx+1}`, topic });
+    notify('Period confirmed!');
+    if (topicEl) topicEl.value = '';
+  } catch (err) {
+    notify(err.message, 'error');
+  }
+}
+
+// ============================================================
+// REPORT CARD
+// ============================================================
+async function generateReportCard() {
+  const sel = document.getElementById('rcStudent');
+  const studentId = sel.value;
+  if (!studentId) return notify('Select a student','error');
+  await generateReportCardForChild(studentId);
+}
+
+async function generateReportCardForChild(studentId) {
+  let data;
+  try {
+    data = await api.get(`/reports/report-card/${studentId}`);
+  } catch (err) {
+    notify(err.message, 'error');
+    return;
+  }
+  const { student, results, average, overallGrade, remark } = data;
+  const html = `
+    <div class="report-card mt-10">
+      <div class="report-header">
+        <div style="font-size:2rem;">🏫</div>
+        <h2>Rafiki Secondary & Primary School</h2>
+        <p style="color:var(--gray);font-size:0.85rem;">Student Report Card · ${new Date().toLocaleDateString()}</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;font-size:0.88rem;">
+        <div><strong>Name:</strong> ${student.fname} ${student.lname}</div>
+        <div><strong>Student ID:</strong> ${student.id}</div>
+        <div><strong>Level:</strong> ${student.level==='form'?'Form':'Grade'} ${(student.formGrade||'').replace('form','').replace('grade','')}</div>
+        <div><strong>Class:</strong> ${student.class}</div>
+      </div>
+      <table class="report-table">
+        <thead><tr><th>Subject/Work</th><th>Type</th><th>Score</th><th>%</th><th>Grade</th><th>Comment</th></tr></thead>
+        <tbody>
+          ${results.map(r => `<tr>
+              <td>${r.title}</td>
+              <td>${r.type||''}</td>
+              <td>${r.mark}/${r.totalMarks}</td>
+              <td>${r.percentage}%</td>
+              <td style="font-weight:800;color:${r.percentage>=70?'var(--green)':r.percentage>=50?'var(--gold)':'var(--red)'};">${r.grade}</td>
+              <td>${r.comment||'-'}</td>
+            </tr>`).join('')}
+          <tr style="background:var(--sky-pale);font-weight:800;">
+            <td colspan="3">Overall Average</td>
+            <td>${average}%</td>
+            <td>${overallGrade}</td>
+            <td>${remark}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:16px;text-align:right;">
+        <button class="btn btn-sky btn-sm" onclick="window.print()">🖨️ Print Report Card</button>
+      </div>
+    </div>`;
+  const area = document.getElementById('reportCardArea');
+  if (area) area.innerHTML = html;
+}
+// TABLE BUILDER
+// ============================================================
+function buildTable() {
+  const rows = parseInt(document.getElementById('tableRows').value)||4;
+  const cols = parseInt(document.getElementById('tableCols').value)||3;
+  let html = `<table class="table-builder-grid"><thead><tr>`;
+  for (let c=0;c<cols;c++) html += `<th><input type="text" placeholder="Header ${c+1}"></th>`;
+  html += `</tr></thead><tbody>`;
+  for (let r=0;r<rows;r++) {
+    html += '<tr>';
+    for (let c=0;c<cols;c++) html += `<td><input type="text" placeholder="Cell ${r+1},${c+1}"></td>`;
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  document.getElementById('tableBuilderArea').innerHTML = html;
+}
+
+function copyTableToSubmission() {
+  const titleEl = document.getElementById('tableTitle');
+  const title = titleEl ? titleEl.value : '';
+  const tableEl = document.querySelector('.table-builder-grid');
+  if (!tableEl) return notify('Build a table first','error');
+  let text = title ? `TABLE: ${title}\n` : '';
+  tableEl.querySelectorAll('tr').forEach(row => {
+    text += [...row.querySelectorAll('td,th')].map(c=>c.querySelector('input').value||c.querySelector('input').placeholder).join(' | ') + '\n';
+  });
+  // Store for current submission
+  const assignmentId = prompt('Enter the assignment ID to attach this table to (or leave blank to copy to clipboard):');
+  if (assignmentId) {
+    localStorage.setItem('rafiki_tableSubmission_'+assignmentId, text);
+    notify('Table added to submission!');
+  } else {
+    navigator.clipboard.writeText(text).then(()=>notify('Table copied to clipboard!')).catch(()=>notify(text.substring(0,50)+'...'));
+  }
+}
+
+// ============================================================
+// SCIENTIFIC CALCULATOR
+// ============================================================
+function initCalc() {
+  const container = document.getElementById('calcGrid');
+  if (!container) return;
+
+  let expr = '', angleMode = 'deg'; // 'deg' or 'rad'
+
+  container.innerHTML = `
+    <style>
+      .sci-calc { display:flex; flex-direction:column; gap:6px; }
+      .sci-mode { display:flex; gap:6px; margin-bottom:2px; align-items:center; font-size:0.78rem; font-weight:700; color:var(--gray); }
+      .sci-mode button { padding:3px 12px; border-radius:50px; border:2px solid var(--gray-light); background:white; cursor:pointer; font-size:0.78rem; font-weight:700; font-family:'Nunito',sans-serif; transition:all .15s; }
+      .sci-mode button.active { background:var(--sky); color:white; border-color:var(--sky); }
+      .sci-expr { background:#f1f5f9; border-radius:6px; padding:4px 10px; font-size:0.72rem; color:var(--gray); min-height:20px; text-align:right; word-break:break-all; margin-bottom:2px; }
+      .sci-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:5px; }
+      .sci-btn { padding:9px 4px; border:none; border-radius:8px; cursor:pointer; font-size:0.78rem; font-weight:700; font-family:'Nunito',sans-serif; transition:transform .1s,background .1s; text-align:center; }
+      .sci-btn:active { transform:scale(0.92); }
+      .sci-btn.num { background:var(--gray-light); color:var(--gray-dark); }
+      .sci-btn.op  { background:var(--sky); color:white; }
+      .sci-btn.fn  { background:#e0f2fe; color:var(--sky-dark); }
+      .sci-btn.eq  { background:var(--red); color:white; }
+      .sci-btn.clr { background:var(--gold); color:white; }
+      .sci-btn.wide2 { grid-column:span 2; }
+    </style>
+    <div class="sci-calc">
+      <div class="sci-mode">
+        Angle: 
+        <button id="calcDegBtn" class="active" onclick="calcSetAngle('deg')">DEG</button>
+        <button id="calcRadBtn" onclick="calcSetAngle('rad')">RAD</button>
+      </div>
+      <div class="calc-display" id="calcDisplay" style="min-height:48px;font-size:1.4rem;">0</div>
+      <div class="sci-expr" id="calcExpr"></div>
+      <div class="sci-grid" id="calcBtnGrid"></div>
+    </div>`;
+
+  const BUTTONS = [
+    // row 1 – scientific functions
+    {l:'sin',  cls:'fn', fn:()=>applyFn('sin')},
+    {l:'cos',  cls:'fn', fn:()=>applyFn('cos')},
+    {l:'tan',  cls:'fn', fn:()=>applyFn('tan')},
+    {l:'log',  cls:'fn', fn:()=>applyFn('log')},
+    {l:'ln',   cls:'fn', fn:()=>applyFn('ln')},
+    // row 2
+    {l:'sin⁻¹',cls:'fn', fn:()=>applyFn('asin')},
+    {l:'cos⁻¹',cls:'fn', fn:()=>applyFn('acos')},
+    {l:'tan⁻¹',cls:'fn', fn:()=>applyFn('atan')},
+    {l:'√',    cls:'fn', fn:()=>applyFn('sqrt')},
+    {l:'x²',   cls:'fn', fn:()=>applyFn('sq')},
+    // row 3
+    {l:'xʸ',   cls:'fn', fn:()=>append('**')},
+    {l:'π',    cls:'fn', fn:()=>append(String(Math.PI))},
+    {l:'e',    cls:'fn', fn:()=>append(String(Math.E))},
+    {l:'(',    cls:'fn', fn:()=>append('(')},
+    {l:')',    cls:'fn', fn:()=>append(')')},
+    // row 4 – standard
+    {l:'C',    cls:'clr',fn:()=>clearCalc()},
+    {l:'⌫',    cls:'clr',fn:()=>backspace()},
+    {l:'±',    cls:'op', fn:()=>negate()},
+    {l:'%',    cls:'op', fn:()=>percent()},
+    {l:'÷',    cls:'op', fn:()=>append('÷')},
+    // row 5
+    {l:'7',cls:'num',fn:()=>append('7')},
+    {l:'8',cls:'num',fn:()=>append('8')},
+    {l:'9',cls:'num',fn:()=>append('9')},
+    {l:'×',cls:'op', fn:()=>append('×')},
+    {l:'1/x',cls:'fn',fn:()=>applyFn('inv')},
+    // row 6
+    {l:'4',cls:'num',fn:()=>append('4')},
+    {l:'5',cls:'num',fn:()=>append('5')},
+    {l:'6',cls:'num',fn:()=>append('6')},
+    {l:'−',cls:'op', fn:()=>append('−')},
+    {l:'|x|',cls:'fn',fn:()=>applyFn('abs')},
+    // row 7
+    {l:'1',cls:'num',fn:()=>append('1')},
+    {l:'2',cls:'num',fn:()=>append('2')},
+    {l:'3',cls:'num',fn:()=>append('3')},
+    {l:'+',cls:'op', fn:()=>append('+')},
+    {l:'n!',cls:'fn',fn:()=>applyFn('fact')},
+    // row 8
+    {l:'0',  cls:'num wide2',fn:()=>append('0')},
+    {l:'.',  cls:'num',fn:()=>append('.')},
+    {l:'EE', cls:'fn', fn:()=>append('e')},
+    {l:'=',  cls:'eq', fn:()=>calcEval()},
+  ];
+
+  const grid = document.getElementById('calcBtnGrid');
+  BUTTONS.forEach(b => {
+    const btn = document.createElement('button');
+    btn.className = 'sci-btn ' + b.cls;
+    btn.textContent = b.l;
+    btn.addEventListener('click', b.fn);
+    grid.appendChild(btn);
+  });
+
+  // ── helpers ──
+  function disp() { return document.getElementById('calcDisplay'); }
+  function exprEl() { return document.getElementById('calcExpr'); }
+
+  function append(v) {
+    if (expr === '0' && /^\d$/.test(v)) expr = '';
+    if (expr === 'Error') expr = '';
+    expr += v;
+    disp().textContent = expr;
+    exprEl().textContent = '';
+  }
+
+  function clearCalc() { expr = ''; disp().textContent = '0'; exprEl().textContent = ''; }
+  function backspace() { expr = expr.slice(0,-1) || ''; disp().textContent = expr || '0'; }
+
+  function negate() {
+    try {
+      const v = -parseFloat(evalExpr(expr));
+      expr = String(v); disp().textContent = expr;
+    } catch { disp().textContent = 'Error'; expr = ''; }
+  }
+
+  function percent() {
+    try {
+      const v = parseFloat(evalExpr(expr)) / 100;
+      expr = String(v); disp().textContent = expr;
+    } catch { disp().textContent = 'Error'; expr = ''; }
+  }
+
+  function toRad(x) { return angleMode === 'deg' ? x * Math.PI / 180 : x; }
+  function fromRad(x) { return angleMode === 'deg' ? x * 180 / Math.PI : x; }
+
+  function applyFn(fn) {
+    let val;
+    try { val = parseFloat(evalExpr(expr || '0')); } catch { val = NaN; }
+    if (isNaN(val)) { disp().textContent='Error'; expr=''; return; }
+    let res;
+    switch(fn) {
+      case 'sin':  res = Math.sin(toRad(val)); break;
+      case 'cos':  res = Math.cos(toRad(val)); break;
+      case 'tan':  res = Math.tan(toRad(val)); break;
+      case 'asin': res = fromRad(Math.asin(val)); break;
+      case 'acos': res = fromRad(Math.acos(val)); break;
+      case 'atan': res = fromRad(Math.atan(val)); break;
+      case 'log':  res = Math.log10(val); break;
+      case 'ln':   res = Math.log(val); break;
+      case 'sqrt': res = Math.sqrt(val); break;
+      case 'sq':   res = val * val; break;
+      case 'inv':  res = 1 / val; break;
+      case 'abs':  res = Math.abs(val); break;
+      case 'fact': res = factorial(val); break;
+      default: return;
+    }
+    const labels = {sin:'sin',cos:'cos',tan:'tan',asin:'sin⁻¹',acos:'cos⁻¹',atan:'tan⁻¹',log:'log',ln:'ln',sqrt:'√',sq:'²',inv:'1/',abs:'|',fact:'!'};
+    exprEl().textContent = `${labels[fn] || fn}(${val}) = ${res}`;
+    expr = isFinite(res) ? String(+res.toPrecision(10)) : 'Error';
+    disp().textContent = expr;
+  }
+
+  function factorial(n) {
+    n = Math.round(n);
+    if (n < 0 || n > 170) return NaN;
+    let r = 1; for (let i = 2; i <= n; i++) r *= i; return r;
+  }
+
+  function evalExpr(e) {
+    const safe = e.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
+    return Function('"use strict";return (' + safe + ')')();
+  }
+
+  function calcEval() {
+    if (!expr) return;
+    try {
+      const res = evalExpr(expr);
+      exprEl().textContent = expr + ' =';
+      expr = isFinite(res) ? String(+res.toPrecision(12)).replace(/\.?0+$/, '') : 'Error';
+      disp().textContent = expr;
+    } catch { disp().textContent = 'Error'; exprEl().textContent = expr; expr = ''; }
+  }
+
+  // expose to window for angle toggle buttons
+  window.calcSetAngle = (mode) => {
+    angleMode = mode;
+    document.getElementById('calcDegBtn').classList.toggle('active', mode==='deg');
+    document.getElementById('calcRadBtn').classList.toggle('active', mode==='rad');
+  };
+}
+
+// ============================================================
+// PERIODIC TABLE
+// ============================================================
+const ELEMENTS = [
+  {n:1,sym:'H',name:'Hydrogen',type:'nonmetal'},{n:2,sym:'He',name:'Helium',type:'noble'},
+  {n:3,sym:'Li',name:'Lithium',type:'alkali'},{n:4,sym:'Be',name:'Beryllium',type:'alkali-earth'},
+  {n:5,sym:'B',name:'Boron',type:'nonmetal'},{n:6,sym:'C',name:'Carbon',type:'nonmetal'},
+  {n:7,sym:'N',name:'Nitrogen',type:'nonmetal'},{n:8,sym:'O',name:'Oxygen',type:'nonmetal'},
+  {n:9,sym:'F',name:'Fluorine',type:'halogen'},{n:10,sym:'Ne',name:'Neon',type:'noble'},
+  {n:11,sym:'Na',name:'Sodium',type:'alkali'},{n:12,sym:'Mg',name:'Magnesium',type:'alkali-earth'},
+  {n:13,sym:'Al',name:'Aluminum',type:'transition'},{n:14,sym:'Si',name:'Silicon',type:'nonmetal'},
+  {n:15,sym:'P',name:'Phosphorus',type:'nonmetal'},{n:16,sym:'S',name:'Sulfur',type:'nonmetal'},
+  {n:17,sym:'Cl',name:'Chlorine',type:'halogen'},{n:18,sym:'Ar',name:'Argon',type:'noble'},
+  {n:19,sym:'K',name:'Potassium',type:'alkali'},{n:20,sym:'Ca',name:'Calcium',type:'alkali-earth'},
+  {n:26,sym:'Fe',name:'Iron',type:'transition'},{n:29,sym:'Cu',name:'Copper',type:'transition'},
+  {n:30,sym:'Zn',name:'Zinc',type:'transition'},{n:47,sym:'Ag',name:'Silver',type:'transition'},
+  {n:79,sym:'Au',name:'Gold',type:'transition'},{n:80,sym:'Hg',name:'Mercury',type:'transition'},
+  {n:82,sym:'Pb',name:'Lead',type:'transition'},{n:92,sym:'U',name:'Uranium',type:'transition'},
+];
+
+function initPT() {
+  const body = document.getElementById('ptBody');
+  if (!body) return;
+  body.innerHTML = `
+    <div id="elemInfo" style="background:var(--sky-pale);border-radius:8px;padding:10px;margin-bottom:10px;font-size:0.82rem;color:var(--sky-dark);min-height:38px;text-align:center;font-weight:700;">
+      Click an element to see details
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:4px;max-height:300px;overflow-y:auto;">
+      ${ELEMENTS.map(e=>`
+        <div class="elem ${e.type}" onclick="showElem('${e.sym}','${e.name}',${e.n})" style="width:52px;min-height:52px;cursor:pointer;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px;">
+          <div style="font-size:0.6rem;color:var(--gray);">${e.n}</div>
+          <div style="font-weight:800;font-size:1rem;">${e.sym}</div>
+          <div style="font-size:0.5rem;color:var(--gray);text-align:center;word-break:break-all;">${e.name.length>8?e.sym:e.name}</div>
+        </div>`).join('')}
+    </div>
+    <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+      ${[['alkali','#fef3c7','Alkali Metal'],['alkali-earth','#fde8e8','Alkaline Earth'],['transition','#e0f2fe','Transition Metal'],['nonmetal','#d1fae5','Nonmetal'],['halogen','#fce7f3','Halogen'],['noble','#ede9fe','Noble Gas']].map(([cls,bg,label])=>
+        `<span style="background:${bg};padding:3px 10px;border-radius:50px;font-size:0.7rem;font-weight:700;">${label}</span>`
+      ).join('')}
+    </div>`;
+}
+
+function showElem(sym, name, n) {
+  const el = document.getElementById('elemInfo');
+  if (el) el.textContent = `${n} · ${sym} · ${name}`;
+}
+
+// ============================================================
+// TTS
+// ============================================================
+let ttsUtterance = null;
+function ttsSpeakStart() {
+  ttsStop();
+  const text = document.getElementById('ttsText').value;
+  if (!text) return notify('Type text first','error');
+  ttsUtterance = new SpeechSynthesisUtterance(text);
+  ttsUtterance.rate = parseFloat(document.getElementById('ttsRate').value);
+  ttsUtterance.pitch = parseFloat(document.getElementById('ttsPitch').value);
+  speechSynthesis.speak(ttsUtterance);
+}
+function ttsPause() { speechSynthesis.paused ? speechSynthesis.resume() : speechSynthesis.pause(); }
+function ttsStop() { speechSynthesis.cancel(); }
+
+// ============================================================
+// DRAGGABLE WINDOWS
+// ============================================================
+function dragStart(e, winId) {
+  const win = document.getElementById(winId);
+  let dx = e.clientX - win.offsetLeft, dy = e.clientY - win.offsetTop;
+  function onMove(ev) { win.style.left=ev.clientX-dx+'px'; win.style.top=ev.clientY-dy+'px'; win.style.bottom='auto'; win.style.right='auto'; }
+  function onUp() { document.removeEventListener('mousemove',onMove); document.removeEventListener('mouseup',onUp); }
+  document.addEventListener('mousemove',onMove);
+  document.addEventListener('mouseup',onUp);
+}
+
+function openToolWin(id) {
+  document.getElementById(id).classList.add('open');
+  if (id==='calcWin') initCalc();
+  if (id==='ptWin') initPT();
+  document.getElementById('toolsMenu').classList.remove('open');
+}
+function closeToolWin(id) { document.getElementById(id).classList.remove('open'); }
+function toggleToolsMenu() { document.getElementById('toolsMenu').classList.toggle('open'); }
+
+// ============================================================
+// PAGE INIT HOOKS
+// ============================================================
+function initPage(page) {
+  if (page === 'board') setTimeout(initBoard, 100);
+  if (page === 'send-work') { mcQCount = 0; }
+  if (page === 'payments') setTimeout(()=>{ selectPayMethod(document.querySelector('.pay-method-btn'),'airtel'); }, 50);
+}
+
+// ============================================================
+// PAYMENT METHODS
+// ============================================================
+const PAY_METHOD_DETAILS = {
+  airtel: '<strong>Airtel Money:</strong> Dial <strong>*778#</strong> → Send Money → Enter <strong>0977-RAF001</strong> → Enter amount → Reference: Student ID.',
+  mtn: '<strong>MTN Mobile Money:</strong> Dial <strong>*303#</strong> → Pay Bill → School Code: <strong>RAF2025</strong> → Enter amount → Reference: Student ID.',
+  zanaco: '<strong>Bank Transfer (ZANACO):</strong> Account Name: <em>Rafiki Secondary & Primary School</em> · Account No: <strong>1122334455</strong> · Branch: Chongwe. Use Student ID as reference.',
+  cash: '<strong>Cash at School:</strong> Pay at the school bursar\'s office (Main Block) during office hours Mon–Fri 07:30–16:00. Request an official receipt.',
+};
+let selectedPayMethod = 'airtel';
+
+function selectPayMethod(el, method) {
+  if (!el) return;
+  document.querySelectorAll('.pay-method-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPayMethod = method || el.dataset.method || 'airtel';
+  const det = document.getElementById('payMethodDetails');
+  if (det) det.innerHTML = PAY_METHOD_DETAILS[selectedPayMethod] || '';
+}
+
+function processPayment(studentId, studentName, amount) {
+  const method = selectedPayMethod || 'airtel';
+  const methodLabels = { airtel:'Airtel Money', mtn:'MTN Mobile Money', zanaco:'Bank Transfer', cash:'Cash at School' };
+  const label = methodLabels[method] || method;
+  // Show a confirmation modal-like flow using the existing notify + confirm
+  if (!confirm(`Confirm payment of ZMW ${amount} for ${studentName} via ${label}?\n\nMake sure you have completed the transfer using the instructions shown before confirming.`)) return;
+  // Record payment locally (in real app this would call the API)
+  if (!DB._cache.payments) DB._cache.payments = {};
+  DB._cache.payments[studentId] = {
+    paid: true,
+    method: label,
+    date: new Date().toLocaleDateString(),
+    amount,
+  };
+  // Persist to localStorage so it survives page reloads
+  try {
+    const stored = JSON.parse(localStorage.getItem('rafiki_payments') || '{}');
+    stored[studentId] = DB._cache.payments[studentId];
+    localStorage.setItem('rafiki_payments', JSON.stringify(stored));
+  } catch(e) {}
+  notify(`✅ Payment of ZMW ${amount} recorded for ${studentName}!`);
+  navigate('payments');
+}
+
+function payAllChildren(feePerChild) {
+  const children = DB.getArr('pupils').filter(p => p.parentPhone === currentUser.phone);
+  const payments = DB.get('payments') || {};
+  const unpaid = children.filter(c => !(payments[c.id] && payments[c.id].paid));
+  if (unpaid.length === 0) return notify('All children already paid!');
+  const method = selectedPayMethod || 'airtel';
+  const methodLabels = { airtel:'Airtel Money', mtn:'MTN Mobile Money', zanaco:'Bank Transfer', cash:'Cash at School' };
+  const label = methodLabels[method] || method;
+  const total = unpaid.length * feePerChild;
+  if (!confirm(`Confirm payment of ZMW ${total} for ${unpaid.length} child(ren) via ${label}?`)) return;
+  if (!DB._cache.payments) DB._cache.payments = {};
+  const stored = JSON.parse(localStorage.getItem('rafiki_payments') || '{}');
+  unpaid.forEach(c => {
+    DB._cache.payments[c.id] = { paid: true, method: label, date: new Date().toLocaleDateString(), amount: feePerChild };
+    stored[c.id] = DB._cache.payments[c.id];
+  });
+  try { localStorage.setItem('rafiki_payments', JSON.stringify(stored)); } catch(e) {}
+  notify(`✅ ZMW ${total} payment recorded for ${unpaid.length} child(ren)!`);
+  navigate('payments');
+}
+
+// ============================================================
+// NOTIFICATION
+// ============================================================
+function notify(msg, type='') {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.className = 'notif show' + (type==='error'?' error':'');
+  setTimeout(()=>el.classList.remove('show'), 3500);
+}
+
+// ============================================================
+
+// ============================================================
+// INIT - restore session from sessionStorage if present
+// ============================================================
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('rafiki_session');
+  if (saved) {
+    try {
+      const s = JSON.parse(saved);
+      currentUser = s.user; currentRole = s.role;
+      loginSuccess(currentRole);
+    } catch {}
+  }
+});
+</script>
+</body>
+</html>

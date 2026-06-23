@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Margaret Mwachiyeya Secondary School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C0392B;
+    --red-dark: #922B21;
+    --red-light: #E74C3C;
+    --sky: #0EA5E9;
+    --sky-dark: #0369A1;
+    --sky-light: #38BDF8;
+    --sky-pale: #E0F2FE;
+    --white: #FFFFFF;
+    --off-white: #F8FAFC;
+    --gray: #64748B;
+    --gray-light: #E2E8F0;
+    --gray-dark: #1E293B;
+    --gold: #F59E0B;
+    --green: #10B981;
+    --purple: #8B5CF6;
+    --shadow: 0 4px 24px rgba(0,0,0,0.10);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.16);
+    --radius: 16px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: var(--off-white); color: var(--gray-dark); min-height: 100vh; }
+
+  /* ===== LANDING PAGE ===== */
+  #landing { display: flex; flex-direction: column; min-height: 100vh; }
+  .land-header {
+    background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 40%, var(--sky-dark) 100%);
+    color: white; padding: 18px 40px; display: flex; align-items: center; gap: 18px;
+    box-shadow: var(--shadow);
+  }
+  .school-crest {
+    width: 64px; height: 64px; background: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .school-title h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; letter-spacing: 0.5px; }
+  .school-title p { font-size: 0.85rem; opacity: 0.85; margin-top: 2px; }
+
+  .land-hero {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: linear-gradient(160deg, #fff 0%, var(--sky-pale) 60%, #fce4e4 100%);
+    padding: 50px 20px;
+  }
+  .land-hero h2 { font-family: 'Playfair Display', serif; font-size: 2.4rem; text-align: center; color: var(--red-dark); margin-bottom: 10px; }
+  .land-hero p { color: var(--gray); font-size: 1.05rem; text-align: center; max-width: 520px; margin-bottom: 40px; }
+
+  .portal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 22px; max-width: 900px; width: 100%; }
+  .portal-card {
+    background: white; border-radius: var(--radius); padding: 32px 20px; text-align: center;
+    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: var(--shadow); border-top: 5px solid var(--sky);
+    position: relative; overflow: hidden;
+  }
+  .portal-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+  .portal-card.red-top { border-top-color: var(--red); }
+  .portal-card.gold-top { border-top-color: var(--gold); }
+  .portal-card.green-top { border-top-color: var(--green); }
+  .portal-card .p-icon { font-size: 3rem; margin-bottom: 12px; }
+  .portal-card h3 { font-size: 1.2rem; font-weight: 800; color: var(--gray-dark); margin-bottom: 6px; }
+  .portal-card p { font-size: 0.82rem; color: var(--gray); }
+  .portal-card .p-action {
+    margin-top: 16px; display: inline-block; padding: 8px 22px; border-radius: 50px;
+    background: var(--sky); color: white; font-weight: 700; font-size: 0.85rem; transition: background 0.2s;
+  }
+  .portal-card.red-top .p-action { background: var(--red); }
+  .portal-card.gold-top .p-action { background: var(--gold); }
+  .portal-card.green-top .p-action { background: var(--green); }
+
+  /* ===== AUTH MODAL ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    z-index: 1000; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: white; border-radius: var(--radius); padding: 36px; max-width: 500px; width: 100%;
+    box-shadow: var(--shadow-lg); position: relative; max-height: 90vh; overflow-y: auto;
+  }
+  .modal-close {
+    position: absolute; top: 14px; right: 18px; font-size: 1.4rem; cursor: pointer;
+    color: var(--gray); background: none; border: none;
+  }
+  .modal h2 { font-family: 'Playfair Display', serif; color: var(--red-dark); margin-bottom: 6px; }
+  .modal .sub { color: var(--gray); font-size: 0.88rem; margin-bottom: 22px; }
+  .tab-row { display: flex; gap: 0; margin-bottom: 24px; border-radius: var(--radius-sm); overflow: hidden; border: 2px solid var(--gray-light); }
+  .tab-btn {
+    flex: 1; padding: 10px; border: none; background: white; cursor: pointer; font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 0.9rem; color: var(--gray); transition: all 0.2s;
+  }
+  .tab-btn.active { background: var(--sky); color: white; }
+  .tab-btn.red-tab.active { background: var(--red); }
+
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--gray-dark); margin-bottom: 5px; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 10px 14px; border: 2px solid var(--gray-light); border-radius: var(--radius-sm);
+    font-family: 'Nunito', sans-serif; font-size: 0.9rem; color: var(--gray-dark);
+    transition: border-color 0.2s; background: white;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--sky);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .btn {
+    width: 100%; padding: 12px; border: none; border-radius: var(--radius-sm); cursor: pointer;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; transition: all 0.2s;
+  }
+  .btn-sky { background: var(--sky); color: white; }
+  .btn-sky:hover { background: var(--sky-dark); }
+  .btn-red { background: var(--red); color: white; }
+  .btn-red:hover { background: var(--red-dark); }
+  .btn-green { background: var(--green); color: white; }
+  .btn-gold { background: var(--gold); color: white; }
+  .btn-outline { background: transparent; border: 2px solid var(--sky); color: var(--sky); }
+  .btn-sm { width: auto; padding: 7px 16px; font-size: 0.82rem; }
+
+  /* ===== DASHBOARD SHELL ===== */
+  #app { display: none; min-height: 100vh; flex-direction: column; }
+  #app.active { display: flex; }
+  .app-header {
+    background: linear-gradient(90deg, var(--red-dark) 0%, var(--red) 50%, var(--sky-dark) 100%);
+    color: white; padding: 0 28px; display: flex; align-items: center; height: 60px;
+    box-shadow: var(--shadow); position: sticky; top: 0; z-index: 500;
+  }
+  .app-header .logo { font-family: 'Playfair Display', serif; font-size: 1.1rem; flex: 1; }
+  .app-header .user-badge {
+    background: rgba(255,255,255,0.18); border-radius: 50px; padding: 5px 14px;
+    font-size: 0.82rem; font-weight: 700; margin-right: 12px;
+  }
+  .app-header button { background: rgba(255,255,255,0.18); border: none; color: white; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.82rem; font-weight: 700; }
+  .app-header button:hover { background: rgba(255,255,255,0.3); }
+
+  .app-body { display: flex; flex: 1; }
+  .sidebar {
+    width: 240px; background: white; border-right: 2px solid var(--gray-light);
+    padding: 20px 0; flex-shrink: 0; position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto;
+  }
+  .sidebar-section { padding: 8px 20px 4px; font-size: 0.7rem; font-weight: 800; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 11px 22px; cursor: pointer;
+    font-weight: 600; font-size: 0.9rem; color: var(--gray-dark); transition: all 0.15s;
+    border-left: 3px solid transparent;
+  }
+  .nav-item:hover { background: var(--sky-pale); color: var(--sky-dark); border-left-color: var(--sky); }
+  .nav-item.active { background: var(--sky-pale); color: var(--sky-dark); border-left-color: var(--sky); font-weight: 800; }
+
+  .main-content { flex: 1; padding: 28px; overflow-y: auto; max-height: calc(100vh - 60px); }
+
+  /* ===== CARDS & REVIEWS ===== */
+  .page-title { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: var(--red-dark); margin-bottom: 4px; }
+  .page-sub { color: var(--gray); font-size: 0.9rem; margin-bottom: 24px; }
+  .card { background: white; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .stat-card { background: white; border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); border-left: 4px solid var(--sky); text-align: center; }
+  .stat-card.red { border-left-color: var(--red); }
+  .stat-card.gold { border-left-color: var(--gold); }
+  .stat-card .s-num { font-size: 2rem; font-weight: 800; color: var(--gray-dark); }
+
+  /* ===== whiteBOARD ===== */
+  .board-container { background: #1a1a2e; border-radius: var(--radius); padding: 0; overflow: hidden; min-height: 400px; display: flex; flex-direction: column; }
+  .board-toolbar { background: #16213e; padding: 10px 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .board-btn { background: rgba(255,255,255,0.1); border: none; color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 700; }
+  #liveBoard { background: #ffffff; display: block; width: 100%; height: 400px; outline: none; border: 4px solid #334155; }
+  #liveBoard:focus { border-color: var(--sky); }
+  .kbd-instructions { color: white; font-size: 0.85rem; }
+  .kbd-instructions span { background: #334155; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+
+  /* ===== FLOATING UTILITIES ===== */
+  .tools-fab { position: fixed; bottom: 28px; right: 28px; z-index: 900; background: linear-gradient(135deg, var(--red), var(--sky-dark)); color: white; width: 58px; height: 58px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; box-shadow: var(--shadow-lg); border: none; }
+  .tools-menu { position: fixed; bottom: 96px; right: 28px; z-index: 900; background: white; border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 10px; display: none; flex-direction: column; gap: 6px; width: 180px; }
+  .tools-menu.open { display: flex; }
+  .tool-item { padding: 10px 14px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; gap: 10px; }
+  .tool-item:hover { background: var(--sky-pale); color: var(--sky-dark); }
+  
+  .tool-window { position: fixed; z-index: 950; background: white; border-radius: var(--radius); box-shadow: var(--shadow-lg); display: none; flex-direction: column; overflow: hidden; }
+  .tool-window.open { display: flex; }
+  .tool-win-header { background: linear-gradient(90deg, var(--red), var(--sky-dark)); color: white; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; }
+  .tool-win-close { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; }
+  .tool-win-body { flex: 1; overflow: auto; padding: 16px; }
+
+  /* ===== CALCULATOR ===== */
+  .calc-display { background: var(--gray-dark); color: white; padding: 14px; border-radius: var(--radius-sm); text-align: right; font-size: 1.6rem; font-weight: 700; margin-bottom: 10px; min-height: 54px; }
+  .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .calc-btn { padding: 12px; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 1rem; font-weight: 700; }
+  .calc-btn.op { background: var(--sky); color: white; }
+  .calc-btn.eq { background: var(--red); color: white; }
+  .calc-btn.num { background: var(--gray-light); color: var(--gray-dark); }
+  .calc-btn.clr { background: var(--gold); color: white; }
+  .calc-btn.wide { grid-column: span 2; }
+
+  /* ===== PERIODIC TABLE ===== */
+  .pt-grid { display: grid; grid-template-columns: repeat(18, 1fr); gap: 2px; font-size: 0.55rem; }
+  .elem { background: var(--sky-pale); border-radius: 4px; padding: 3px 2px; text-align: center; border: 1px solid var(--gray-light); }
+  .elem .sym { font-weight: 800; font-size: 0.8rem; }
+  .elem .num { font-size: 0.5rem; color: var(--gray); }
+
+  /* ===== TRANSMISSION STRINGS ===== */
+  .msg-thread { display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; padding: 10px; background: var(--off-white); border-radius: var(--radius-sm); margin-bottom: 12px; }
+  .msg-bubble { max-width: 75%; padding: 10px 14px; border-radius: 16px; font-size: 0.88rem; }
+  .msg-bubble.sent { background: var(--sky); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .msg-bubble.recv { background: var(--gray-light); color: var(--gray-dark); align-self: flex-start; border-bottom-left-radius: 4px; }
+  .msg-input-row { display: flex; gap: 10px; }
+  .msg-input-row input { flex: 1; padding: 10px 14px; border: 2px solid var(--gray-light); border-radius: 50px; }
+
+  /* ===== NOTIFICATION LAYER ===== */
+  .notif { position: fixed; top: 72px; right: 20px; z-index: 2000; background: var(--green); color: white; padding: 12px 20px; border-radius: var(--radius-sm); font-weight: 700; display: none; box-shadow: var(--shadow-lg); }
+  .notif.show { display: block; }
+  .notif.error { background: var(--red); }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="notif" id="notif"></div>
+
+<!-- ===== LANDING INTERFACE ===== -->
+<div id="landing">
+  <header class="land-header">
+    <div class="school-crest">🏫</div>
+    <div class="school-title">
+      <h1>Margaret Mwachiyeya Secondary School</h1>
+      <p>think · change · do</p>
+    </div>
+  </header>
+  <div class="land-hero">
+    <h2>Welcome to Our School Portal</h2>
+    <p>Access your database-backed profile panel ecosystem securely.</p>
+    <div class="portal-grid">
+       <div class="portal-card gold-top" onclick="openAuthModal('admin')"><div class="p-icon">🏛️</div><h3>Admin Portal</h3><span class="p-action btn-gold">Enter</span></div>
+       <div class="portal-card" onclick="openAuthModal('pupil')"><div class="p-icon">🎓</div><h3>Pupil Portal</h3><span class="p-action">Enter</span></div>
+       <div class="portal-card red-top" onclick="openAuthModal('teacher')"><div class="p-icon">📚</div><h3>Teacher Portal</h3><span class="p-action btn-red">Enter</span></div>
+       <div class="portal-card green-top" onclick="openAuthModal('parent')"><div class="p-icon">👨‍👩‍👧</div><h3>Parent Portal</h3><span class="p-action btn-green">Enter</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AUTHENTICATION PANEL MODAL ===== -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+    <h2 id="authTitle">Sign In</h2>
+    <div class="tab-row" id="authTabs">
+      <button class="tab-btn active" onclick="switchAuthTab('login')">Login</button>
+      <button class="tab-btn" onclick="switchAuthTab('register')" id="regTabBtn">Register</button>
+    </div>
+    <div id="loginForm"></div>
+    <div id="registerForm" class="hidden"></div>
+  </div>
+</div>
+
+<!-- ===== MAIN CORE SYSTEM LAYOUT ===== -->
+<div id="app">
+  <header class="app-header">
+    <div class="logo">📚 MM Secondary School (Connected Server Layer)</div>
+    <span class="user-badge" id="headerBadge"></span>
+    <button onclick="logout()">Logout</button>
+  </header>
+  <div class="app-body">
+    <nav class="sidebar" id="sidebar"></nav>
+    <main class="main-content" id="mainContent"></main>
+  </div>
+</div>
+
+<!-- ===== FLOATING APPS SYSTEMS ===== -->
+<div class="tool-window" id="calcWin" style="bottom:20px; right:20px; width:280px; height:400px;">
+  <div class="tool-win-header"><span>🔢 Calculator</span><button class="tool-win-close" onclick="closeToolWin('calcWin')">✕</button></div>
+  <div class="tool-win-body">
+    <div class="calc-display" id="calcDisplay">0</div>
+    <div class="calc-grid" id="calcGrid"></div>
+  </div>
+</div>
+
+<div class="tool-window" id="ptWin" style="bottom:20px; right:320px; width:650px; height:350px;">
+  <div class="tool-win-header"><span>⚗️ Periodic Table</span><button class="tool-win-close" onclick="closeToolWin('ptWin')">✕</button></div>
+  <div class="tool-win-body" id="ptBody"></div>
+</div>
+
+<button class="tools-fab" id="toolsFab" onclick="toggleToolsMenu()">🛠️</button>
+<div class="tools-menu" id="toolsMenu">
+  <div class="tool-item" onclick="openToolWin('calcWin')">🔢 Calculator</div>
+  <div class="tool-item" onclick="openToolWin('ptWin')">⚗️ Periodic Table</div>
+</div>
+
+<script>
+let currentUser = null;
+let currentRole = null;
+let authTabActive = 'login';
+
+// Notifications UI handler
+function showNotif(msg, isErr = false) {
+  const n = document.getElementById('notif');
+  n.textContent = msg;
+  n.className = `notif show ${isErr ? 'error' : ''}`;
+  setTimeout(() => n.classList.remove('show'), 4000);
+}
+
+function openAuthModal(role) {
+  currentRole = role;
+  document.getElementById('authTitle').textContent = `${role.toUpperCase()} Access Panel`;
+  document.getElementById('authModal').classList.add('active');
+  document.getElementById('regTabBtn').style.display = (role === 'admin') ? 'none' : '';
+  switchAuthTab('login');
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+function switchAuthTab(tab) {
+  authTabActive = tab;
+  document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+  if (tab === 'login') renderLoginForm(); else renderRegisterForm();
+}
+
+function renderLoginForm() {
+  document.getElementById('loginForm').innerHTML = `
+    <div class="form-group"><label>Unique Access Key (UID / Email / Phone)</label><input type="text" id="liCred"></div>
+    <div class="form-group"><label>Password Passphrase</label><input type="password" id="liPass"></div>
+    <button class="btn btn-sky mt-10" onclick="doLogin()">Authenticate Verification</button>
+  `;
+}
+
+function renderRegisterForm() {
+  document.getElementById('registerForm').innerHTML = `
+    <div class="form-row">
+      <div class="form-group"><label>First Name</label><input type="text" id="rFname"></div>
+      <div class="form-group"><label>Last Name</label><input type="text" id="rLname"></div>
+    </div>
+    <div class="form-group"><label>Cell Phone</label><input type="text" id="rPhone" placeholder="0977XXXXXX"></div>
+    <div class="form-group"><label>Email Address</label><input type="email" id="rEmail"></div>
+    <div class="form-group"><label>Account Password</label><input type="password" id="rPass"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Form / Grade Level</label><input type="text" id="rGrade" placeholder="e.g. 10"></div>
+      <div class="form-group"><label>Class Stream</label><input type="text" id="rClass" placeholder="e.g. A"></div>
+    </div>
+    <button class="btn btn-sky mt-10" onclick="doRegister()">Write Database Profile</button>
+  `;
+}
+
+// Relational API dispatchers
+async function doRegister() {
+  const body = {
+    role: currentRole,
+    fname: document.getElementById('rFname').value,
+    lname: document.getElementById('rLname').value,
+    phone: document.getElementById('rPhone').value,
+    email: document.getElementById('rEmail').value,
+    pass: document.getElementById('rPass').value,
+    formGradeVal: document.getElementById('rGrade').value,
+    className: document.getElementById('rClass').value
+  };
+  const res = await fetch('/api/auth/register', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+  const data = await res.json();
+  if(data.success) { showNotif("Account established! Assigned System ID: " + data.user_uid); switchAuthTab('login'); }
+  else { showNotif(data.message, true); }
+}
+
+async function doLogin() {
+  const body = {
+    role: currentRole,
+    credential: document.getElementById('liCred').value,
+    password: document.getElementById('liPass').value
+  };
+  const res = await fetch('/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+  const data = await res.json();
+  if(data.success) {
+    currentUser = data.user;
+    closeModal('authModal');
+    document.getElementById('landing').style.display = 'none';
+    document.getElementById('app').classList.add('active');
+    document.getElementById('headerBadge').textContent = `${currentUser.firstName} (${currentUser.uid})`;
+    loadDashboardShell();
+  } else { showNotif(data.message, true); }
+}
+
+function loadDashboardShell() {
+  const sb = document.getElementById('sidebar');
+  let navItems = `<div class="nav-item active" onclick="showDashboardHome()">🏠 Home Workspace</div>`;
+  navItems += `<div class="nav-item" onclick="showLiveBoardPage()">🎨 Keyboard Live Board</div>`;
+  navItems += `<div class="nav-item" onclick="showChatWorkspace()">💬 Communications</div>`;
+  if(currentUser.role === 'teacher') {
+    navItems += `<div class="nav-item" onclick="showAssignmentManager()">📝 Issue Work Tasks</div>`;
+  }
+  sb.innerHTML = navItems;
+  showDashboardHome();
+  initCalculator();
+  initPeriodicTable();
+}
+
+async function showDashboardHome() {
+  const mc = document.getElementById('mainContent');
+  if(currentUser.role === 'admin') {
+    const res = await fetch('/api/admin/stats');
+    const stats = await res.json();
+    mc.innerHTML = `
+      <h2 class="page-title">Administrative Overview Registers</h2>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="s-num">${stats.pupils}</div>Pupils Enrolled</div>
+        <div class="stat-card red"><div class="s-num">${stats.teachers}</div>Active Instructors</div>
+        <div class="stat-card gold"><div class="s-num">${stats.assignments}</div>Issued Curriculums</div>
+      </div>
+    `;
+  } else {
+    const res = await fetch(`/api/assignments?grade=${currentUser.formGradeVal || '10'}&className=${currentUser.className || 'A'}`);
+    const assigns = await res.json();
+    let cardsHtml = '';
+    assigns.forEach(a => {
+      cardsHtml += `<div class="card"><h3>${a.title}</h3><p style="margin: 8px 0; color: #475569;">${a.body}</p><small>Assigned by teacher index UID: ${a.assigned_by}</small></div>`;
+    });
+    mc.innerHTML = `<h2 class="page-title">Personalized Assignment Feed</h2><p class="page-sub">Synchronized target syllabus tracks</p>` + (cardsHtml || '<p>No pending academic files published.</p>');
+  }
+}
+
+/* ============================================================
+   UPGRADED INTERACTIVE ACCESSIBLE KEYBOARD DRIVEN DRAWING ENGINE
+   ============================================================ */
+let boardCtx = null, boardPosX = 200, boardPosY = 200, isPenDown = true, lineWeight = 4, penColor = '#1e293b';
+
+function showLiveBoardPage() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = `
+    <h2 class="page-title">Keyboard-Controlled Live Board</h2>
+    <p class="page-sub">Click inside the whiteboard area. Move marker vector lines smoothly via keyboard inputs.</p>
+    <div class="board-container">
+      <div class="board-toolbar">
+        <div class="kbd-instructions">
+          Move Vector: <span>← ↑ → ↓</span> | Toggle Pen State: <span>Spacebar (${isPenDown ? 'DOWN' : 'UP'})</span> | Clear: <span>C</span> | Add Custom Label: <span>T</span> | Width: <span>+</span> or <span>-</span>
+        </div>
+      </div>
+      <canvas id="liveBoard" width="800" height="400" tabindex="1"></canvas>
+    </div>
+  `;
+  const canvas = document.getElementById('liveBoard');
+  boardCtx = canvas.getContext('2d');
+  boardCtx.lineCap = 'round';
+  boardCtx.lineJoin = 'round';
+  renderTrackerDot();
+  canvas.addEventListener('keydown', processBoardKeys);
+}
+
+function renderTrackerDot() {
+  boardCtx.beginPath(); boardCtx.arc(boardPosX, boardPosY, lineWeight/2, 0, 2*Math.PI);
+  boardCtx.fillStyle = penColor; boardCtx.fill();
+}
+
+function processBoardKeys(e) {
+  let oldX = boardPosX, oldY = boardPosY, step = 10;
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+  
+  switch(e.key) {
+    case 'ArrowUp':    boardPosY = Math.max(0, boardPosY - step); break;
+    case 'ArrowDown':  boardPosY = Math.min(400, boardPosY + step); break;
+    case 'ArrowLeft':  boardPosX = Math.max(0, boardPosX - step); break;
+    case 'ArrowRight': boardPosX = Math.min(800, boardPosX + step); break;
+    case ' ':
+      isPenDown = !isPenDown;
+      showNotif(isPenDown ? "Marker Engaged" : "Marker Elevated (Hovering Mode)");
+      document.querySelector('.kbd-instructions span:nth-of-type(2)').textContent = `Spacebar (${isPenDown ? 'DOWN' : 'UP'})`;
+      return;
+    case 'c': case 'C':
+      boardCtx.clearRect(0,0,800,400); renderTrackerDot(); return;
+    case '+': lineWeight = Math.min(24, lineWeight + 2); return;
+    case '-': lineWeight = Math.max(2, lineWeight - 2); return;
+    case 't': case 'T':
+      const text = prompt("Inject layout text block here:");
+      if(text) { boardCtx.font = "16px Nunito"; boardCtx.fillStyle = penColor; boardCtx.fillText(text, boardPosX, boardPosY); }
+      return;
+    default: return;
+  }
+  if(isPenDown) {
+    boardCtx.beginPath(); boardCtx.moveTo(oldX, oldY); boardCtx.lineTo(boardPosX, boardPosY);
+    boardCtx.strokeStyle = penColor; boardCtx.lineWidth = lineWeight; boardCtx.stroke();
+  } else { renderTrackerDot(); }
+}
+
+function showAssignmentManager() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = `
+    <h2 class="page-title">Publish Academic Operations</h2>
+    <div class="card">
+       <div class="form-group"><label>Assignment Title</label><input type="text" id="asgnTitle"></div>
+       <div class="form-group"><label>Syllabus Directives Text Body</label><textarea id="asgnBody" rows="4"></textarea></div>
+       <div class="form-row">
+         <div class="form-group"><label>Target Grade</label><input type="text" id="asgnGrade" value="10"></div>
+         <div class="form-group"><label>Target Stream</label><input type="text" id="asgnClass" value="A"></div>
+       </div>
+       <button class="btn btn-red mt-10" onclick="submitAssignment()">Deploy Content Distribution</button>
+    </div>
+  `;
+}
+
+async function submitAssignment() {
+  const body = {
+    title: document.getElementById('asgnTitle').value,
+    body: document.getElementById('asgnBody').value,
+    type: 'assignment',
+    assignedBy: currentUser.uid,
+    targetGrade: document.getElementById('asgnGrade').value,
+    targetClass: document.getElementById('asgnClass').value
+  };
+  await fetch('/api/assignments', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+  showNotif("Academic assignment file successfully distributed.");
+  showAssignmentManager();
+}
+
+async function showChatWorkspace() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = `
+    <h2 class="page-title">Communications Hub</h2>
+    <div class="card">
+      <div class="form-group"><label>Recipient UID Identifier Key</label><input type="text" id="msgTarget" placeholder="ADM001 / TCH001"></div>
+      <div class="msg-thread" id="msgThread">Loading secure message transmission pipelines...</div>
+      <div class="msg-input-row">
+         <input type="text" id="msgBody" placeholder="Compose message tracking blocks...">
+         <button class="btn btn-sky btn-sm" onclick="dispatchMessage()">Transmit</button>
+      </div>
+    </div>
+  `;
+  pollMessages();
+}
+
+async function pollMessages() {
+  const res = await fetch(`/api/messages/${currentUser.uid}`);
+  const messages = await res.json();
+  const box = document.getElementById('msgThread');
+  if(!box) return;
+  box.innerHTML = messages.map(m => `
+    <div class="msg-bubble ${m.sender_uid === currentUser.uid ? 'sent' : 'recv'}">
+      <strong>${m.first_name}:</strong> ${m.message_content}
+    </div>
+  `).join('');
+}
+
+async function dispatchMessage() {
+  const body = { senderUid: currentUser.uid, receiverUid: document.getElementById('msgTarget').value, content: document.getElementById('msgBody').value };
+  await fetch('/api/messages', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+  document.getElementById('msgBody').value = '';
+  pollMessages();
+}
+
+/* ============================================================
+   UI SYSTEM INTERACTIVE SUB-MODULES (CALCULATOR, PERIODIC TABLE)
+   ============================================================ */
+function initCalculator() {
+  const grid = document.getElementById('calcGrid');
+  const btns = ['C','/','*','-','7','8','9','+','4','5','6','=','1','2','3','0'];
+  grid.innerHTML = btns.map(b => `<button class="calc-btn ${b==='='?'eq':b==='C'?'clr':isNaN(b)?'op':'num'}" onclick="pressCalc('${b}')">${b}</button>`).join('');
+}
+let calcVal = '';
+function pressCalc(b) {
+  const d = document.getElementById('calcDisplay');
+  if(b === 'C') calcVal = '';
+  else if(b === '=') { try { calcVal = eval(calcVal).toString(); } catch{ calcVal='Error'; } }
+  else calcVal += b;
+  d.textContent = calcVal || '0';
+}
+
+function initPeriodicTable() {
+  const elements = [
+    {s:'H',n:1},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'He',n:2},
+    {s:'Li',n:3},{s:'Be',n:4},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'B',n:5},{s:'C',n:6},{s:'N',n:7},{s:'O',n:8},{s:'F',n:9},{s:'Ne',n:10},
+    {s:'Na',n:11},{s:'Mg',n:12},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'',n:0},{s:'Al',n:13},{s:'Si',n:14},{s:'P',n:15},{s:'S',n:16},{s:'Cl',n:17},{s:'Ar',n:18}
+  ];
+  document.getElementById('ptBody').innerHTML = `<div class="pt-grid">` + elements.map(e => e.s ? `<div class="elem"><div class="num">${e.n}</div><div class="sym">${e.s}</div></div>` : `<div></div>`).join('') + `</div>`;
+}
+
+function toggleToolsMenu() { document.getElementById('toolsMenu').classList.toggle('open'); }
+function openToolWin(id) { document.getElementById(id).classList.add('open'); }
+function closeToolWin(id) { document.getElementById(id).classList.remove('open'); }
+function logout() { location.reload(); }
+</script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Margaret Mwachiyeya Sec. School</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red: #C62828;
+            --sky: #0288D1;
+            --white: #fff;
+            --bg: #F5F5F5;
+            --border: #E0E0E0;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Open Sans',sans-serif; background:var(--bg); color:#333; }
+        .login-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center; z-index:999; }
+        .login-box { background:white; padding:30px; border-radius:12px; width:320px; text-align:center; }
+        .login-box input { width:100%; padding:10px; margin:10px 0; border:1px solid #ccc; border-radius:5px; }
+        .btn { padding:8px 20px; border-radius:20px; font-weight:600; cursor:pointer; border:none; }
+        .btn-red { background:var(--red); color:white; }
+        .btn-sky { background:var(--sky); color:white; }
+        .btn-outline { border:1px solid var(--red); color:var(--red); background:transparent; }
+        .container { max-width:1100px; margin:20px auto; padding:20px; display:none; }
+        .tabs { display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
+        .tab { padding:8px 16px; background:#e0e0e0; border-radius:20px; cursor:pointer; font-weight:600; }
+        .tab.active { background:var(--red); color:white; }
+        .panel { background:white; border-radius:8px; padding:20px; box-shadow:var(--shadow); }
+        .list-item { display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border); }
+        .list-item:last-child { border-bottom:none; }
+        .list-item img { width:50px; height:50px; border-radius:50%; object-fit:cover; margin-right:15px; }
+        .actions { display:flex; gap:5px; }
+        .add-btn { margin-top:15px; }
+        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000; }
+        .modal.active { display:flex; }
+        .modal-content { background:white; padding:25px; border-radius:12px; width:90%; max-width:500px; }
+        .modal-content input, .modal-content textarea, .modal-content select { width:100%; padding:8px; margin:6px 0; border:1px solid #ccc; border-radius:4px; }
+    </style>
+</head>
+<body>
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-box">
+            <h2>Admin Login</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button class="btn btn-red" onclick="login()">Log In</button>
+            <p id="loginError" style="color:red;"></p>
+        </div>
+    </div>
+
+    <div class="container" id="dashboard">
+        <h1 style="text-align:center;">Admin Dashboard</h1>
+        <p style="text-align:center;"><a href="../index.html">← Back to Website</a></p>
+        <div class="tabs" id="tabsContainer">
+            <div class="tab active" data-tab="slides">Slides</div>
+            <div class="tab" data-tab="teachers">Teachers</div>
+            <div class="tab" data-tab="pupils">Pupils</div>
+            <div class="tab" data-tab="goods">Goods</div>
+            <div class="tab" data-tab="programs">Programs</div>
+            <div class="tab" data-tab="about">About</div>
+            <div class="tab" data-tab="events">Events</div>
+            <div class="tab" data-tab="admissions">Admissions</div>
+        </div>
+        <div class="panel" id="panelContent"></div>
+    </div>
+
+    <div class="modal" id="editModal"><div class="modal-content" id="modalContent"></div></div>
+
+    <script>
+        const DATA_KEY = 'mms_data';
+        let data = JSON.parse(localStorage.getItem(DATA_KEY)) || getDefaultData();
+        let currentTab = 'slides';
+        let editingIndex = -1;
+        let isAdmin = sessionStorage.getItem('mms_admin') === 'true';
+
+        function getDefaultData() { /* same default as index */ }
+
+        function saveData() { localStorage.setItem(DATA_KEY, JSON.stringify(data)); }
+
+        function login() {
+            if (document.getElementById('username').value.trim()==='guni' && document.getElementById('password').value.trim()==='12345') {
+                sessionStorage.setItem('mms_admin','true');
+                document.getElementById('loginOverlay').style.display='none';
+                document.getElementById('dashboard').style.display='block';
+                renderTab();
+            } else document.getElementById('loginError').textContent='Invalid credentials';
+        }
+
+        document.getElementById('tabsContainer').addEventListener('click', e => {
+            if (e.target.classList.contains('tab')) {
+                currentTab = e.target.dataset.tab;
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+                renderTab();
+            }
+        });
+
+        function renderTab() {
+            const panel = document.getElementById('panelContent');
+            const items = data[currentTab] || [];
+            let html = '';
+            if (currentTab === 'about') {
+                html = `<textarea id="aboutEditor" style="width:100%;height:200px;">${data.aboutText || ''}</textarea>
+                        <button class="btn btn-sky add-btn" onclick="saveAbout()">Save About</button>`;
+            } else if (currentTab === 'admissions') {
+                html = '<table style="width:100%"><tr><th>ID</th><th>Parent</th><th>Student</th><th>Grade</th><th>Email</th><th>Status</th><th>Action</th></tr>';
+                items.forEach(app => {
+                    html += `<tr><td>${app.id}</td><td>${app.parentName}</td><td>${app.studentName}</td><td>${app.grade}</td><td>${app.email}</td>
+                        <td>${app.status}</td><td>${app.status==='pending'?`<button class="btn btn-sky" onclick="updateAdmission(${app.id},'accepted')">Accept</button>
+                        <button class="btn btn-red" onclick="updateAdmission(${app.id},'rejected')">Reject</button>`:''}</td></tr>`;
+                });
+                html += '</table>';
+            } else {
+                items.forEach((item, idx) => {
+                    let display = '';
+                    if (currentTab==='slides') display = `<img src="${item.imageUrl||''}" alt=""><span><strong>${item.title}</strong><br>${item.subtitle}</span>`;
+                    else if (currentTab==='teachers') display = `<img src="${item.imageUrl||''}" alt=""><span><strong>${item.name}</strong><br>${item.subject}</span>`;
+                    else if (currentTab==='pupils') display = `<img src="${item.imageUrl||''}" alt=""><span><strong>${item.name}</strong><br>Grade ${item.grade} - ${item.achievement}</span>`;
+                    else if (currentTab==='goods') display = `<img src="${item.imageUrl||''}" alt=""><span><strong>${item.name}</strong><br>${item.price}</span>`;
+                    else if (currentTab==='events'||currentTab==='programs') display = `<span><strong>${item.title}</strong><br>${item.description} | ${item.date}</span>`;
+                    html += `<div class="list-item"><div style="display:flex;align-items:center;gap:15px;">${display}</div>
+                        <div class="actions"><button class="btn btn-outline" onclick="editItem(${idx})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-red" onclick="deleteItem(${idx})"><i class="fas fa-trash"></i></button></div></div>`;
+                });
+                html += `<button class="btn btn-sky add-btn" onclick="addItem()">+ Add New</button>`;
+            }
+            panel.innerHTML = html;
+        }
+
+        function editItem(idx) { editingIndex = idx; openModal(); }
+        function addItem() { editingIndex = -1; openModal(); }
+        function deleteItem(idx) { if(confirm('Delete?')) { data[currentTab].splice(idx,1); saveData(); renderTab(); } }
+
+        function openModal() {
+            let item = editingIndex >=0 ? data[currentTab][editingIndex] : {};
+            let html = '<h3>' + (editingIndex>=0?'Edit':'Add') + '</h3>';
+            if (currentTab==='slides') html += `<input id="imgUrl" placeholder="Image URL" value="${item.imageUrl||''}"><input id="title" placeholder="Title" value="${item.title||''}"><input id="subtitle" placeholder="Subtitle" value="${item.subtitle||''}">`;
+            else if (currentTab==='teachers') html += `<input id="name" placeholder="Name" value="${item.name||''}"><input id="subject" placeholder="Subject" value="${item.subject||''}"><input id="imgUrl" placeholder="Image URL" value="${item.imageUrl||''}">`;
+            else if (currentTab==='pupils') html += `<input id="name" placeholder="Name" value="${item.name||''}"><input id="grade" placeholder="Grade" value="${item.grade||''}"><input id="achievement" placeholder="Achievement" value="${item.achievement||''}"><input id="imgUrl" placeholder="Image URL" value="${item.imageUrl||''}">`;
+            else if (currentTab==='goods') html += `<input id="name" placeholder="Item" value="${item.name||''}"><input id="price" placeholder="Price" value="${item.price||''}"><input id="imgUrl" placeholder="Image URL" value="${item.imageUrl||''}">`;
+            else if (currentTab==='events'||currentTab==='programs') html += `<input id="title" placeholder="Title" value="${item.title||''}"><input id="date" placeholder="Date" value="${item.date||''}"><textarea id="desc">${item.description||''}</textarea>`;
+            html += `<button class="btn btn-sky" onclick="saveItem()">Save</button><button class="btn btn-outline" onclick="closeModal()">Cancel</button>`;
+            document.getElementById('modalContent').innerHTML = html;
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('editModal').classList.remove('active'); }
+
+        function saveItem() {
+            let obj = {};
+            if (currentTab==='slides') obj = { imageUrl: document.getElementById('imgUrl').value, title: document.getElementById('title').value, subtitle: document.getElementById('subtitle').value };
+            else if (currentTab==='teachers') obj = { name: document.getElementById('name').value, subject: document.getElementById('subject').value, imageUrl: document.getElementById('imgUrl').value };
+            else if (currentTab==='pupils') obj = { name: document.getElementById('name').value, grade: document.getElementById('grade').value, achievement: document.getElementById('achievement').value, imageUrl: document.getElementById('imgUrl').value };
+            else if (currentTab==='goods') obj = { name: document.getElementById('name').value, price: document.getElementById('price').value, imageUrl: document.getElementById('imgUrl').value };
+            else if (currentTab==='events'||currentTab==='programs') obj = { title: document.getElementById('title').value, date: document.getElementById('date').value, description: document.getElementById('desc').value };
+            if (editingIndex>=0) data[currentTab][editingIndex] = obj;
+            else data[currentTab].push(obj);
+            saveData();
+            closeModal();
+            renderTab();
+        }
+
+        function saveAbout() { data.aboutText = document.getElementById('aboutEditor').value; saveData(); alert('Saved'); }
+        function updateAdmission(id, status) { const app = data.admissions.find(a=>a.id===id); if(app) { app.status = status; saveData(); renderTab(); } }
+
+        if (isAdmin) {
+            document.getElementById('loginOverlay').style.display='none';
+            document.getElementById('dashboard').style.display='block';
+            renderTab();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel – Margaret Mwachiyeya SS</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      min-height: 100vh;
+      background: #f4f6f9
+    }
+
+    :root {
+      --red: #c0392b;
+      --sky: #3498db;
+      --gray-dark: #2c3e50;
+      --white: #fff;
+      --border: #e0e0e0
+    }
+
+    .sidebar {
+      width: 260px;
+      background: var(--gray-dark);
+      color: white;
+      padding: 1.5rem 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      overflow-y: auto;
+      z-index: 100;
+      transition: 0.3s
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      padding: 0 1rem 2rem;
+      font-size: 1.4rem;
+      color: var(--sky)
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 0.8rem 1.5rem;
+      color: #ccc;
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: 0.2s
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: #34495e;
+      color: white;
+      border-left-color: var(--sky)
+    }
+
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      padding: 2rem;
+      transition: 0.3s
+    }
+
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 200;
+      background: var(--sky);
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer
+    }
+
+    @media(max-width:768px) {
+      .sidebar {
+        width: 240px;
+        transform: translateX(-100%)
+      }
+
+      .sidebar.open {
+        transform: translateX(0)
+      }
+
+      .main-content {
+        margin-left: 0
+      }
+
+      .menu-toggle {
+        display: block
+      }
+    }
+
+    .section-panel {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      display: none
+    }
+
+    .section-panel.active {
+      display: block
+    }
+
+    h3 {
+      color: var(--red);
+      margin-bottom: 1.2rem
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: var(--gray-dark)
+    }
+
+    input,
+    textarea,
+    select {
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.2s
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--sky)
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem
+    }
+
+    button {
+      padding: 0.6rem 1.5rem;
+      background: var(--sky);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s
+    }
+
+    button:hover {
+      opacity: 0.9
+    }
+
+    button.danger {
+      background: var(--red)
+    }
+
+    button.secondary {
+      background: #7f8c8d
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 0.8rem;
+      background: #fafafa
+    }
+
+    .list-item img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-right: 1rem
+    }
+
+    .list-item .item-info {
+      flex: 1
+    }
+
+    .list-item .item-actions {
+      display: flex;
+      gap: 0.5rem
+    }
+
+    .edit-form {
+      display: none;
+      margin-top: 1rem;
+      background: #f9f9f9;
+      padding: 1rem;
+      border-radius: 8px
+    }
+
+    .edit-form input,
+    .edit-form textarea {
+      width: 100%;
+      margin-bottom: 0.5rem
+    }
+
+    hr {
+      margin: 1.5rem 0;
+      border: 0;
+      border-top: 1px solid #eee
+    }
+
+    .linkbtn {
+      width: 150px;
+      height: 30px;
+      background-color: #c20b0b;
+
+      a {
+        color: #ccc;
+        font-weight: 800;
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰ Menu</button>
+  <button class="linkbtn"><a href="about-admin.html">About Page</a></button>
+  <div class="sidebar" id="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="#" class="active" data-section="carousel">Carousel Slides</a>
+    <a href="#" data-section="students">Best Students</a>
+    <a href="#" data-section="teachers">Best Teachers</a>
+    <a href="#" data-section="staff">Best Staff</a>
+    <a href="#" data-section="goods">Selling Goods</a>
+    <a href="#" data-section="events">Events</a>
+    <a href="#" data-section="stats">School Stats & Motto</a>
+    <a href="#" data-section="admissions">Admissions</a>
+  </div>
+  <div class="main-content" id="mainContent"></div>
+
+  <script>
+    const PREFIX = 'mmss_';
+    function getData(key, defaultValue) { try { return JSON.parse(localStorage.getItem(PREFIX + key)) || defaultValue; } catch (e) { return defaultValue; } }
+    function setData(key, value) { localStorage.setItem(PREFIX + key, JSON.stringify(value)); }
+
+    function initDefaults() {
+      if (!getData('carousel_slides')) setData('carousel_slides', [
+        { id: 1, title: 'Welcome to Margaret Mwachiyeya', subtitle: 'Excellence in Education', image_url: 'https://images.unsplash.com/photo-1523050854058-8df90110cb8f?w=1200' },
+        { id: 2, title: 'Nurturing Future Leaders', subtitle: 'Think · Change · Do', image_url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200' }
+      ]);
+      if (!getData('best_students')) setData('best_students', [
+        { id: 1, name: 'Chanda Mwila', grade: 'Grade 12', rank: 1, image_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400', position_in_class: '1st out of 45', age: 18, sex: 'Female', achievements: 'Science Quiz Champion' }
+      ]);
+      if (!getData('best_teachers')) setData('best_teachers', [
+        { id: 1, name: 'Mr. John Phiri', subject: 'Mathematics', image_url: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=400', qualification: 'BSc Mathematics', years_experience: '12 years', age: 38, achievements: '98% pass rate' }
+      ]);
+      if (!getData('best_staff')) setData('best_staff', [
+        { id: 1, name: 'Mr. Peter Zulu', role: 'Librarian', image_url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400', qualification: 'Diploma in Library Science', years_experience: '8 years', age: 34, achievements: 'Digital Library' }
+      ]);
+      if (!getData('selling_goods')) setData('selling_goods', [
+        { id: 1, name: 'School Uniform', description: 'High-quality branded uniform', image_url: 'https://images.unsplash.com/photo-1598033129183-c4f50dac7c6e?w=400', price: 'ZMW 350', category: 'Uniform' }
+      ]);
+      if (!getData('events')) setData('events', [
+        { id: 1, title: 'Annual Sports Day', description: 'Come and witness our talented athletes!', date: '2026-07-15', image_url: 'https://images.unsplash.com/photo-1461896836934-bd81be05e4d6?w=600', venue: 'School Sports Ground' }
+      ]);
+      if (!getData('about_personnel')) setData('about_personnel', {
+        headteacher: { name: 'Dr. Margaret Mwachiyeya', title: 'Headteacher', image_url: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=500', qualification: 'PhD Educational Leadership', years_in_field: '25 years', age: 52, bio: 'Founding headteacher.' },
+        deputy_headteacher: { name: 'Mr. David Simwanza', title: 'Deputy Headteacher', image_url: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500', qualification: 'MEd Administration', years_in_field: '18 years', age: 45, bio: 'Oversees discipline.' },
+        hods: [
+          { id: 1, name: 'Mrs. Grace Tembo', department: 'Science', image_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400', qualification: 'BSc Chemistry', years_in_field: '14 years', age: 40, bio: 'Passionate about experiments.' }
+        ]
+      });
+      if (!getData('school_stats')) setData('school_stats', { total_pupils: 1250, total_teachers: 65, pass_rate: 94 });
+      if (!getData('school_motto')) setData('school_motto', 'Think · Change · Do');
+      if (!getData('admission_list')) setData('admission_list', []);
+    }
+    initDefaults();
+
+    const sidebarLinks = document.querySelectorAll('.sidebar a');
+    const mainContent = document.getElementById('mainContent');
+    let currentSection = 'carousel';
+
+    sidebarLinks.forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        sidebarLinks.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+        currentSection = this.dataset.section;
+        loadSection(currentSection);
+        if (window.innerWidth < 768) document.getElementById('sidebar').classList.remove('open');
+      });
+    });
+
+    function loadSection(section) {
+      mainContent.innerHTML = '';
+      switch (section) {
+        case 'carousel': renderCarouselAdmin(); break;
+        case 'students': renderListAdmin('best_students', 'student', ['name', 'grade', 'rank', 'position_in_class', 'age', 'sex', 'achievements']); break;
+        case 'teachers': renderListAdmin('best_teachers', 'teacher', ['name', 'subject', 'qualification', 'years_experience', 'age', 'achievements']); break;
+        case 'staff': renderListAdmin('best_staff', 'staff', ['name', 'role', 'qualification', 'years_experience', 'age', 'achievements']); break;
+        case 'goods': renderListAdmin('selling_goods', 'goods', ['name', 'description', 'price', 'category']); break;
+        case 'events': renderListAdmin('events', 'event', ['title', 'description', 'date', 'venue']); break;
+        case 'about': renderAboutAdmin(); break;
+        case 'stats': renderStatsAdmin(); break;
+        case 'admissions': renderAdmissionsAdmin(); break;
+      }
+    }
+
+    function getImageFromInputs(urlInputId, fileInputId, callback) {
+      const url = document.getElementById(urlInputId)?.value.trim();
+      const fileInput = document.getElementById(fileInputId);
+      if (fileInput && fileInput.files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = e => callback(e.target.result);
+        reader.readAsDataURL(fileInput.files[0]);
+      } else if (url) {
+        callback(url);
+      } else {
+        callback(null);
+      }
+    }
+
+    // ========== CAROUSEL ==========
+    function renderCarouselAdmin() {
+      const slides = getData('carousel_slides', []);
+      let html = `<div class="section-panel active"><h3>Manage Carousel Slides</h3>
+        <div class="form-group"><label>Title</label><input id="carTitle" placeholder="Slide title"></div>
+        <div class="form-group"><label>Subtitle</label><input id="carSub" placeholder="Slide subtitle"></div>
+        <div class="form-group"><label>Image URL</label><input id="carImgUrl" placeholder="https://..."></div>
+        <div class="form-group"><label>Or upload from device</label><input type="file" id="carImgFile" accept="image/*"></div>
+        <button onclick="addCarouselSlide()">Add Slide</button><hr>`;
+      slides.forEach(slide => {
+        html += `<div class="list-item" id="carousel-${slide.id}">
+          <img src="${slide.image_url}" onerror="this.src='https://via.placeholder.com/70'">
+          <div class="item-info"><strong>${slide.title}</strong><br><small>${slide.subtitle || ''}</small></div>
+          <div class="item-actions">
+            <button onclick="editCarouselSlide(${slide.id})">Edit</button>
+            <button class="danger" onclick="deleteCarouselSlide(${slide.id})">Delete</button>
+          </div></div>
+          <div class="edit-form" id="edit-carousel-${slide.id}">
+            <input id="editCarTitle-${slide.id}" value="${slide.title}">
+            <input id="editCarSub-${slide.id}" value="${slide.subtitle || ''}">
+            <input id="editCarImgUrl-${slide.id}" value="${slide.image_url}">
+            <input type="file" id="editCarImgFile-${slide.id}" accept="image/*">
+            <div class="btn-row"><button onclick="saveEditCarousel(${slide.id})">Save</button><button class="secondary" onclick="cancelEditCarousel(${slide.id})">Cancel</button></div></div>`;
+      });
+      html += '</div>'; mainContent.innerHTML = html;
+    }
+
+    window.addCarouselSlide = function () {
+      const title = document.getElementById('carTitle').value.trim(); if (!title) return alert('Title required');
+      getImageFromInputs('carImgUrl', 'carImgFile', imgUrl => {
+        const slides = getData('carousel_slides', []);
+        slides.push({ id: Date.now(), title, subtitle: document.getElementById('carSub').value, image_url: imgUrl || 'https://via.placeholder.com/1200x500' });
+        setData('carousel_slides', slides); loadSection('carousel');
+      });
+    };
+    window.editCarouselSlide = function (id) { document.getElementById(`carousel-${id}`).style.display = 'none'; document.getElementById(`edit-carousel-${id}`).style.display = 'block'; };
+    window.saveEditCarousel = function (id) {
+      getImageFromInputs(`editCarImgUrl-${id}`, `editCarImgFile-${id}`, imgUrl => {
+        const slides = getData('carousel_slides', []);
+        const idx = slides.findIndex(s => s.id === id);
+        if (idx !== -1) { slides[idx].title = document.getElementById(`editCarTitle-${id}`).value; slides[idx].subtitle = document.getElementById(`editCarSub-${id}`).value; if (imgUrl) slides[idx].image_url = imgUrl; }
+        setData('carousel_slides', slides); loadSection('carousel');
+      });
+    };
+    window.cancelEditCarousel = function (id) { document.getElementById(`carousel-${id}`).style.display = 'flex'; document.getElementById(`edit-carousel-${id}`).style.display = 'none'; };
+    window.deleteCarouselSlide = function (id) { if (confirm('Delete?')) { let s = getData('carousel_slides', []).filter(s => s.id !== id); setData('carousel_slides', s); loadSection('carousel'); } };
+
+    // ========== GENERIC LIST (students, teachers, staff, goods, events) ==========
+    function renderListAdmin(key, type, extraFields) {
+      const items = getData(key, []);
+      let html = `<div class="section-panel active"><h3>Manage ${type}</h3>
+        <div class="form-group"><label>Name/Title</label><input id="itemName"></div>`;
+      extraFields.forEach(f => html += `<div class="form-group"><label>${f}</label><input id="item_${f}"></div>`);
+      html += `<div class="form-group"><label>Image URL</label><input id="itemImgUrl"></div>
+        <div class="form-group"><label>Or upload</label><input type="file" id="itemImgFile"></div>
+        <button onclick="addItem('${key}')">Add</button><hr>`;
+      items.forEach(item => html += `<div class="list-item"><img src="${item.image_url || 'https://via.placeholder.com/70'}" onerror="this.src='https://via.placeholder.com/70'"><div class="item-info"><strong>${item.name || item.title}</strong></div><div class="item-actions"><button onclick="deleteItem('${key}',${item.id})">Delete</button></div></div>`);
+      html += '</div>'; mainContent.innerHTML = html;
+    }
+    window.addItem = function (key) {
+      const name = document.getElementById('itemName').value.trim(); if (!name) return;
+      const newItem = { id: Date.now(), name };
+      document.querySelectorAll('#mainContent input[id^="item_"]').forEach(inp => { const f = inp.id.replace('item_', ''); if (f !== 'ImgUrl' && f !== 'ImgFile') newItem[f] = inp.value; });
+      getImageFromInputs('itemImgUrl', 'itemImgFile', imgUrl => {
+        newItem.image_url = imgUrl || 'https://via.placeholder.com/400';
+        const items = getData(key, []); items.push(newItem); setData(key, items); loadSection(currentSection);
+      });
+    };
+    window.deleteItem = function (key, id) { if (confirm('Delete?')) { let items = getData(key, []).filter(i => i.id !== id); setData(key, items); loadSection(currentSection); } };
+
+    // ========== STATS & MOTTO ==========
+    function renderStatsAdmin() {
+      const stats = getData('school_stats', { total_pupils: 0, total_teachers: 0, pass_rate: 0 });
+      const motto = getData('school_motto', '');
+      mainContent.innerHTML = `<div class="section-panel active"><h3>School Stats & Motto</h3>
+        <div class="form-group"><label>Total Pupils</label><input id="total_pupils" type="number" value="${stats.total_pupils}"></div>
+        <div class="form-group"><label>Total Teachers</label><input id="total_teachers" type="number" value="${stats.total_teachers}"></div>
+        <div class="form-group"><label>Pass Rate (%)</label><input id="pass_rate" type="number" step="0.1" value="${stats.pass_rate}"></div>
+        <div class="form-group"><label>School Motto</label><input id="motto" value="${motto}"></div>
+        <button onclick="saveStats()">Save</button></div>`;
+    }
+    window.saveStats = function () {
+      setData('school_stats', {
+        total_pupils: parseInt(document.getElementById('total_pupils').value) || 0,
+        total_teachers: parseInt(document.getElementById('total_teachers').value) || 0,
+        pass_rate: parseFloat(document.getElementById('pass_rate').value) || 0
+      });
+      setData('school_motto', document.getElementById('motto').value);
+      alert('Stats & Motto saved!');
+    };
+
+    // ========== ADMISSIONS ==========
+    function renderAdmissionsAdmin() {
+      const apps = getData('admission_list', []);
+      let html = `<div class="section-panel active"><h3>Admission Registrations (${apps.length})</h3>`;
+      if (!apps.length) html += '<p>No applications yet.</p>';
+      else apps.forEach((a, i) => html += `<div class="list-item"><img src="${a.photo || 'https://via.placeholder.com/70'}"><div class="item-info"><strong>${a.fullname}</strong> (${a.grade})<br><small>Parent: ${a.parentName}</small></div><button class="danger" onclick="deleteAdmission(${i})">Delete</button></div>`);
+      html += '</div>'; mainContent.innerHTML = html;
+    }
+    window.deleteAdmission = function (index) {
+      if (confirm('Delete this admission?')) {
+        let apps = getData('admission_list', []);
+        apps.splice(index, 1);
+        setData('admission_list', apps);
+        loadSection('admissions');
+      }
+    };
+
+    // initial load
+    loadSection('carousel');
+  </script>
+</body>
+
+</html>

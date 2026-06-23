@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Registry Administration</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red-dark: #922B21;
+    --sky-dark: #0369A1;
+    --sky-pale: #E0F2FE;
+    --gray-dark: #1E293B;
+    --gray-light: #E2E8F0;
+  }
+  body { font-family: 'Nunito', sans-serif; background: #F8FAFC; color: var(--gray-dark); margin: 0; padding: 40px; }
+  .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+  h1 { color: var(--red-dark); border-bottom: 3px solid var(--sky-dark); padding-bottom: 12px; margin-bottom: 24px; }
+  table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+  th { background: var(--sky-pale); color: var(--sky-dark); padding: 12px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
+  td { padding: 12px; border-bottom: 1px solid var(--gray-light); }
+  tr:hover td { background: #F1F5F9; }
+  .role-badge { display: inline-block; padding: 4px 10px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+  .role-admin { background: #FEE2E2; color: #991B1B; }
+  .role-teacher { background: #FEF3C7; color: #92400E; }
+  .role-pupil { background: #D1FAE5; color: #065F46; }
+  .role-parent { background: #E0F2FE; color: #0369A1; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Master Account Directory Registry</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>System UID</th>
+        <th>System Role</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email Address</th>
+        <th>Cell Phone</th>
+        <th>Target Stream</th>
+        <th>Registration Date</th>
+      </tr>
+    </thead>
+    <tbody id="accountsTableBody">
+      <tr><td colspan="8">Connecting to secure database relational grids...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+async function fetchAccounts() {
+  try {
+    const res = await fetch('/api/admin/accounts');
+    const accounts = await res.json();
+    const tbody = document.getElementById('accountsTableBody');
+    
+    if (accounts.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8">No accounts found in the database.</td></tr>`;
+      return;
+    }
+    
+    tbody.innerHTML = accounts.map(acc => `
+      <tr>
+        <td><strong>${acc.uid}</strong></td>
+        <td><span class="role-badge role-${acc.role}">${acc.role}</span></td>
+        <td>${acc.first_name}</td>
+        <td>${acc.last_name}</td>
+        <td>${acc.email || 'N/A'}</td>
+        <td>${acc.phone || 'N/A'}</td>
+        <td>${acc.form_grade ? `Form/Grade ${acc.form_grade}-${acc.class_name}` : 'Global Staff'}</td>
+        <td>${new Date(acc.created_at).toLocaleDateString()}</td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    document.getElementById('accountsTableBody').innerHTML = `<tr><td colspan="8" style="color:red;">Failed to retrieve records: ${err.message}</td></tr>`;
+  }
+}
+
+// Initial fetch on viewport generation
+window.onload = fetchAccounts;
+</script>
+</body>
+</html>

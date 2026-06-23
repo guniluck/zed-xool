@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Margaret Mwachiyeya Secondary School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C0392B;
+    --red-dark: #922B21;
+    --red-light: #E74C3C;
+    --sky: #0EA5E9;
+    --sky-dark: #0369A1;
+    --sky-light: #38BDF8;
+    --sky-pale: #E0F2FE;
+    --white: #FFFFFF;
+    --off-white: #F8FAFC;
+    --gray: #64748B;
+    --gray-light: #E2E8F0;
+    --gray-dark: #1E293B;
+    --gold: #F59E0B;
+    --green: #10B981;
+    --purple: #8B5CF6;
+    --shadow: 0 4px 24px rgba(0,0,0,0.10);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.16);
+    --radius: 16px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: var(--off-white); color: var(--gray-dark); min-height: 100vh; }
+
+  /* ===== LANDING PAGE ===== */
+  #landing { display: flex; flex-direction: column; min-height: 100vh; }
+  #landing.hidden { display: none !important; }
+  .land-header {
+    background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 40%, var(--sky-dark) 100%);
+    color: white; padding: 18px 40px; display: flex; align-items: center; gap: 18px;
+    box-shadow: var(--shadow);
+  }
+  .school-crest {
+    width: 64px; height: 64px; background: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .school-title h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; letter-spacing: 0.5px; }
+  .school-title p { font-size: 0.85rem; opacity: 0.85; margin-top: 2px; }
+
+  .land-hero {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: linear-gradient(160deg, #fff 0%, var(--sky-pale) 60%, #fce4e4 100%);
+    padding: 50px 20px;
+  }
+  .land-hero h2 { font-family: 'Playfair Display', serif; font-size: 2.4rem; text-align: center; color: var(--red-dark); margin-bottom: 10px; }
+  .land-hero p { color: var(--gray); font-size: 1.05rem; text-align: center; max-width: 520px; margin-bottom: 40px; }
+
+  .portal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 22px; max-width: 900px; width: 100%; }
+  .portal-card {
+    background: white; border-radius: var(--radius); padding: 32px 20px; text-align: center;
+    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: var(--shadow); border-top: 5px solid var(--sky);
+    position: relative; overflow: hidden;
+  }
+  .portal-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+  .portal-card.red-top { border-top-color: var(--red); }
+  .portal-card.gold-top { border-top-color: var(--gold); }
+  .portal-card.green-top { border-top-color: var(--green); }
+  .portal-card .p-icon { font-size: 3rem; margin-bottom: 12px; }
+  .portal-card h3 { font-size: 1.2rem; font-weight: 800; color: var(--gray-dark); margin-bottom: 6px; }
+  .portal-card p { font-size: 0.82rem; color: var(--gray); }
+  .portal-card .p-action {
+    margin-top: 16px; display: inline-block; padding: 8px 22px; border-radius: 50px;
+    background: var(--sky); color: white; font-weight: 700; font-size: 0.85rem; transition: background 0.2s;
+  }
+  .portal-card.red-top .p-action { background: var(--red); }
+  .portal-card.gold-top .p-action { background: var(--gold); }
+  .portal-card.green-top .p-action { background: var(--green); }
+
+  /* ===== AUTH MODAL ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    z-index: 1000; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: white; border-radius: var(--radius); padding: 36px; max-width: 500px; width: 100%;
+    box-shadow: var(--shadow-lg); position: relative; max-height: 90vh; overflow-y: auto;
+  }
+  .modal-close {
+    position: absolute; top: 14px; right: 18px; font-size: 1.4rem; cursor: pointer;
+    color: var(--gray); background: none; border: none;
+  }
+  .modal h2 { font-family: 'Playfair Display', serif; color: var(--red-dark); margin-bottom: 6px; }
+  .modal .sub { color: var(--gray); font-size: 0.88rem; margin-bottom: 22px; }
+  .tab-row { display: flex; gap: 0; margin-bottom: 24px; border-radius: var(--radius-sm); overflow: hidden; border: 2px solid var(--gray-light); }
+  .tab-btn {
+    flex: 1; padding: 10px; border: none; background: white; cursor: pointer; font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 0.9rem; color: var(--gray); transition: all 0.2s;
+  }
+  .tab-btn.active { background: var(--sky); color: white; }
+  .tab-btn.red-tab.active { background: var(--red); }
+
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--gray-dark); margin-bottom: 5px; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 10px 14px; border: 2px solid var(--gray-light); border-radius: var(--radius-sm);
+    font-family: 'Nunito', sans-serif; font-size: 0.9rem; color: var(--gray-dark);
+    transition: border-color 0.2s; background: white;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--sky);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .btn {
+    width: 100%; padding: 12px; border: none; border-radius: var(--radius-sm); cursor: pointer;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; transition: all 0.2s;
+  }
+  .btn-sky { background: var(--sky); color: white; }
+  .btn-sky:hover { background: var(--sky-dark); }
+  .btn-red { background: var(--red); color: white; }
+  .btn-red:hover { background: var(--red-dark); }
+  .btn-green { background: var(--green); color: white; }
+  .btn-green:hover { background: #059669; }
+  .btn-gold { background: var(--gold); color: white; }
+  .btn-gold:hover { background: #D97706; }
+  .btn-outline { background: transparent; border: 2px solid var(--sky); color: var(--sky); }
+  .btn-sm { width: auto; padding: 7px 16px; font-size: 0.82rem; }
+  .btn-xs { width: auto; padding: 4px 11px; font-size: 0.76rem; border-radius: 6px; }
+
+  /* ===== DASHBOARD SHELL ===== */
+  #app { display: none; min-height: 100vh; flex-direction: column; }
+  #app.active { display: flex; }
+  .app-header {
+    background: linear-gradient(90deg, var(--red-dark) 0%, var(--red) 50%, var(--sky-dark) 100%);
+    color: white; padding: 0 28px; display: flex; align-items: center; height: 60px;
+    box-shadow: var(--shadow); position: sticky; top: 0; z-index: 500;
+  }
+  .app-header .logo { font-family: 'Playfair Display', serif; font-size: 1.1rem; flex: 1; }
+  .app-header .user-badge {
+    background: rgba(255,255,255,0.18); border-radius: 50px; padding: 5px 14px;
+    font-size: 0.82rem; font-weight: 700; margin-right: 12px;
+  }
+  .app-header button { background: rgba(255,255,255,0.18); border: none; color: white; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.82rem; font-weight: 700; }
+  .app-header button:hover { background: rgba(255,255,255,0.3); }
+
+  .app-body { display: flex; flex: 1; }
+  .sidebar {
+    width: 240px; background: white; border-right: 2px solid var(--gray-light);
+    padding: 20px 0; flex-shrink: 0; position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto;
+  }
+  .sidebar-section { padding: 8px 20px 4px; font-size: 0.7rem; font-weight: 800; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 11px 22px; cursor: pointer;
+    font-weight: 600; font-size: 0.9rem; color: var(--gray-dark); transition: all 0.15s;
+    border-left: 3px solid transparent;
+  }
+  .nav-item:hover { background: var(--sky-pale); color: var(--sky-dark); border-left-color: var(--sky); }
+  .nav-item.active { background: var(--sky-pale); color: var(--sky-dark); border-left-color: var(--sky); font-weight: 800; }
+  .nav-item .icon { font-size: 1.1rem; width: 22px; text-align: center; }
+
+  .main-content { flex: 1; padding: 28px; overflow-y: auto; max-height: calc(100vh - 60px); }
+
+  /* ===== CARDS & PANELS ===== */
+  .page-title { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: var(--red-dark); margin-bottom: 4px; }
+  .page-sub { color: var(--gray); font-size: 0.9rem; margin-bottom: 24px; }
+  .card { background: white; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .card-title { font-weight: 800; font-size: 1rem; color: var(--gray-dark); }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .stat-card {
+    background: white; border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
+    border-left: 4px solid var(--sky); text-align: center;
+  }
+  .stat-card.red { border-left-color: var(--red); }
+  .stat-card.gold { border-left-color: var(--gold); }
+  .stat-card.green { border-left-color: var(--green); }
+  .stat-card .s-num { font-size: 2rem; font-weight: 800; color: var(--gray-dark); }
+  .stat-card .s-label { font-size: 0.78rem; color: var(--gray); margin-top: 2px; }
+
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; }
+  .badge-sky { background: var(--sky-pale); color: var(--sky-dark); }
+  .badge-red { background: #fde8e8; color: var(--red-dark); }
+  .badge-green { background: #d1fae5; color: #065f46; }
+  .badge-gold { background: #fef3c7; color: #92400e; }
+  .badge-gray { background: var(--gray-light); color: var(--gray); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  th { background: var(--sky-pale); color: var(--sky-dark); padding: 10px 14px; text-align: left; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--gray-light); vertical-align: middle; }
+  tr:hover td { background: var(--sky-pale); }
+
+  /* ===== WORK/ASSIGNMENT FORMS ===== */
+  .work-card {
+    background: white; border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow);
+    margin-bottom: 16px; border-left: 4px solid var(--sky);
+  }
+  .work-card.assignment { border-left-color: var(--sky); }
+  .work-card.test { border-left-color: var(--gold); }
+  .work-card.exam { border-left-color: var(--red); }
+  .work-card .w-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+  .work-card .w-title { font-weight: 800; font-size: 1rem; color: var(--gray-dark); margin-bottom: 6px; }
+  .work-card .w-body { color: var(--gray-dark); font-size: 0.9rem; line-height: 1.6; }
+
+  .mc-option { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
+  .mc-option input[type=radio], .mc-option input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--sky); }
+
+  /* ===== LIVE BOARD ===== */
+  .board-container { background: #1a1a2e; border-radius: var(--radius); padding: 0; overflow: hidden; min-height: 400px; display: flex; flex-direction: column; }
+  .board-toolbar { background: #16213e; padding: 10px 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .board-btn { background: rgba(255,255,255,0.1); border: none; color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 700; transition: background 0.2s; }
+  .board-btn:hover { background: rgba(255,255,255,0.2); }
+  #liveBoard { flex: 1; min-height: 400px; background: white; cursor: crosshair; display: block; width: 100%; }
+  .color-swatch { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+  .color-swatch.active { border-color: white; }
+
+  /* ===== DRAGGABLE TOOLS ===== */
+  .tools-fab {
+    position: fixed; bottom: 28px; right: 28px; z-index: 900;
+    background: linear-gradient(135deg, var(--red), var(--sky-dark));
+    color: white; width: 58px; height: 58px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer;
+    box-shadow: var(--shadow-lg); border: none; transition: transform 0.2s;
+  }
+  .tools-fab:hover { transform: scale(1.1); }
+  .tools-fab.hidden { display: none !important; }
+  .tools-menu {
+    position: fixed; bottom: 96px; right: 28px; z-index: 900;
+    background: white; border-radius: var(--radius); box-shadow: var(--shadow-lg);
+    padding: 10px; display: none; flex-direction: column; gap: 6px; width: 180px;
+  }
+  .tools-menu.open { display: flex; }
+  .tool-item { padding: 10px 14px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; gap: 10px; transition: background 0.15s; color: var(--gray-dark); }
+  .tool-item:hover { background: var(--sky-pale); color: var(--sky-dark); }
+
+  .tool-window {
+    position: fixed; z-index: 950; background: white; border-radius: var(--radius);
+    box-shadow: var(--shadow-lg); display: none; flex-direction: column;
+    resize: both; overflow: hidden; min-width: 280px; min-height: 300px;
+  }
+  .tool-window.open { display: flex; }
+  .tool-win-header {
+    background: linear-gradient(90deg, var(--red), var(--sky-dark));
+    color: white; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;
+    cursor: move; user-select: none;
+  }
+  .tool-win-header span { font-weight: 800; font-size: 0.9rem; }
+  .tool-win-close { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; }
+  .tool-win-body { flex: 1; overflow: auto; padding: 16px; }
+
+  /* ===== CALCULATOR ===== */
+  .calc-display { background: var(--gray-dark); color: white; padding: 14px; border-radius: var(--radius-sm); text-align: right; font-size: 1.6rem; font-weight: 700; margin-bottom: 10px; word-break: break-all; min-height: 54px; }
+  .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .calc-btn { padding: 12px; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 1rem; font-weight: 700; transition: transform 0.1s; font-family: 'Nunito', sans-serif; }
+  .calc-btn:active { transform: scale(0.94); }
+  .calc-btn.op { background: var(--sky); color: white; }
+  .calc-btn.eq { background: var(--red); color: white; }
+  .calc-btn.num { background: var(--gray-light); color: var(--gray-dark); }
+  .calc-btn.clr { background: var(--gold); color: white; }
+  .calc-btn.wide { grid-column: span 2; }
+
+  /* ===== PERIODIC TABLE ===== */
+  .pt-grid { display: grid; grid-template-columns: repeat(18, 1fr); gap: 2px; font-size: 0.55rem; }
+  .elem {
+    background: var(--sky-pale); border-radius: 4px; padding: 3px 2px; text-align: center; cursor: pointer;
+    border: 1px solid var(--gray-light); transition: transform 0.15s; color: var(--gray-dark);
+  }
+  .elem:hover { transform: scale(1.3); z-index: 10; background: var(--sky); color: white; }
+  .elem .sym { font-weight: 800; font-size: 0.8rem; }
+  .elem .num { font-size: 0.5rem; color: var(--gray); }
+  .elem.alkali { background: #fef3c7; } .elem.alkali-earth { background: #fde8e8; }
+  .elem.transition { background: #e0f2fe; } .elem.nonmetal { background: #d1fae5; }
+  .elem.noble { background: #ede9fe; } .elem.halogen { background: #fce7f3; }
+
+  /* ===== TTS ===== */
+  .tts-area { width: 100%; border: 2px solid var(--gray-light); border-radius: var(--radius-sm); padding: 12px; min-height: 80px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; resize: vertical; }
+  .tts-controls { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+  .tts-slider { width: 100%; }
+
+  /* ===== TABLE BUILDER ===== */
+  .table-builder-grid { border-collapse: collapse; width: 100%; }
+  .table-builder-grid td { border: 2px solid var(--sky); padding: 0; }
+  .table-builder-grid td input { width: 100%; border: none; padding: 8px; font-family: 'Nunito', sans-serif; font-size: 0.88rem; background: transparent; outline: none; }
+  .table-builder-grid th { background: var(--sky-pale); border: 2px solid var(--sky); }
+  .table-builder-grid th input { width: 100%; border: none; padding: 8px; font-family: 'Nunito', sans-serif; font-size: 0.88rem; font-weight: 800; background: transparent; outline: none; color: var(--sky-dark); }
+
+  /* ===== MESSAGES ===== */
+  .msg-thread { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; padding: 10px 0; }
+  .msg-bubble { max-width: 75%; padding: 10px 14px; border-radius: 16px; font-size: 0.88rem; line-height: 1.5; }
+  .msg-bubble.sent { background: var(--sky); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .msg-bubble.recv { background: var(--gray-light); color: var(--gray-dark); align-self: flex-start; border-bottom-left-radius: 4px; }
+  .msg-meta { font-size: 0.7rem; opacity: 0.65; margin-top: 3px; display: block; text-align: right; }
+  .msg-bubble.sent .msg-meta { color: #f0fdf4; }
+  .msg-input-row { display: flex; gap: 10px; margin-top: 14px; }
+  .msg-input-row input { flex: 1; padding: 10px 14px; border: 2px solid var(--gray-light); border-radius: 50px; font-family: 'Nunito', sans-serif; font-size: 0.88rem; }
+  .msg-input-row input:focus { outline: none; border-color: var(--sky); }
+
+  /* ===== REGISTER ===== */
+  .register-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+  .reg-student { background: white; border-radius: var(--radius-sm); padding: 12px; box-shadow: var(--shadow); text-align: center; border-top: 3px solid var(--sky); }
+  .reg-student .s-name { font-weight: 700; font-size: 0.88rem; margin-bottom: 6px; }
+  .reg-student .s-id { font-size: 0.72rem; color: var(--gray); margin-bottom: 8px; }
+  .attendance-btn { display: flex; gap: 6px; justify-content: center; }
+
+  /* ===== RESULTS ===== */
+  .result-bar-wrap { margin: 4px 0; }
+  .result-bar-bg { background: var(--gray-light); border-radius: 50px; height: 10px; }
+  .result-bar { height: 10px; border-radius: 50px; background: linear-gradient(90deg, var(--sky), var(--green)); }
+
+  /* ===== FILE UPLOAD ===== */
+  .file-drop {
+    border: 2px dashed var(--sky); border-radius: var(--radius); padding: 28px;
+    text-align: center; cursor: pointer; transition: background 0.2s; color: var(--gray);
+  }
+  .file-drop:hover { background: var(--sky-pale); }
+  .file-drop .icon { font-size: 2rem; margin-bottom: 8px; display: block; }
+
+  /* ===== NOTIFICATION ===== */
+  .notif {
+    position: fixed; top: 72px; right: 20px; z-index: 2000; background: var(--green);
+    color: white; padding: 12px 20px; border-radius: var(--radius-sm); font-weight: 700;
+    font-size: 0.9rem; box-shadow: var(--shadow-lg); display: none;
+  }
+  .notif.show { display: block; animation: slideIn 0.3s ease; }
+  .notif.error { background: var(--red); }
+  @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .app-header .logo { font-size: 0.9rem; }
+    .land-hero h2 { font-size: 1.7rem; }
+    .portal-grid { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .main-content { padding: 16px; }
+  }
+
+  /* ===== HIDDEN HELPER ===== */
+  .hidden { display: none !important; }
+  .section-page { display: none; }
+  .section-page.active { display: block; }
+  .flex-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .mt-10 { margin-top: 10px; }
+  .mb-10 { margin-bottom: 10px; }
+
+  /* ===== REPORT CARD ===== */
+  .report-card { background: white; border: 3px solid var(--red); border-radius: var(--radius); padding: 28px; max-width: 600px; margin: 0 auto; }
+  .report-header { text-align: center; border-bottom: 2px solid var(--red); padding-bottom: 16px; margin-bottom: 16px; }
+  .report-header h2 { font-family: 'Playfair Display', serif; color: var(--red-dark); }
+  .report-table { width: 100%; border-collapse: collapse; }
+  .report-table th, .report-table td { border: 1px solid var(--gray-light); padding: 8px 12px; font-size: 0.88rem; }
+  .report-table th { background: var(--sky-pale); color: var(--sky-dark); }
+
+  /* Welcome banner */
+  .welcome-banner {
+    background: linear-gradient(135deg, var(--red-dark), var(--sky-dark));
+    color: white; border-radius: var(--radius); padding: 24px 28px; margin-bottom: 24px;
+  }
+  .welcome-banner h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; }
+  .welcome-banner p { opacity: 0.85; font-size: 0.9rem; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<div class="notif" id="notif"></div>
+
+<div id="landing">
+  <header class="land-header">
+    <div class="school-crest">🏫</div>
+    <div class="school-title">
+      <h1>Margaret Mwachiyeya Secondary School</h1>
+      <p> think · change · do</p>
+    </div>
+  </header>
+  <div class="land-hero">
+    <h2>Welcome to Our School Portal</h2>
+    <p>Access your personalized dashboard, submit work, communicate with teachers, and track your academic journey.</p>
+    <div class="portal-grid">
+
+     <div class="portal-card gold-top" onclick="openAuthModal('admin')">
+        <div class="p-icon">🏛️</div>
+        <h3>Admin Portal</h3>
+        <p>School administration and management</p>
+        <span class="p-action btn-gold">Enter</span>
+      </div>
+
+      <div class="portal-card" onclick="openAuthModal('pupil')">
+        <div class="p-icon">🎓</div>
+        <h3>Pupil Portal</h3>
+        <p>Students access classes, submit work and learn</p>
+        <span class="p-action">Enter</span>
+      </div>
+
+      <div class="portal-card red-top" onclick="openAuthModal('teacher')">
+        <div class="p-icon">📚</div>
+        <h3>Teacher Portal</h3>
+        <p>Educators manage classes, send work and mark</p>
+        <span class="p-action btn-red">Enter</span>
+      </div>
+
+      <div class="portal-card green-top" onclick="openAuthModal('parent')">
+        <div class="p-icon">👨‍👩‍👧</div>
+        <h3>Parent Portal</h3>
+        <p>Track your child's progress and communicate</p>
+        <span class="p-action btn-green">Enter</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+    <h2 id="authTitle">Sign In</h2>
+    <p class="sub" id="authSub">Access your portal</p>
+    <div class="tab-row" id="authTabs">
+      <button class="tab-btn active" onclick="switchAuthTab('login')">Login</button>
+      <button class="tab-btn" onclick="switchAuthTab('register')" id="regTabBtn">Register</button>
+    </div>
+    <div id="loginForm"></div>
+    <div id="registerForm" class="hidden"></div>
+  </div>
+</div>
+
+<div id="app">
+  <header class="app-header">
+    <div class="logo">📚 MM Secondary School</div>
+    <span class="user-badge" id="headerBadge"></span>
+    <button onclick="logout()">Logout</button>
+  </header>
+  <div class="app-body">
+    <nav class="sidebar" id="sidebar"></nav>
+    <main class="main-content" id="mainContent"></main>
+  </div>
+</div>
+
+<div class="tool-window" id="calcWin" style="bottom:100px;right:220px;width:280px;height:380px;">
+  <div class="tool-win-header" onmousedown="dragStart(event,'calcWin')">
+    <span>🔢 Calculator</span>
+    <button class="tool-win-close" onclick="closeToolWin('calcWin')">✕</button>
+  </div>
+  <div class="tool-win-body">
+    <div class="calc-display" id="calcDisplay">0</div>
+    <div class="calc-grid" id="calcGrid"></div>
+  </div>
+</div>
+
+<div class="tool-window" id="ptWin" style="bottom:100px;right:220px;width:700px;height:420px;">
+  <div class="tool-win-header" onmousedown="dragStart(event,'ptWin')">
+    <span>⚗️ Periodic Table</span>
+    <button class="tool-win-close" onclick="closeToolWin('ptWin')">✕</button>
+  </div>
+  <div class="tool-win-body" id="ptBody"></div>
+</div>
+
+<div class="tool-window" id="ttsWin" style="bottom:100px;right:220px;width:320px;height:300px;">
+  <div class="tool-win-header" onmousedown="dragStart(event,'ttsWin')">
+    <span>🔊 Talking Mercy (TTS)</span>
+    <button class="tool-win-close" onclick="closeToolWin('ttsWin')">✕</button>
+  </div>
+  <div class="tool-win-body">
+    <textarea class="tts-area" id="ttsText" placeholder="Type text here to be spoken..."></textarea>
+    <div style="margin-top:10px;">
+      <label style="font-size:0.78rem;font-weight:700;">Speed</label>
+      <input type="range" class="tts-slider" id="ttsRate" min="0.5" max="2" step="0.1" value="1">
+    </div>
+    <div style="margin-top:6px;">
+      <label style="font-size:0.78rem;font-weight:700;">Pitch</label>
+      <input type="range" class="tts-slider" id="ttsPitch" min="0.5" max="2" step="0.1" value="1">
+    </div>
+    <div class="tts-controls">
+      <button class="btn btn-sky btn-sm" onclick="ttsSpeakStart()">▶ Speak</button>
+      <button class="btn btn-outline btn-sm" onclick="ttsPause()">⏸ Pause</button>
+      <button class="btn btn-red btn-sm" onclick="ttsStop()">⏹ Stop</button>
+    </div>
+  </div>
+</div>
+
+<div class="tool-window" id="tableWin" style="bottom:100px;right:220px;width:500px;height:400px;">
+  <div class="tool-win-header" onmousedown="dragStart(event,'tableWin')">
+    <span>📊 Table Builder</span>
+    <button class="tool-win-close" onclick="closeToolWin('tableWin')">✕</button>
+  </div>
+  <div class="tool-win-body">
+    <div class="form-group">
+      <label>Table Title</label>
+      <input type="text" id="tableTitle" placeholder="e.g. Income Statement">
+    </div>
+    <div class="flex-row mb-10">
+      <label style="font-size:0.82rem;font-weight:700;">Rows:</label>
+      <input type="number" id="tableRows" value="4" min="1" max="20" style="width:60px;padding:5px;border:2px solid var(--gray-light);border-radius:6px;">
+      <label style="font-size:0.82rem;font-weight:700;">Cols:</label>
+      <input type="number" id="tableCols" value="3" min="1" max="10" style="width:60px;padding:5px;border:2px solid var(--gray-light);border-radius:6px;">
+      <button class="btn btn-sky btn-sm" onclick="buildTable()">Build</button>
+    </div>
+    <div id="tableBuilderArea" style="overflow:auto;max-height:200px;"></div>
+    <button class="btn btn-green btn-sm mt-10" onclick="copyTableToSubmission()">✓ Add to Submission</button>
+  </div>
+</div>
+
+<button class="tools-fab hidden" id="toolsFab" onclick="toggleToolsMenu()">🛠️</button>
+<div class="tools-menu" id="toolsMenu">
+  <div class="tool-item" onclick="openToolWin('calcWin')">🔢 Calculator</div>
+  <div class="tool-item" onclick="openToolWin('ptWin')">⚗️ Periodic Table</div>
+  <div class="tool-item" onclick="openToolWin('ttsWin')">🔊 Talking Mercy</div>
+  <div class="tool-item" onclick="openToolWin('tableWin')">📊 Table Builder</div>
+</div>
+
+<script>
+// ============================================================
+// DATA LAYER (localStorage)
+// ============================================================
+const DB = {
+  get(k) { try { return JSON.parse(localStorage.getItem('mmss_'+k)) || null; } catch { return null; } },
+  set(k,v) { localStorage.setItem('mmss_'+k, JSON.stringify(v)); },
+  getArr(k) { return this.get(k) || []; },
+  push(k,v) { const a = this.getArr(k); a.push(v); this.set(k,a); },
+  update(k, matcher, updater) {
+    const a = this.getArr(k);
+    const idx = a.findIndex(matcher);
+    if (idx !== -1) { a[idx] = updater(a[idx]); this.set(k,a); return true; }
+    return false;
+  }
+};
+
+// Seed administrative and fundamental dummy portal systems data
+if (!DB.get('admins')) {
+  DB.set('admins', [{ id: 'ADM001', name: 'Principal Admin', email: 'admin@mmss.edu', password: 'admin123', role: 'admin' }]);
+}
+if (DB.getArr('pupils').length === 0) {
+  DB.set('pupils', [
+    { id: 'PUP1001', fname: 'Chipo', lname: 'Banda', dob: '2010-04-12', gender: 'Female', level: 'grade', formGrade: '12', class: 'Grade 12A', parentPhone: '0977112233', phone: '0977112234', password: 'password123', role: 'pupil' }
+  ]);
+}
+if (DB.getArr('teachers').length === 0) {
+  DB.set('teachers', [
+    { id: 'TCH2001', fname: 'Mwansa', lname: 'Phiri', email: 'mphiri@mmss.edu', phone: '0966112233', gender: 'Male', qualifications: 'B.Ed Science', department: 'Natural Sciences', password: 'password123', role: 'teacher', status: 'approved' }
+  ]);
+}
+if (DB.getArr('assignments').length === 0) {
+  DB.set('assignments', [
+    { id: 'ASN01', title: 'Grade 12 Composition Writing', type: 'assignment', subject: 'English Language', content: 'Write a comprehensive essay describing your preparation steps for secondary transitions and your selection criteria for upcoming scholarship tracks.', deadline: '2026-07-15', createdBy: 'TCH2001' }
+  ]);
+}
+if (DB.getArr('messages').length === 0) {
+  DB.set('messages', [
+    { from: 'TCH2001', to: '0977112233', text: 'Hello, chipo has shown great progress in college readiness tracking exercises.', timestamp: '2026-06-19 14:00' }
+  ]);
+}
+
+let currentUser = null;
+let currentRole = null;
+
+// ============================================================
+// NOTIFICATION UTILITY
+// ============================================================
+function showToast(msg, isError = false) {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.className = 'notif show' + (isError ? ' error' : '');
+  setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// ============================================================
+// AUTH MANAGEMENT
+// ============================================================
+function openAuthModal(role) {
+  currentRole = role;
+  const titles = { pupil:'Pupil Portal', teacher:'Teacher Portal', admin:'Admin Portal', parent:'Parent Portal' };
+  document.getElementById('authTitle').textContent = titles[role];
+  document.getElementById('authSub').textContent = `Sign in or register as a ${role}`;
+  document.getElementById('authModal').classList.add('active');
+  document.getElementById('regTabBtn').style.display = (role === 'admin' || role === 'parent') ? 'none' : '';
+  switchAuthTab('login');
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+let authTabActive = 'login';
+function switchAuthTab(tab) {
+  authTabActive = tab;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (i===0 && tab==='login')||(i===1 && tab==='register')));
+  document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+  if (tab === 'login') renderLoginForm();
+  else renderRegisterForm();
+}
+
+function renderLoginForm() {
+  const isParent = currentRole === 'parent';
+  document.getElementById('loginForm').innerHTML = `
+    <div class="form-group">
+      <label>${isParent ? 'Parent Registered Mobile No.' : 'Email / Portal ID Number'}</label>
+      <input type="text" id="liEmail" placeholder="${isParent ? 'e.g. 0977112233' : 'Enter identifier Code'}">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="liPass" placeholder="••••••••">
+    </div>
+    <button class="btn btn-sky mt-10" onclick="doLogin()">Login into Secure System</button>
+  `;
+}
+
+function updateClassOptions() {
+  const lvl = document.getElementById('rLevel').value;
+  const fg = document.getElementById('rFormGrade');
+  const cls = document.getElementById('rClass');
+  if(lvl === 'form') {
+    fg.innerHTML = `<option value="1">Form 1</option><option value="2">Form 2</option>`;
+    cls.innerHTML = `<option value="Form 1A">Form 1A</option><option value="Form 2A">Form 2A</option>`;
+  } else if(lvl === 'grade') {
+    fg.innerHTML = `<option value="10">Grade 10</option><option value="11">Grade 11</option><option value="12">Grade 12</option>`;
+    cls.innerHTML = `<option value="Grade 10A">Grade 10A</option><option value="Grade 11A">Grade 11A</option><option value="Grade 12A">Grade 12A</option>`;
+  } else {
+    fg.innerHTML = `<option>Select Level First</option>`;
+    cls.innerHTML = `<option>Select Form/Grade First</option>`;
+  }
+}
+
+function renderRegisterForm() {
+  if (currentRole === 'pupil') {
+    document.getElementById('registerForm').innerHTML = `
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" id="rFname" placeholder="First Name"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="rLname" placeholder="Last Name"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Date of Birth</label><input type="date" id="rDob"></div>
+        <div class="form-group"><label>Gender</label>
+          <select id="rGender"><option value="">Select</option><option>Male</option><option>Female</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Level</label>
+          <select id="rLevel" onchange="updateClassOptions()">
+            <option value="">Select Level</option>
+            <option value="form">Form (1-2)</option>
+            <option value="grade">Grade (10-12)</option>
+          </select>
+        </div>
+        <div class="form-group"><label id="formGradeLabel">Form/Grade</label>
+          <select id="rFormGrade"><option value="">Select Level First</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Class Assignment Block</label>
+        <select id="rClass"><option value="">Select Form/Grade First</option></select>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Parent Phone No.</label><input type="text" id="rParentPhone" placeholder="0977XXXXXX"></div>
+        <div class="form-group"><label>Your Phone No.</label><input type="text" id="rPhone" placeholder="0977XXXXXX"></div>
+      </div>
+      <div class="form-group"><label>Password</label><input type="password" id="rPass" placeholder="Create password"></div>
+      <button class="btn btn-sky mt-10" onclick="doRegisterPupil()">Create Student Account</button>
+    `;
+  } else if (currentRole === 'teacher') {
+    document.getElementById('registerForm').innerHTML = `
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" id="rTFname" placeholder="First Name"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="rTLname" placeholder="Last Name"></div>
+      </div>
+      <div class="form-group"><label>Email Address</label><input type="email" id="rTEmail" placeholder="teacher@mmss.edu"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Phone Number</label><input type="text" id="rTPhone" placeholder="0966XXXXXX"></div>
+        <div class="form-group"><label>Gender</label>
+          <select id="rTGender"><option>Male</option><option>Female</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Professional Qualifications</label><input type="text" id="rTQual" placeholder="e.g. Diploma / B.Ed in Secondary Education"></div>
+      <div class="form-group"><label>Department Group</label>
+        <select id="rTDept">
+          <option>Languages</option>
+          <option>Natural Sciences</option>
+          <option>Mathematics</option>
+          <option>Social Sciences</option>
+          <option>Commercial Studies</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Password</label><input type="password" id="rTPass" placeholder="Security Password"></div>
+      <button class="btn btn-red mt-10" onclick="doRegisterTeacher()">Submit Registration File</button>
+    `;
+  }
+}
+
+function doRegisterPupil() {
+  const f = document.getElementById('rFname').value, l = document.getElementById('rLname').value,
+        dob = document.getElementById('rDob').value, g = document.getElementById('rGender').value,
+        lvl = document.getElementById('rLevel').value, fg = document.getElementById('rFormGrade').value,
+        cls = document.getElementById('rClass').value, pp = document.getElementById('rParentPhone').value,
+        ph = document.getElementById('rPhone').value, pass = document.getElementById('rPass').value;
+  if(!f || !l || !pass || !pp) return showToast("Please fill all mandatory configuration criteria", true);
+  
+  const id = 'PUP' + (Math.floor(Math.random() * 9000) + 1000);
+  const user = { id, fname: f, lname: l, dob, gender: g, level: lvl, formGrade: fg, class: cls, parentPhone: pp, phone: ph, password: pass, role: 'pupil' };
+  DB.push('pupils', user);
+  showToast(`Registration Successful! System Access ID generated: ${id}`);
+  switchAuthTab('login');
+}
+
+function doRegisterTeacher() {
+  const f = document.getElementById('rTFname').value, l = document.getElementById('rTLname').value,
+        em = document.getElementById('rTEmail').value, ph = document.getElementById('rTPhone').value,
+        gen = document.getElementById('rTGender').value, qual = document.getElementById('rTQual').value,
+        dept = document.getElementById('rTDept').value, pass = document.getElementById('rTPass').value;
+  if(!f || !l || !em || !pass) return showToast("All standard fields required", true);
+
+  const id = 'TCH' + (Math.floor(Math.random() * 9000) + 1000);
+  const teacher = { id, fname: f, lname: l, email: em, phone: ph, gender: gen, qualifications: qual, department: dept, password: pass, role: 'teacher', status: 'pending' };
+  DB.push('teachers', teacher);
+  showToast(`File submitted for Admin review. ID code is: ${id}`);
+  switchAuthTab('login');
+}
+
+function doLogin() {
+  const idOrEmail = document.getElementById('liEmail').value.trim();
+  const password = document.getElementById('liPass').value;
+
+  if (currentRole === 'admin') {
+    const matched = DB.getArr('admins').find(u => (u.id === idOrEmail || u.email === idOrEmail) && u.password === password);
+    if(matched) initApp(matched); else showToast("Invalid Admin Verification Credentials", true);
+  } else if (currentRole === 'pupil') {
+    const matched = DB.getArr('pupils').find(u => u.id === idOrEmail && u.password === password);
+    if(matched) initApp(matched); else showToast("Invalid Pupil ID or password profile match", true);
+  } else if (currentRole === 'teacher') {
+    const matched = DB.getArr('teachers').find(u => (u.id === idOrEmail || u.email === idOrEmail) && u.password === password);
+    if(matched) {
+      if(matched.status === 'pending') return showToast("Your registration is awaiting administrative authorization approval status.", true);
+      initApp(matched);
+    } else showToast("Invalid Educator authentication mapping", true);
+  } else if (currentRole === 'parent') {
+    const matched = DB.getArr('pupils').find(u => u.parentPhone === idOrEmail && u.password === password);
+    if(matched) {
+      initApp({ role: 'parent', parentPhone: idOrEmail, childName: `${matched.fname} ${matched.lname}`, childId: matched.id, class: matched.class });
+    } else showToast("No verification matched for this phone number and password matrix", true);
+  }
+}
+
+function initApp(user) {
+  currentUser = user;
+  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('authModal').classList.remove('active');
+  document.getElementById('app').classList.add('active');
+  document.getElementById('toolsFab').classList.remove('hidden');
+  
+  const label = user.role === 'parent' ? `Parent of ${user.childName}` : `${user.fname || user.name || 'User'} (${user.id})`;
+  document.getElementById('headerBadge').textContent = label;
+  
+  renderSidebar();
+  navigateTo(user.role === 'admin' ? 'adm_teachers' : user.role + '_dash');
+}
+
+function logout() {
+  currentUser = null;
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('landing').classList.remove('hidden');
+  document.getElementById('toolsFab').classList.add('hidden');
+  document.getElementById('toolsMenu').classList.remove('open');
+  closeToolWin('calcWin'); closeToolWin('ptWin'); closeToolWin('ttsWin'); closeToolWin('tableWin');
+  showToast("Logged out from system console.");
+}
+
+// ============================================================
+// NAVIGATION LAYOUT ENGINE
+// ============================================================
+const SIDEBAR_SCHEMA = {
+  admin: [
+    { section: "School Administration" },
+    { id: "adm_teachers", label: "Approve Teachers", icon: "⚖️" },
+    { id: "adm_pupils", label: "Manage Pupils", icon: "👥" }
+  ],
+  teacher: [
+    { section: "Educator Deck" },
+    { id: "teacher_dash", label: "Teacher Dashboard", icon: "📊" },
+    { id: "tch_attendance", label: "Take Attendance", icon: "📝" },
+    { id: "tch_work", label: "Issue Work Assignments", icon: "📤" },
+    { id: "tch_grading", label: "Marking Grid", icon: "💯" },
+    { id: "tch_comms", label: "Parent Connect Desk", icon: "💬" }
+  ],
+  pupil: [
+    { section: "Student Terminal" },
+    { id: "pupil_dash", label: "My Dashboard", icon: "🏠" },
+    { id: "pup_work", label: "Open Assignments", icon: "📖" },
+    { id: "pup_board", label: "Live Active Whiteboard", icon: "🎨" }
+  ],
+  parent: [
+    { section: "Parent Watch Desk" },
+    { id: "parent_dash", label: "Child Academic Report", icon: "📜" },
+    { id: "parent_comms", label: "Message Teacher", icon: "💬" }
+  ]
+};
+
+function renderSidebar() {
+  const container = document.getElementById('sidebar');
+  const items = SIDEBAR_SCHEMA[currentUser.role] || [];
+  let html = '';
+  items.forEach(item => {
+    if(item.section) {
+      html += `<div class="sidebar-section">${item.section}</div>`;
+    } else {
+      html += `<div class="nav-item" id="nav_${item.id}" onclick="navigateTo('${item.id}')">
+        <span class="icon">${item.icon}</span> <span>${item.label}</span>
+      </div>`;
+    }
+  });
+  container.innerHTML = html;
+}
+
+function navigateTo(targetId) {
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const activeNav = document.getElementById(`nav_${targetId}`);
+  if(activeNav) activeNav.classList.add('active');
+
+  const main = document.getElementById('mainContent');
+  main.innerHTML = `<div id="${targetId}_page" class="section-page active"></div>`;
+  
+  const fnMap = {
+    adm_teachers: viewAdminTeachers, adm_pupils: viewAdminPupils,
+    teacher_dash: viewTeacherDash, tch_attendance: viewTeacherAttendance, tch_work: viewTeacherWork, tch_grading: viewTeacherGrading, tch_comms: viewTeacherComms,
+    pupil_dash: viewPupilDash, pup_work: viewPupilWork, pup_board: viewPupilBoard,
+    parent_dash: viewParentDash, parent_comms: viewParentComms
+  };
+  if(fnMap[targetId]) fnMap[targetId]();
+}
+
+// ============================================================
+// VIEW LOGIC: ADMIN
+// ============================================================
+function viewAdminTeachers() {
+  const container = document.getElementById('adm_teachers_page');
+  const teachers = DB.getArr('teachers');
+  let rows = teachers.map(t => `
+    <tr>
+      <td><b>${t.id}</b></td>
+      <td>${t.fname} ${t.lname}</td>
+      <td>${t.email}<br>${t.phone}</td>
+      <td>${t.department}</td>
+      <td><span class="badge ${t.status==='approved'?'badge-green':'badge-gold'}">${t.status.toUpperCase()}</span></td>
+      <td>
+        ${t.status === 'pending' ? `<button class="btn btn-sky btn-xs" onclick="approveTeacher('${t.id}')">Approve Access</button>` : 'Authorized'}
+      </td>
+    </tr>
+  `).join('');
+
+  container.innerHTML = `
+    <h2 class="page-title">Teacher Registration System Files</h2>
+    <p class="page-sub">Manage entry rights for educators</p>
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>ID</th><th>Name</th><th>Contact</th><th>Department</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>${rows || '<tr><td colspan="6" style="text-align:center;">No teacher registration forms inside storage records</td></tr>'}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function approveTeacher(id) {
+  DB.update('teachers', t => t.id === id, t => { t.status = 'approved'; return t; });
+  showToast("Teacher clearance profile activated");
+  viewAdminTeachers();
+}
+
+function viewAdminPupils() {
+  const container = document.getElementById('adm_pupils_page');
+  const pupils = DB.getArr('pupils');
+  let rows = pupils.map(p => `
+    <tr>
+      <td><b>${p.id}</b></td>
+      <td>${p.fname} ${p.lname}</td>
+      <td>${p.class}</td>
+      <td>${p.parentPhone}</td>
+      <td><button class="btn btn-red btn-xs" onclick="removePupil('${p.id}')">Delete Entry</button></td>
+    </tr>
+  `).join('');
+
+  container.innerHTML = `
+    <h2 class="page-title">Pupil General Ledger</h2>
+    <p class="page-sub">Operational profiles for system registered learners</p>
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>Pupil ID</th><th>Full Name</th><th>Class Allocation</th><th>Parent Phone Matrix</th><th>Actions</th></tr></thead>
+        <tbody>${rows || '<tr><td colspan="5">No pupil accounts registered in directory.</td></tr>'}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function removePupil(id) {
+  if(confirm("Confirm structural deletion of pupil?")) {
+    let pupils = DB.getArr('pupils').filter(p => p.id !== id);
+    DB.set('pupils', pupils);
+    showToast("Pupil account removed from index matrix.");
+    viewAdminPupils();
+  }
+}
+
+// ============================================================
+// VIEW LOGIC: TEACHER
+// ============================================================
+function viewTeacherDash() {
+  const container = document.getElementById('teacher_dash_page');
+  const pupilsCount = DB.getArr('pupils').length;
+  const assignmentsCount = DB.getArr('assignments').filter(a => a.createdBy === currentUser.id).length;
+  
+  container.innerHTML = `
+    <div class="welcome-banner">
+      <h2>Greetings, Educator ${currentUser.fname} ${currentUser.lname}</h2>
+      <p>Department of ${currentUser.department} Management Engine. Monitor academic tracking structures.</p>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="s-num">${pupilsCount}</div><div class="s-label">Total Pupils Records</div></div>
+      <div class="stat-card red"><div class="s-num">${assignmentsCount}</div><div class="s-label">Tasks Dispatched</div></div>
+    </div>
+  `;
+}
+
+function viewTeacherAttendance() {
+  const container = document.getElementById('tch_attendance_page');
+  const pupils = DB.getArr('pupils');
+  
+  let cards = pupils.map(p => `
+    <div class="reg-student">
+      <div class="s-name">${p.fname} ${p.lname}</div>
+      <div class="s-id">${p.id} • ${p.class}</div>
+      <div class="attendance-btn">
+        <button class="btn btn-green btn-xs" onclick="markAttendance('${p.id}', 'Present')">Present</button>
+        <button class="btn btn-red btn-xs" onclick="markAttendance('${p.id}', 'Absent')">Absent</button>
+      </div>
+    </div>
+  `).join('');
+
+  container.innerHTML = `
+    <h2 class="page-title">Digital Attendance Sheet</h2>
+    <p class="page-sub">Log regular daily participation matrix files</p>
+    <div class="register-grid">${cards || 'No matching active pupils inside local block.'}</div>
+  `;
+}
+
+function markAttendance(pupilId, status) {
+  showToast(`Logged ${status} status confirmation index for user: ${pupilId}`);
+}
+
+function viewTeacherWork() {
+  const container = document.getElementById('tch_work_page');
+  container.innerHTML = `
+    <h2 class="page-title">Dispatch Assignment tasks</h2>
+    <div class="card">
+      <div class="form-group"><label>Assignment/Test Heading Title</label><input type="text" id="asgTitle" placeholder="e.g. Chemical Balancing Exercise"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Evaluation Profile Type</label>
+          <select id="asgType"><option value="assignment">Standard Class Assignment</option><option value="test">Structured Test Sheet</option><option value="exam">Term Examination Blueprint</option></select>
+        </div>
+        <div class="form-group"><label>Subject Context Track</label><input type="text" id="asgSub" placeholder="Chemistry / English"></div>
+      </div>
+      <div class="form-group"><label>Question Text / Prompt Instructions</label><textarea id="asgContent" rows="4" placeholder="Enter task rubric directions..."></textarea></div>
+      <div class="form-group"><label>Submission Deadline date</label><input type="date" id="asgDate"></div>
+      <button class="btn btn-red" onclick="saveAssignment()">Broadcast Curricular Task</button>
+    </div>
+  `;
+}
+
+function saveAssignment() {
+  const title = document.getElementById('asgTitle').value, type = document.getElementById('asgType').value,
+        sub = document.getElementById('asgSub').value, content = document.getElementById('asgContent').value,
+        date = document.getElementById('asgDate').value;
+  if(!title || !content) return showToast("Title and Core structural question prompts required", true);
+  
+  const task = { id: 'ASN'+Date.now().toString().slice(-4), title, type, subject: sub, content, deadline: date, createdBy: currentUser.id };
+  DB.push('assignments', task);
+  showToast("Curricular evaluation framework successfully broadcasted to student portals.");
+  viewTeacherWork();
+}
+
+function viewTeacherGrading() {
+  const container = document.getElementById('tch_grading_page');
+  const subs = DB.getArr('submissions');
+  let rows = subs.map(s => `
+    <tr>
+      <td><b>${s.id}</b></td>
+      <td>${s.pupilName} (${s.pupilId})</td>
+      <td>${s.asgTitle}</td>
+      <td><span class="badge badge-sky">${s.timestamp}</span></td>
+      <td>
+        <div class="flex-row">
+          <input type="number" id="gr_${s.id}" value="${s.grade || ''}" placeholder="Score %" style="width:75px; padding:4px;">
+          <button class="btn btn-green btn-xs" onclick="gradeSubmission('${s.id}')">Submit Grade Score</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+
+  container.innerHTML = `
+    <h2 class="page-title">Gradebook Central Dashboard</h2>
+    <p class="page-sub">Evaluate submitted file structures from active student terminals</p>
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>ID</th><th>Pupil</th><th>Assignment Task</th><th>Submitted Date</th><th>Grading Value Matrix</th></tr></thead>
+        <tbody>${rows || '<tr><td colspan="5">No pending pupil submission objects located inside system storage.</td></tr>'}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function gradeSubmission(subId) {
+  const gradeVal = document.getElementById(`gr_${subId}`).value;
+  if(!gradeVal) return showToast("Enter clear computational score metric first", true);
+  DB.update('submissions', s => s.id === subId, s => { s.grade = gradeVal; return s; });
+  showToast("Student performance record updated successfully.");
+  viewTeacherGrading();
+}
+
+function viewTeacherComms() {
+  const container = document.getElementById('tch_comms_page');
+  const msgs = DB.getArr('messages');
+  let bubbleHtml = msgs.map(m => `
+    <div class="msg-bubble ${m.from === currentUser.id ? 'sent' : 'recv'}">
+      <div>${m.text}</div>
+      <span class="msg-meta">${m.timestamp} (Parent Target: ${m.to})</span>
+    </div>
+  `).join('');
+
+  container.innerHTML = `
+    <h2 class="page-title">Parent Connect Terminal</h2>
+    <p class="page-sub">Secure notification feed to guard channels</p>
+    <div class="card">
+      <div class="form-group">
+        <label>Target Guardian Telephone Vector</label>
+        <input type="text" id="msgTarget" placeholder="e.g. 0977112233">
+      </div>
+      <div class="msg-thread">${bubbleHtml}</div>
+      <div class="msg-input-row">
+        <input type="text" id="msgText" placeholder="Type notification statement or performance note here...">
+        <button class="btn btn-sky btn-sm" onclick="sendTeacherMessage()">Send Broadcast</button>
+      </div>
+    </div>
+  `;
+}
+
+function sendTeacherMessage() {
+  const target = document.getElementById('msgTarget').value, text = document.getElementById('msgText').value;
+  if(!target || !text) return showToast("Specify correct contact coordinate and statement strings", true);
+  
+  const m = { from: currentUser.id, to: target, text, timestamp: new Date().toISOString().replace('T',' ').slice(0,16) };
+  DB.push('messages', m);
+  showToast("Message successfully logged in portal history database.");
+  viewTeacherComms();
+}
+
+// ============================================================
+// VIEW LOGIC: PUPIL
+// ============================================================
+function viewPupilDash() {
+  const container = document.getElementById('pupil_dash_page');
+  const graded = DB.getArr('submissions').filter(s => s.pupilId === currentUser.id && s.grade);
+  
+  let rows = graded.map(g => `
+    <tr>
+      <td><b>${g.asgTitle}</b></td>
+      <td>${g.subject}</td>
+      <td><b>${g.grade}%</b></td>
+      <td>
+        <div class="result-bar-wrap">
+          <div class="result-bar-bg"><div class="result-bar" style="width: ${g.grade}%;"></div></div>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+
+  container.innerHTML = `
+    <div class="welcome-banner">
+      <h2>Welcome Back, ${currentUser.fname}!</h2>
+      <p>Class Stream allocation: <b>${currentUser.class}</b> | Terminal tracking activated.</p>
+    </div>
+    <h3 class="mb-10">Academic Performance Matrix Report</h3>
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>Subject Domain Component</th><th>Category</th><th>Score Metric</th><th>Visual Bar Graph Range</th></tr></thead>
+        <tbody>${rows || '<tr><td colspan="4">No authenticated graded records published inside this student file profile yet.</td></tr>'}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+let activeSubmissionAsgId = null;
+function viewPupilWork() {
+  const container = document.getElementById('pup_work_page');
+  const asgs = DB.getArr('assignments');
+  const subs = DB.getArr('submissions').filter(s => s.pupilId === currentUser.id);
+
+  let html = asgs.map(a => {
+    const isSubmitted = subs.some(s => s.asgId === a.id);
+    return `
+      <div class="work-card ${a.type}">
+        <div class="w-meta">
+          <span class="badge ${a.type==='exam'?'badge-red':a.type==='test'?'badge-gold':'badge-sky'}">${a.type.toUpperCase()}</span>
+          <span class="badge badge-gray">${a.subject}</span>
+          <span class="badge badge-gray">Due: ${a.deadline}</span>
+        </div>
+        <div class="w-title">${a.title}</div>
+        <div class="w-body">${a.content}</div>
+        <div class="mt-10">
+          ${isSubmitted ? `<span class="badge badge-green">✓ Structural file block successfully uploaded</span>` : 
+          `<button class="btn btn-sky btn-sm" onclick="openSubmissionPanel('${a.id}', '${a.title}', '${a.subject}')">Open Workspace Matrix</button>`}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <h2 class="page-title">Assigned Coursework Tasks</h2>
+    <p class="page-sub">Review guidelines and structural requirements</p>
+    <div id="pupilWorkList">${html || 'No tasks posted currently.'}</div>
+    <div class="card hidden" id="submissionWorkspacePanel">
+      <h3 id="wsTitle" style="margin-bottom:12px; color:var(--sky-dark);">Workspace</h3>
+      <div class="form-group">
+        <label>Draft Response Workspace Sandbox</label>
+        <textarea id="submissionText" rows="8" placeholder="Compose architectural responses, structural analyses, or paste Table Builder assets directly here..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Optional Resource Upload Attachment Simulation</label>
+        <div class="file-drop" onclick="showToast('Simulated Document Parser tracking completed.')">
+          <span class="icon">📁</span> Click to link spreadsheet, note maps, or text matrix formats
+        </div>
+      </div>
+      <div class="flex-row">
+        <button class="btn btn-green btn-sm" onclick="submitWorkResponse()">Transmit Secure Submission Packet</button>
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('submissionWorkspacePanel').classList.add('hidden')">Cancel</button>
+      </div>
+    </div>
+  `;
+}
+
+function openSubmissionPanel(asgId, title, sub) {
+  activeSubmissionAsgId = { asgId, title, sub };
+  document.getElementById('wsTitle').textContent = `Workspace for: ${title}`;
+  document.getElementById('submissionText').value = '';
+  document.getElementById('submissionWorkspacePanel').classList.remove('hidden');
+  document.getElementById('submissionWorkspacePanel').scrollIntoView({ behavior: 'smooth' });
+}
+
+function submitWorkResponse() {
+  const text = document.getElementById('submissionText').value;
+  if(!text) return showToast("Workspace field empty", true);
+  
+  const s = {
+    id: 'SUB' + Date.now().toString().slice(-4),
+    asgId: activeSubmissionAsgId.asgId,
+    asgTitle: activeSubmissionAsgId.title,
+    subject: activeSubmissionAsgId.sub,
+    pupilId: currentUser.id,
+    pupilName: `${currentUser.fname} ${currentUser.lname}`,
+    content: text,
+    timestamp: new Date().toISOString().replace('T',' ').slice(0,10),
+    grade: null
+  };
+  
+  DB.push('submissions', s);
+  showToast("Structural payload broadcast achieved successfully.");
+  document.getElementById('submissionWorkspacePanel').classList.add('hidden');
+  viewPupilWork();
+}
+
+function viewPupilBoard() {
+  const container = document.getElementById('pup_board_page');
+  container.innerHTML = `
+    <h2 class="page-title">Live Active Whiteboard Workspace</h2>
+    <p class="page-sub">Interactive logic sketching matrix sandbox</p>
+    <div class="board-container">
+      <div class="board-toolbar">
+        <div class="color-swatch active" style="background:#000000;" onclick="setBoardColor('#000000', this)"></div>
+        <div class="color-swatch" style="background:#C0392B;" onclick="setBoardColor('#C0392B', this)"></div>
+        <div class="color-swatch" style="background:#0EA5E9;" onclick="setBoardColor('#0EA5E9', this)"></div>
+        <div class="color-swatch" style="background:#10B981;" onclick="setBoardColor('#10B981', this)"></div>
+        <button class="board-btn" onclick="clearBoardInstance()">Clear Slate</button>
+      </div>
+      <canvas id="liveBoard"></canvas>
+    </div>
+  `;
+  setTimeout(initWhiteboardEngine, 100);
+}
+
+// ============================================================
+// VIEW LOGIC: PARENT
+// ============================================================
+function viewParentDash() {
+  const container = document.getElementById('parent_dash_page');
+  const graded = DB.getArr('submissions').filter(s => s.pupilId === currentUser.childId && s.grade);
+  
+  let rows = graded.map(g => `
+    <tr>
+      <td>${g.asgTitle}</td>
+      <td>${g.subject}</td>
+      <td><b style="color:var(--green);">${g.grade}%</b></td>
+    </tr>
+  `).join('');
+
+  container.innerHTML = `
+    <div class="report-card">
+      <div class="report-header">
+        <h2>Margaret Mwachiyeya Secondary School</h2>
+        <p>Official Performance Summary Statement File</p>
+      </div>
+      <p style="margin-bottom:8px;">Student Identity Name: <b>${currentUser.childName}</b></p>
+      <p style="margin-bottom:18px;">Assigned Stream Context Vector: <b>${currentUser.class}</b></p>
+      <table class="report-table">
+        <thead><tr><th>Assessment Module Segment</th><th>Subject Group</th><th>Mark Achieved</th></tr></thead>
+        <tbody>${rows || '<tr><td colspan="3" style="text-align:center;">No published grade components compiled for student database index</td></tr>'}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function viewParentComms() {
+  const container = document.getElementById('parent_comms_page');
+  const msgs = DB.getArr('messages').filter(m => m.to === currentUser.parentPhone || m.from === currentUser.parentPhone);
+  
+  let threadHtml = msgs.map(m => `
+    <div class="msg-bubble ${m.from === currentUser.parentPhone ? 'sent' : 'recv'}">
+      <div>${m.text}</div>
+      <span class="msg-meta">${m.timestamp}</span>
+    </div>
+  `).join('');
+
+  container.innerHTML = `
+    <h2 class="page-title">Direct Communication Link</h2>
+    <p class="page-sub">Submit feedback paths directly into tracking files</p>
+    <div class="card">
+      <div class="msg-thread">${threadHtml || '<p style="color:var(--gray);">No messages logged in communication tracking lines.</p>'}</div>
+      <div class="msg-input-row">
+        <input type="text" id="parentMsgText" placeholder="Type clarification message to teacher layout here...">
+        <button class="btn btn-green btn-sm" onclick="sendParentMessage()">Transmit Message</button>
+      </div>
+    </div>
+  `;
+}
+
+function sendParentMessage() {
+  const text = document.getElementById('parentMsgText').value;
+  if(!text) return showToast("Empty context fields rejected", true);
+  
+  const m = { from: currentUser.parentPhone, to: 'FACILITY_STAFF', text, timestamp: new Date().toISOString().replace('T',' ').slice(0,16) };
+  DB.push('messages', m);
+  showToast("Message successfully appended into parent-teacher sync tracking thread.");
+  viewParentComms();
+}
+
+// ============================================================
+// INTERACTIVE ENGINE: WHITEBOARD LAYOUT
+// ============================================================
+let boardCanvas, boardCtx, isDrawing = false;
+let currentPenColor = '#000000';
+
+function initWhiteboardEngine() {
+  boardCanvas = document.getElementById('liveBoard');
+  if(!boardCanvas) return;
+  boardCtx = boardCanvas.getContext('2d');
+  
+  // Configure appropriate structural coordinates mapping
+  boardCanvas.width = boardCanvas.parentElement.clientWidth;
+  boardCanvas.height = 400;
+  
+  boardCtx.strokeStyle = currentPenColor;
+  boardCtx.lineWidth = 3;
+  boardCtx.lineCap = 'round';
+
+  boardCanvas.addEventListener('mousedown', (e) => { isDrawing = true; drawSegment(e); });
+  boardCanvas.addEventListener('mousemove', drawSegment);
+  boardCanvas.addEventListener('mouseup', () => { isDrawing = false; boardCtx.beginPath(); });
+}
+
+function setBoardColor(color, element) {
+  currentPenColor = color;
+  if(boardCtx) boardCtx.strokeStyle = color;
+  document.querySelectorAll('.color-swatch').forEach(el => el.classList.remove('active'));
+  element.classList.add('active');
+}
+
+function drawSegment(e) {
+  if(!isDrawing || !boardCtx) return;
+  const rect = boardCanvas.getBoundingClientRect();
+  boardCtx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+  boardCtx.stroke();
+  boardCtx.beginPath();
+  boardCtx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+}
+
+function clearBoardInstance() {
+  if(boardCtx && boardCanvas) {
+    boardCtx.clearRect(0, 0, boardCanvas.width, boardCanvas.height);
+    showToast("Whiteboard viewport cache reset accomplished.");
+  }
+}
+
+// ============================================================
+// FLOATING MODAL UTILS & TOOL WINDOW DRAGGING ENGINE
+// ============================================================
+function toggleToolsMenu() { document.getElementById('toolsMenu').classList.toggle('open'); }
+function openToolWin(id) {
+  document.getElementById(id).classList.add('open');
+  if(id==='calcWin' && document.getElementById('calcGrid').children.length === 0) initCalcGrid();
+  if(id==='ptWin' && document.getElementById('ptBody').children.length === 0) initPeriodicTableEngine();
+}
+function closeToolWin(id) { document.getElementById(id).classList.remove('open'); }
+
+let activeDragWinId = null, offsetX = 0, offsetY = 0;
+function dragStart(e, id) {
+  activeDragWinId = id;
+  const win = document.getElementById(id);
+  offsetX = e.clientX - win.offsetLeft;
+  offsetY = e.clientY - win.offsetTop;
+  document.addEventListener('mousemove', dragMove);
+  document.addEventListener('mouseup', dragStopHandler);
+}
+function dragMove(e) {
+  if(!activeDragWinId) return;
+  const win = document.getElementById(activeDragWinId);
+  win.style.left = (e.clientX - offsetX) + 'px';
+  win.style.top = (e.clientY - offsetY) + 'px';
+  win.style.bottom = 'auto'; win.style.right = 'auto';
+}
+function dragStopHandler() {
+  document.removeEventListener('mousemove', dragMove);
+  document.removeEventListener('mouseup', dragStopHandler);
+  activeDragWinId = null;
+}
+
+// ============================================================
+// MICRO-APP COMPONENT ONE: LOGICAL CALCULATOR
+// ============================================================
+function initCalcGrid() {
+  const target = document.getElementById('calcGrid');
+  const schema = [
+    'C', '(', ')', '/',
+    '7', '8', '9', '*',
+    '4', '5', '6', '-',
+    '1', '2', '3', '+',
+    '0', '.', '='
+  ];
+  target.innerHTML = schema.map(char => {
+    let cls = 'calc-btn ';
+    if(['+','-','*','/','(',')'].includes(char)) cls += 'op';
+    else if(char === '=') cls += 'eq wide';
+    else if(char === 'C') cls += 'clr';
+    else cls += 'num';
+    return `<button class="${cls}" onclick="handleCalcPress('${char}')">${char}</button>`;
+  }).join('');
+}
+
+let calcExpressionString = '';
+function handleCalcPress(char) {
+  const display = document.getElementById('calcDisplay');
+  if(char === 'C') {
+    calcExpressionString = ''; display.textContent = '0';
+  } else if(char === '=') {
+    try {
+      let res = new Function(`return (${calcExpressionString})`)();
+      display.textContent = res !== undefined ? res : '0';
+      calcExpressionString = String(res);
+    } catch { display.textContent = 'Syntax Error'; calcExpressionString = ''; }
+  } else {
+    calcExpressionString += char;
+    display.textContent = calcExpressionString;
+  }
+}
+
+// ============================================================
+// MICRO-APP COMPONENT TWO: PERIODIC TABLE ENGINE
+// ============================================================
+function initPeriodicTableEngine() {
+  const data = [
+    { n: 1, s: 'H', c: 'nonmetal' }, { n: 0, s: '', c: 'empty', span: 16 }, { n: 2, s: 'He', c: 'noble' },
+    { n: 3, s: 'Li', c: 'alkali' }, { n: 4, s: 'Be', c: 'alkali-earth' }, { n: 0, s: '', c: 'empty', span: 10 },
+    { n: 5, s: 'B', c: 'nonmetal' }, { n: 6, s: 'C', c: 'nonmetal' }, { n: 7, s: 'N', c: 'nonmetal' }, { n: 8, s: 'O', c: 'nonmetal' }, { n: 9, s: 'F', c: 'halogen' }, { n: 10, s: 'Ne', c: 'noble' },
+    { n: 11, s: 'Na', c: 'alkali' }, { n: 12, s: 'Mg', c: 'alkali-earth' }, { n: 0, s: '', c: 'empty', span: 10 },
+    { n: 13, s: 'Al', c: 'transition' }, { n: 14, s: 'Si', c: 'nonmetal' }, { n: 15, s: 'P', c: 'nonmetal' }, { n: 16, s: 'S', c: 'nonmetal' }, { n: 17, s: 'Cl', c: 'halogen' }, { n: 18, s: 'Ar', c: 'noble' }
+  ];
+  let html = '<div class="pt-grid">';
+  data.forEach(e => {
+    if(e.c === 'empty') html += `<div style="grid-column: span ${e.span};"></div>`;
+    else html += `<div class="elem ${e.c}" onclick="showToast('Element parsed: ${e.s} (Atomic Number: ${e.n})')"><div class="num">${e.n}</div><div class="sym">${e.s}</div></div>`;
+  });
+  html += '</div>';
+  document.getElementById('ptBody').innerHTML = html;
+}
+
+// ============================================================
+// MICRO-APP COMPONENT THREE: TEXT TO SPEECH ENGINE (TTS)
+// ============================================================
+let currentTtsUtteranceObj = null;
+function ttsSpeakStart() {
+  window.speechSynthesis.cancel();
+  const txt = document.getElementById('ttsText').value;
+  if(!txt) return showToast("Type text configuration elements inside window box structure", true);
+  
+  currentTtsUtteranceObj = new SpeechSynthesisUtterance(txt);
+  currentTtsUtteranceObj.rate = parseFloat(document.getElementById('ttsRate').value);
+  currentTtsUtteranceObj.pitch = parseFloat(document.getElementById('ttsPitch').value);
+  window.speechSynthesis.speak(currentTtsUtteranceObj);
+}
+function ttsPause() { window.speechSynthesis.pause(); }
+function ttsStop() { window.speechSynthesis.cancel(); }
+
+// ============================================================
+// MICRO-APP COMPONENT FOUR: TABLE BUILDER ENGINE
+// ============================================================
+function buildTable() {
+  const r = parseInt(document.getElementById('tableRows').value);
+  const c = parseInt(document.getElementById('tableCols').value);
+  const area = document.getElementById('tableBuilderArea');
+  
+  let html = '<table class="table-builder-grid"><thead><tr>';
+  for(let j=0; j<c; j++) html += `<th><input type="text" value="Header ${j+1}" id="th_${j}"></th>`;
+  html += '</tr></thead><tbody>';
+  
+  for(let i=0; i<r; i++) {
+    html += '<tr>';
+    for(let j=0; j<c; j++) html += `<td><input type="text" placeholder="Cell Data" id="td_${i}_${j}"></td>`;
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  area.innerHTML = html;
+}
+
+function copyTableToSubmission() {
+  const area = document.getElementById('tableBuilderArea');
+  if(!area.querySelector('table')) return showToast("Build a table first structure block", true);
+  
+  let mdText = "\n\n### [Table Builder Asset Summary]\n";
+  const r = parseInt(document.getElementById('tableRows').value);
+  const c = parseInt(document.getElementById('tableCols').value);
+  
+  let headers = [];
+  for(let j=0; j<c; j++) headers.push(document.getElementById(`th_${j}`).value);
+  mdText += "| " + headers.join(" | ") + " |\n";
+  mdText += "| " + headers.map(() => "---").join(" | ") + " |\n";
+  
+  for(let i=0; i<r; i++) {
+    let rowCells = [];
+    for(let j=0; j<c; j++) rowCells.push(document.getElementById(`td_${i}_${j}`).value || " ");
+    mdText += "| " + rowCells.join(" | ") + " |\n";
+  }
+
+  const workspace = document.getElementById('submissionText');
+  if(workspace && document.getElementById('submissionWorkspacePanel').classList.contains('hidden') === false) {
+    workspace.value += mdText;
+    showToast("Structured matrix table string appended into Workspace text context data.");
+    closeToolWin('tableWin');
+  } else {
+    showToast("Please open a pupil assignment workspace first before copying.", true);
+  }
+}
+</script>
+</body>
+</html>

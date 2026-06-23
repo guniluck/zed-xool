@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Admissions</title>
+  <style>
+    body{font-family:'Segoe UI',sans-serif;background:#0a0a14;color:#fff;padding:20px}
+    h1{color:#3498db} table{width:100%;border-collapse:collapse;background:#1e1e2f;border-radius:12px;overflow:hidden}
+    th,td{padding:12px;border-bottom:1px solid #333} th{background:#2a2a3a}
+    .delete-btn{color:#e74c3c;cursor:pointer}
+  </style>
+</head>
+<body>
+  <h1>Admission Applications</h1>
+  <table id="admissionsTable"><tr><th>Name</th><th>Grade</th><th>Class</th><th>Parent</th><th>Phone</th><th>Date</th><th>Actions</th></tr></table>
+  <script>
+    function loadAdmissions() {
+      const admissions = JSON.parse(localStorage.getItem('mmss_admissions')||'[]');
+      const tbody = document.querySelector('#admissionsTable tbody') || document.querySelector('#admissionsTable');
+      tbody.innerHTML = '<tr><th>Name</th><th>Grade</th><th>Class</th><th>Parent</th><th>Phone</th><th>Date</th><th>Actions</th></tr>';
+      admissions.forEach((a,i) => {
+        const row = tbody.insertRow();
+        row.insertCell().textContent = a.name;
+        row.insertCell().textContent = a.grade;
+        row.insertCell().textContent = a.class;
+        row.insertCell().textContent = a.parent;
+        row.insertCell().textContent = a.phone;
+        row.insertCell().textContent = new Date(a.date).toLocaleDateString();
+        const del = row.insertCell();
+        del.innerHTML = `<span class="delete-btn" onclick="deleteAdmission(${i})"><i class="fas fa-trash"></i></span>`;
+      });
+    }
+    function deleteAdmission(i) {
+      let admissions = JSON.parse(localStorage.getItem('mmss_admissions')||'[]');
+      admissions.splice(i,1);
+      localStorage.setItem('mmss_admissions', JSON.stringify(admissions));
+      loadAdmissions();
+    }
+    loadAdmissions();
+  </script>
+</body>
+</html>

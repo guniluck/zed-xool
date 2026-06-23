@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admission / Registration - MMSS | Margaret Mwachiyeya Secondary School</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --red: #b71c1c;
+      --red-mid: #c62828;
+      --blue: #0d2b52;
+      --blue-mid: #1a3c6e;
+      --white: #ffffff;
+      --off-white: #f8f9fa;
+      --text-dark: #1a1a2e;
+      --text-light: #6b7280;
+      --gold: #f59e0b;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --radius: 20px;
+      --transition: 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+      background: var(--off-white);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      background: linear-gradient(135deg, rgba(13, 43, 82, 0.94), rgba(26, 60, 110, 0.93), rgba(150, 30, 30, 0.9), rgba(183, 28, 28, 0.88));
+      backdrop-filter: blur(16px);
+      padding: 12px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .logo img {
+      height: 42px;
+      border-radius: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: 0.3s;
+      padding: 6px 2px;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2.5px;
+      border-radius: 4px;
+      background: #fff;
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a.active {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .nav-links a.active::after {
+      width: 100%;
+      background: var(--gold);
+      height: 3px;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    /* Hero */
+    .admission-hero {
+      margin-top: 66px;
+      width: 100%;
+      height: 60vh;
+      background: url('https://images.unsplash.com/photo-1523050854058-8df90110a2e5?w=1200') center/cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .admission-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(183, 28, 28, 0.65);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: #fff;
+      max-width: 700px;
+      padding: 20px;
+    }
+
+    .hero-content h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-content p {
+      font-size: 1.2rem;
+      margin-top: 15px;
+    }
+
+    /* Form */
+    .form-section {
+      max-width: 650px;
+      margin: 60px auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .form-section h2 {
+      color: var(--blue);
+      margin-bottom: 25px;
+      text-align: center;
+      font-size: 1.8rem;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--blue);
+    }
+
+    label i {
+      margin-right: 6px;
+      color: var(--red);
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .file-input-wrapper input[type="file"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .file-input-custom {
+      background: #f0f0f0;
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      padding: 12px 20px;
+      text-align: center;
+      width: 100%;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .file-input-custom:hover {
+      border-color: var(--blue);
+    }
+
+    .file-input-custom i {
+      margin-right: 8px;
+      color: var(--blue);
+    }
+
+    .btn {
+      background: var(--red);
+      color: #fff;
+      border: none;
+      padding: 14px 30px;
+      border-radius: 50px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: var(--red-mid);
+    }
+
+    .download-btn {
+      display: none;
+      margin-top: 20px;
+      background: var(--blue);
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .download-btn.show {
+      display: block;
+    }
+
+    .footer {
+      background: #0f172a;
+      padding: 30px 20px;
+      text-align: center;
+      color: #cbd5e1;
+      margin-top: 60px;
+    }
+
+    @media (max-width:768px) {
+      .navbar {
+        padding: 10px 20px;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: linear-gradient(180deg, rgba(13, 43, 82, 0.98), rgba(183, 28, 28, 0.95));
+        flex-direction: column;
+        padding: 0;
+        border-radius: 0 0 16px 16px;
+        overflow: hidden;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-links a {
+        padding: 14px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .nav-links a::after {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .admission-hero {
+        height: 40vh;
+      }
+
+      .hero-content h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="logo"><img src="logo.jpg" alt="MMSS"><span>MMSS</span></a>
+    <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="admission.html" class="active">Admission</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="portal.html">Portal</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="admission-hero">
+    <div class="hero-content">
+      <h1>Register Now</h1>
+      <p>Join Margaret Mwachiyeya Secondary School – Chongwe</p>
+    </div>
+  </section>
+
+  <!-- Registration Form -->
+  <div class="form-section">
+    <h2>Pupil Registration Form</h2>
+    <form id="registrationForm">
+      <div class="form-group">
+        <label><i class="fas fa-user"></i> Full Name</label>
+        <input type="text" required>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-user-tie"></i> Parent / Guardian</label>
+        <input type="text" required>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-envelope"></i> Email</label>
+        <input type="email" required>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-phone"></i> Phone</label>
+        <input type="tel" required>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-graduation-cap"></i> Applying for Level</label>
+        <select required>
+          <option>Form 1</option>
+          <option>Form 2</option>
+          <option>Grade 10</option>
+          <option>Grade 11</option>
+          <option>Grade 12</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-school"></i> Previous School</label>
+        <input type="text" required>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-exchange-alt"></i> Reason for Transfer</label>
+        <textarea rows="3" required></textarea>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-id-card"></i> Exam Number (if applicable)</label>
+        <input type="text">
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-notes-medical"></i> Medical Problems / Allergies</label>
+        <textarea rows="3" placeholder="e.g., asthma, allergies, chronic conditions..."></textarea>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-camera"></i> Pupil's Photo</label>
+        <div class="file-input-wrapper">
+          <input type="file" id="photoInput" accept="image/*">
+          <div class="file-input-custom" id="fileLabel"><i class="fas fa-cloud-upload-alt"></i> Choose a photo</div>
+        </div>
+      </div>
+      <button type="submit" class="btn">Submit Registration</button>
+    </form>
+    <a href="school_rules.pdf" class="btn download-btn" id="downloadBtn" download>
+      <i class="fas fa-download"></i> Download School Rules (PDF)
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p><strong>Margaret Mwachiyeya Secondary School</strong> – Chongwe</p>
+    <p>Est. 2016 · School of Excellence & Holistic Education</p>
+    <p>&copy; 2026 MMSS</p>
+  </footer>
+
+  <script>
+    // Mobile menu
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      const icon = menuToggle.querySelector('i');
+      icon.classList.toggle('fa-bars');
+      icon.classList.toggle('fa-times');
+    });
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // File input label update
+    const photoInput = document.getElementById('photoInput');
+    const fileLabel = document.getElementById('fileLabel');
+    photoInput.addEventListener('change', () => {
+      if (photoInput.files.length > 0) {
+        fileLabel.innerHTML = '<i class="fas fa-check-circle"></i> ' + photoInput.files[0].name;
+      } else {
+        fileLabel.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Choose a photo';
+      }
+    });
+
+    // Form submission – show PDF download button
+    const form = document.getElementById('registrationForm');
+    const downloadBtn = document.getElementById('downloadBtn');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      downloadBtn.classList.add('show');
+      // Optional: scroll to the download button
+      downloadBtn.scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+</body>
+
+</html>

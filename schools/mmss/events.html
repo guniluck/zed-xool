@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events & News - MMSS | Margaret Mwachiyeya Secondary School</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --red: #b71c1c;
+      --red-mid: #c62828;
+      --red-light: #e53935;
+      --blue: #0d2b52;
+      --blue-mid: #1a3c6e;
+      --blue-light: #2563eb;
+      --white: #ffffff;
+      --off-white: #f8f9fa;
+      --text-dark: #1a1a2e;
+      --text-light: #6b7280;
+      --gold: #f59e0b;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+      --radius: 20px;
+      --transition: 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+      background: var(--off-white);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      background: linear-gradient(135deg, rgba(13, 43, 82, 0.94), rgba(26, 60, 110, 0.93), rgba(150, 30, 30, 0.9), rgba(183, 28, 28, 0.88));
+      backdrop-filter: blur(16px);
+      padding: 10px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .navbar.scrolled {
+      background: linear-gradient(135deg, rgba(13, 43, 82, 0.97), rgba(183, 28, 28, 0.93));
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .logo img {
+      height: 42px;
+      border-radius: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: 0.3s;
+      padding: 6px 2px;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2.5px;
+      border-radius: 4px;
+      background: #fff;
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a.active {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .nav-links a.active::after {
+      width: 100%;
+      background: var(--gold);
+      height: 3px;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    /* Hero Slider */
+    .hero-slider {
+      margin-top: 66px;
+      position: relative;
+      width: 100%;
+      height: 70vh;
+      overflow: hidden;
+    }
+
+    .slides {
+      display: flex;
+      transition: transform 0.6s ease-in-out;
+      height: 100%;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2));
+      z-index: 1;
+    }
+
+    .slide-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: #fff;
+      max-width: 700px;
+      padding: 20px;
+    }
+
+    .slide-content h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .slide-content p {
+      font-size: 1.1rem;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      padding: 10px 16px;
+      cursor: pointer;
+      z-index: 3;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    .slider-btn:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .prev {
+      left: 20px;
+    }
+
+    .next {
+      right: 20px;
+    }
+
+    .dots {
+      position: absolute;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 3;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .dot.active {
+      background: #fff;
+      transform: scale(1.3);
+    }
+
+    /* News Grid */
+    .news-section {
+      padding: 60px 20px;
+      background: var(--white);
+    }
+
+    .section-title {
+      text-align: center;
+      color: var(--blue);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      border-radius: 4px;
+      background: var(--red);
+    }
+
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .news-card {
+      height: 320px;
+      border-radius: var(--radius);
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .news-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .news-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 60%);
+      z-index: 1;
+    }
+
+    .news-card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 25px;
+      z-index: 2;
+      color: #fff;
+    }
+
+    .news-card-content h3 {
+      font-size: 1.4rem;
+      margin-bottom: 5px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    .news-card-content .date {
+      font-size: 0.85rem;
+      color: var(--gold);
+    }
+
+    /* Modal Popup */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: var(--radius);
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+      transform: scale(0.9);
+      transition: 0.3s;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-overlay.open .modal {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      padding: 20px;
+      background: linear-gradient(135deg, var(--blue), var(--red));
+      color: #fff;
+      border-radius: var(--radius) var(--radius) 0 0;
+      position: relative;
+    }
+
+    .modal-header h2 {
+      font-size: 1.8rem;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 25px;
+    }
+
+    .modal-body img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .modal-body .meta {
+      color: var(--text-light);
+      margin-bottom: 15px;
+    }
+
+    .modal-body p {
+      color: var(--text-dark);
+      line-height: 1.7;
+    }
+
+    /* Footer */
+    .footer {
+      background: #0f172a;
+      padding: 30px 20px;
+      text-align: center;
+      color: #cbd5e1;
+      margin-top: 40px;
+    }
+
+    .footer p {
+      margin: 5px 0;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width:768px) {
+      .navbar {
+        padding: 10px 20px;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: linear-gradient(180deg, rgba(13, 43, 82, 0.98), rgba(183, 28, 28, 0.95));
+        flex-direction: column;
+        padding: 0;
+        border-radius: 0 0 16px 16px;
+        overflow: hidden;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-links a {
+        padding: 14px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .nav-links a::after {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .hero-slider {
+        height: 50vh;
+      }
+
+      .slide-content h2 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="logo"><img src="logo.jpg" alt="MMSS"><span>MMSS</span></a>
+    <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="admission.html">Admission</a></li>
+      <li><a href="events.html" class="active">Events</a></li>
+      <li><a href="portal.html">Portal</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Slider (Trending News) -->
+  <section class="hero-slider" id="heroSlider">
+    <div class="slides" id="slides">
+      <div class="slide"
+        style="background-image:url('https://images.unsplash.com/photo-1523050854058-8df90110a2e5?w=1200');">
+        <div class="slide-content">
+          <h2>Visitation Day is Coming!</h2>
+          <p>6th June 2026 – Bring love, food, and family to MMSS</p>
+        </div>
+      </div>
+      <div class="slide"
+        style="background-image:url('https://images.unsplash.com/photo-1571266028243-3716f0223d4e?w=1200');">
+        <div class="slide-content">
+          <h2>JETS Fair 2026</h2>
+          <p>Monday – Friday at Chongwe Secondary School</p>
+        </div>
+      </div>
+      <div class="slide"
+        style="background-image:url('https://images.unsplash.com/photo-1541339907198-e03d7f6e3e8f?w=1200');">
+        <div class="slide-content">
+          <h2>Sports Day Excitement</h2>
+          <p>Compete, cheer, celebrate – multiple sports disciplines</p>
+        </div>
+      </div>
+    </div>
+    <button class="slider-btn prev" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+    <button class="slider-btn next" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+    <div class="dots" id="dots"></div>
+  </section>
+
+  <!-- News Cards -->
+  <section class="news-section">
+    <h2 class="section-title">Latest Events & News</h2>
+    <div class="news-grid" id="newsGrid"></div>
+  </section>
+
+  <!-- Modal Popup -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Event Title</h2>
+        <button class="close-btn" id="closeModal"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <img id="modalImg" src="" alt="">
+        <div class="meta" id="modalDate"></div>
+        <p id="modalDesc"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p><strong>Margaret Mwachiyeya Secondary School</strong> – Chongwe</p>
+    <p>Est. 2016 · School of Excellence & Holistic Education</p>
+    <p>&copy; 2026 MMSS</p>
+  </footer>
+
+  <script>
+    // Mobile menu
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      const icon = menuToggle.querySelector('i');
+      icon.classList.toggle('fa-bars');
+      icon.classList.toggle('fa-times');
+    });
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Hero Slider
+    const slides = document.getElementById('slides');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const dotsContainer = document.getElementById('dots');
+    const slideCount = document.querySelectorAll('.slide').length;
+    let currentSlide = 0;
+    function updateSlider() {
+      slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+      document.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
+    }
+    for (let i = 0; i < slideCount; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.addEventListener('click', () => { currentSlide = i; updateSlider(); });
+      dotsContainer.appendChild(dot);
+    }
+    nextBtn.addEventListener('click', () => { currentSlide = (currentSlide + 1) % slideCount; updateSlider(); });
+    prevBtn.addEventListener('click', () => { currentSlide = (currentSlide - 1 + slideCount) % slideCount; updateSlider(); });
+    setInterval(() => { currentSlide = (currentSlide + 1) % slideCount; updateSlider(); }, 5000);
+
+    // News data
+    const newsItems = [
+      {
+        title: 'Visitation Day',
+        date: '6th June 2026',
+        image: 'admin/goodluck/visitation.jpg',
+        short: 'A special day for parents and guardians to visit their children, share food, and meet teachers.',
+        full: 'Join us on <strong>6th June 2026</strong> at <strong>Margaret Mwachiyeya Secondary School</strong> for Visitation Day. Parents and relatives are warmly invited to spend the day with their children, bring delicious food, and connect with the school community. It’s a wonderful opportunity to strengthen family bonds and celebrate student progress together.',
+        location: 'MMSS, Chongwe'
+      },
+      {
+        title: 'JETS Fair',
+        date: 'Monday – Friday (July 2026)',
+        image: 'admin/goodluck/jets.jpg',
+        short: 'A week‑long science and technology exhibition at Chongwe Secondary School.',
+        full: 'The <strong>JETS Fair 2026</strong> will take place from Monday to Friday at <strong>Chongwe Secondary School</strong>. Students from MMSS and neighboring schools will showcase innovative science projects, robotics, and environmental solutions. Come and be inspired by the next generation of inventors and thinkers.',
+        location: 'Chongwe Secondary School'
+      },
+      {
+        title: 'Sports Day',
+        date: 'August 2026 (date TBA)',
+        image: 'admin/goodluck/sports.jpg',
+        short: 'An action‑packed day of athletics, football, netball, and more.',
+        full: 'Get ready for the monthly <strong>MMSS Sports Day</strong>! Pupils will compete in football, netball, volleyball, athletics, and traditional games. Parents and community members are welcome to cheer and enjoy the festive atmosphere. Prizes and medals for outstanding performers.',
+        location: 'MMSS, Chongwe'
+      }
+    ];
+
+    // Build news cards
+    const newsGrid = document.getElementById('newsGrid');
+    newsItems.forEach((item, index) => {
+      const card = document.createElement('div');
+      card.className = 'news-card';
+      card.style.backgroundImage = `url('${item.image}')`;
+      card.innerHTML = `
+                <div class="news-card-content">
+                    <h3>${item.title}</h3>
+                    <div class="date"><i class="far fa-calendar"></i> ${item.date}</div>
+                </div>`;
+      card.addEventListener('click', () => openModal(item));
+      newsGrid.appendChild(card);
+    });
+
+    // Modal logic
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalImg = document.getElementById('modalImg');
+    const modalDate = document.getElementById('modalDate');
+    const modalDesc = document.getElementById('modalDesc');
+    const closeModal = document.getElementById('closeModal');
+
+    function openModal(item) {
+      modalTitle.textContent = item.title;
+      modalImg.src = item.image;
+      modalDate.innerHTML = `<i class="far fa-calendar-alt"></i> ${item.date} &nbsp;|&nbsp; <i class="fas fa-map-marker-alt"></i> ${item.location}`;
+      modalDesc.innerHTML = item.full;
+      modalOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModalFunc() {
+      modalOverlay.classList.remove('open');
+      document.body.style.overflow = 'auto';
+    }
+    closeModal.addEventListener('click', closeModalFunc);
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModalFunc();
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModalFunc(); });
+  </script>
+</body>
+
+</html>

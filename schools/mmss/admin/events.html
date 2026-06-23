@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Manage Events</title>
+  <style>
+    body{font-family:'Segoe UI',sans-serif;background:#0a0a14;color:#fff;padding:20px}
+    h1{color:#3498db} .form-group{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+    input,textarea,select{padding:10px;background:#2a2a3a;border:1px solid #444;color:#fff;border-radius:8px}
+    button{padding:10px 20px;background:#e74c3c;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:bold}
+    button:hover{background:#c0392b}
+    table{width:100%;border-collapse:collapse;background:#1e1e2f;border-radius:12px}
+    th,td{padding:12px;border-bottom:1px solid #333}
+  </style>
+</head>
+<body>
+  <h1>Manage Events</h1>
+  <div class="form-group">
+    <input type="text" id="eTitle" placeholder="Event Title">
+    <input type="date" id="eDate"><input type="time" id="eTime">
+    <input type="text" id="eLocation" placeholder="Location"><input type="text" id="eImg" placeholder="Image URL">
+    <textarea id="eDesc" placeholder="Description"></textarea>
+    <button onclick="addEvent()">Add Event</button>
+  </div>
+  <table id="eventsTable"><tr><th>Title</th><th>Date</th><th>Location</th><th>Actions</th></tr></table>
+  <script>
+    function loadEvents() {
+      const events = JSON.parse(localStorage.getItem('mmss_events')||'[]');
+      const table = document.getElementById('eventsTable');
+      table.innerHTML = '<tr><th>Title</th><th>Date</th><th>Location</th><th>Actions</th></tr>';
+      events.forEach((e,i)=>{
+        const row = table.insertRow();
+        row.insertCell().textContent = e.title;
+        row.insertCell().textContent = e.date + ' ' + (e.time||'');
+        row.insertCell().textContent = e.location||'';
+        const act = row.insertCell();
+        act.innerHTML = `<button onclick="deleteEvent(${i})"><i class="fas fa-trash"></i></button>`;
+      });
+    }
+    function addEvent() {
+      const title = document.getElementById('eTitle').value.trim();
+      if(!title) return alert('Title required');
+      const event = {
+        title,
+        date: document.getElementById('eDate').value,
+        time: document.getElementById('eTime').value,
+        location: document.getElementById('eLocation').value,
+        description: document.getElementById('eDesc').value,
+        image: document.getElementById('eImg').value
+      };
+      let events = JSON.parse(localStorage.getItem('mmss_events')||'[]');
+      events.push(event);
+      localStorage.setItem('mmss_events', JSON.stringify(events));
+      document.querySelectorAll('#eTitle,#eDate,#eTime,#eLocation,#eImg,#eDesc').forEach(el=> el.value='');
+      loadEvents();
+    }
+    function deleteEvent(i) {
+      let events = JSON.parse(localStorage.getItem('mmss_events')||'[]');
+      events.splice(i,1);
+      localStorage.setItem('mmss_events', JSON.stringify(events));
+      loadEvents();
+    }
+    loadEvents();
+  </script>
+</body>
+</html>
