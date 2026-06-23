@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Zedcom - Home</title>
+  <!-- Font Awesome 6 for real icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --green: #198a00;
+      --red: #de2010;
+      --orange: #ef7d00;
+      --gold: #ffb900;
+      --bg: #f0f2f5;
+      --white: #fff;
+      --border: #dadde1;
+      --text: #1c1e21;
+      --gray: #65676b;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--white);
+      min-height: 100vh;
+      padding-bottom: 75px;
+      position: relative;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--green), #0d4d00);
+      color: white;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-icons {
+      display: flex;
+      gap: 4px;
+    }
+
+    .h-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      position: relative;
+    }
+
+    .h-icon .badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--red);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .h-icon .badge.show {
+      display: flex;
+    }
+
+    .status-section {
+      padding: 12px 16px;
+      border-bottom: 8px solid var(--bg);
+    }
+
+    .status-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .status-header h3 {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .status-scroll {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding: 4px 0;
+      scrollbar-width: none;
+    }
+
+    .status-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .status-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      flex-shrink: 0;
+      border: none;
+      background: none;
+      padding: 0;
+    }
+
+    .status-ring {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      padding: 2.5px;
+      position: relative;
+    }
+
+    .status-ring.new {
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    }
+
+    .status-ring.viewed {
+      background: #ccc;
+    }
+
+    .status-ring.mine {
+      background: #ddd;
+    }
+
+    .status-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 22px;
+      border: 3px solid white;
+      overflow: hidden;
+    }
+
+    .status-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .status-plus {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: var(--green);
+      color: white;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      border: 2px solid white;
+    }
+
+    .status-name {
+      font-size: 11px;
+      color: var(--gray);
+      max-width: 62px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .req-bar {
+      padding: 8px 16px;
+      background: #e8f5e9;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+
+    .req-bar .count {
+      background: var(--red);
+      color: white;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .create-post {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cp-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .avatar-sm {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .avatar-sm img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cp-input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 25px;
+      padding: 10px 16px;
+      cursor: pointer;
+      color: var(--gray);
+      font-size: 15px;
+      transition: all 0.2s;
+    }
+
+    .cp-input:hover {
+      background: #e4e6e9;
+    }
+
+    .cp-btns {
+      display: flex;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .cp-btn {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      background: var(--bg);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .cp-btn:hover {
+      background: #e4e6e9;
+    }
+
+    .feed {
+      padding: 0;
+    }
+
+    .post {
+      background: white;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .post-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .post-av {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .post-av img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .post-info {
+      flex: 1;
+    }
+
+    .post-author {
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .post-author:hover {
+      text-decoration: underline;
+    }
+
+    .post-time {
+      font-size: 11px;
+      color: var(--gray);
+    }
+
+    .post-menu {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .post-menu:hover {
+      background: var(--bg);
+    }
+
+    .post-text {
+      margin-bottom: 8px;
+      font-size: 15px;
+      line-height: 1.5;
+      word-wrap: break-word;
+    }
+
+    .post-media {
+      width: 100%;
+      max-height: 450px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: black;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .post-audio {
+      width: 100%;
+      margin: 8px 0;
+      border-radius: 8px;
+    }
+
+    .post-actions {
+      display: flex;
+      gap: 2px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .pa-btn {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray);
+      border-radius: 6px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .pa-btn:hover {
+      background: var(--bg);
+    }
+
+    .pa-btn.liked {
+      color: var(--red);
+    }
+
+    .pa-btn.saved {
+      color: var(--green);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 600px;
+      background: white;
+      display: flex;
+      border-top: 1px solid var(--border);
+      z-index: 100;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .bn-item {
+      flex: 1 0 auto;
+      min-width: 60px;
+      padding: 6px 2px;
+      text-align: center;
+      text-decoration: none;
+      color: var(--gray);
+      font-size: 10px;
+      font-weight: 600;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    .bn-item .bn-icon {
+      font-size: 18px;
+      display: block;
+      margin-bottom: 1px;
+    }
+
+    .bn-item.active {
+      color: var(--green);
+    }
+
+    /* ---------- Story viewer ---------- */
+    .story-viewer {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      z-index: 1000;
+      flex-direction: column;
+    }
+
+    .story-viewer.active {
+      display: flex;
+    }
+
+    .sv-header {
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+    }
+
+    .sv-av {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 15px;
+      overflow: hidden;
+    }
+
+    .sv-av img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .sv-info {
+      flex: 1;
+    }
+
+    .sv-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .sv-time {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+
+    .sv-close {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .sv-progress {
+      height: 2px;
+      background: rgba(255, 255, 255, 0.3);
+      margin: 0 14px;
+      border-radius: 1px;
+      display: flex;
+      gap: 3px;
+    }
+
+    .sv-prog-seg {
+      flex: 1;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .sv-prog-fill {
+      height: 100%;
+      background: white;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .sv-prog-fill.done {
+      width: 100%;
+    }
+
+    .sv-media {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      position: relative;
+    }
+
+    .sv-media img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .sv-media video {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .sv-text-overlay {
+      position: absolute;
+      bottom: 60px;
+      left: 20px;
+      right: 20px;
+      text-align: center;
+      color: white;
+      font-size: 22px;
+      font-weight: 700;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+    }
+
+    .sv-audio-overlay {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #1db954;
+      padding: 8px 14px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .sv-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sv-nav.prev {
+      left: 8px;
+    }
+
+    .sv-nav.next {
+      right: 8px;
+    }
+
+    /* ---------- Modals ---------- */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-dialog {
+      background: white;
+      border-radius: 14px;
+      padding: 22px;
+      width: 92%;
+      max-width: 500px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      border-color: var(--green);
+    }
+
+    .file-upload {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: all 0.2s;
+    }
+
+    .file-upload:hover {
+      border-color: var(--green);
+      background: #f9f9f9;
+    }
+
+    .preview-area {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 8px 0;
+    }
+
+    .preview-item {
+      width: 55px;
+      height: 55px;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .preview-item .remove-btn {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: var(--red);
+      color: white;
+      border: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 15px;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: white;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      background: #147a00;
+    }
+
+    .btn-secondary {
+      background: #e4e6eb;
+      color: var(--text);
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    /* ---------- Responsive tweaks ---------- */
+    @media (min-width: 768px) {
+      .app {
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+      }
+    }
+
+    @media (max-width: 400px) {
+      .status-ring {
+        width: 52px;
+        height: 52px;
+      }
+
+      .cp-btn {
+        font-size: 11px;
+      }
+
+      .bn-item {
+        min-width: 50px;
+        font-size: 9px;
+      }
+
+      .bn-item .bn-icon {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="logo"><i class="fas fa-flag"></i> Zedcom</div>
+      <div class="header-icons">
+        <a href="friends.html" class="h-icon" title="Friends"><i class="fas fa-user-friends"></i><span class="badge"
+            id="reqBadge">0</span></a>
+        <a href="chats.html" class="h-icon" title="Messages"><i class="fas fa-comments"></i><span class="badge"
+            id="msgBadge">0</span></a>
+        <button class="h-icon" onclick="logout()" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
+    </header>
+    <div class="req-bar" id="reqBar" onclick="location.href='friends.html'"><i class="fas fa-user-friends"></i> You have
+      <span class="count" id="reqCount">0</span> friend requests
+    </div>
+    <div class="status-section">
+      <div class="status-header">
+        <h3>Status</h3>
+      </div>
+      <div class="status-scroll" id="statusScroll"></div>
+    </div>
+    <div class="create-post">
+      <div class="cp-top">
+        <div class="avatar-sm" id="myAv">U</div>
+        <div class="cp-input" onclick="openPostModal()"><i class="fas fa-pen"></i> What's on your mind? 🎵📷🎬</div>
+      </div>
+      <div class="cp-btns">
+        <button class="cp-btn" onclick="openPostModal()"><i class="fas fa-image"></i> Photo</button>
+        <button class="cp-btn" onclick="openPostModal()"><i class="fas fa-video"></i> Video</button>
+        <button class="cp-btn" onclick="openPostModal()"><i class="fas fa-music"></i> Audio</button>
+        <button class="cp-btn" onclick="openStatusCreator()"><i class="fas fa-pencil-alt"></i> Status</button>
+      </div>
+    </div>
+    <div class="feed" id="feedContainer"></div>
+    <nav class="bottom-nav">
+      <a href="index.html" class="bn-item active"><span class="bn-icon"><i class="fas fa-home"></i></span>Home</a>
+      <a href="videos.html" class="bn-item"><span class="bn-icon"><i class="fas fa-video"></i></span>Videos</a>
+      <a href="friends.html" class="bn-item"><span class="bn-icon"><i class="fas fa-user-friends"></i></span>Friends</a>
+      <a href="pages.html" class="bn-item"><span class="bn-icon"><i class="fas fa-flag"></i></span>Pages</a>
+      <a href="groups.html" class="bn-item"><span class="bn-icon"><i class="fas fa-users"></i></span>Groups</a>
+      <a href="chats.html" class="bn-item"><span class="bn-icon"><i class="fas fa-comments"></i></span>Chats</a>
+      <a href="profile.html" class="bn-item"><span class="bn-icon"><i class="fas fa-user-circle"></i></span>Profile</a>
+    </nav>
+  </div>
+
+  <!-- Story viewer -->
+  <div class="story-viewer" id="storyViewer">
+    <div class="sv-header">
+      <div class="sv-av" id="svAv">S</div>
+      <div class="sv-info">
+        <div class="sv-name" id="svName">User</div>
+        <div class="sv-time" id="svTime"></div>
+      </div>
+      <button class="sv-close" onclick="closeStoryViewer()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="sv-progress" id="svProgressBar"></div>
+    <div class="sv-media" id="svMedia"></div>
+    <button class="sv-nav prev" onclick="prevStory()"><i class="fas fa-chevron-left"></i></button>
+    <button class="sv-nav next" onclick="nextStory()"><i class="fas fa-chevron-right"></i></button>
+  </div>
+
+  <!-- Post modal -->
+  <div class="modal" id="postModal">
+    <div class="modal-dialog">
+      <h2 class="modal-title">Create Post</h2>
+      <form onsubmit="createPost(event)">
+        <div class="form-group"><textarea class="form-textarea" id="postContent" placeholder="Share your thoughts..."
+            required></textarea></div>
+        <div class="file-upload" onclick="document.getElementById('postFileInput').click()"><i
+            class="fas fa-cloud-upload-alt"></i> Upload media (images, videos, audio)</div>
+        <input type="file" id="postFileInput" accept="image/*,video/*,audio/*" onchange="handlePostFiles(event)"
+          multiple style="display:none;">
+        <div class="form-group"><input type="url" class="form-input" id="mediaUrl" placeholder="Or paste media URL">
+        </div>
+        <div class="preview-area" id="postPreview"></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Publish Post</button>
+        <button type="button" class="btn btn-secondary" onclick="closePostModal()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Status modal -->
+  <div class="modal" id="statusModal">
+    <div class="modal-dialog">
+      <h2 class="modal-title">Create Status</h2>
+      <form onsubmit="createStatus(event)">
+        <div class="form-group">
+          <label class="form-label">Status Type</label>
+          <select class="form-select" id="statusType" onchange="toggleStatusFields()">
+            <option value="image"><i class="fas fa-image"></i> Photo Status</option>
+            <option value="video"><i class="fas fa-video"></i> Video Status</option>
+            <option value="text"><i class="fas fa-font"></i> Text Status</option>
+            <option value="audio"><i class="fas fa-music"></i> Audio Status</option>
+            <option value="mixed"><i class="fas fa-layer-group"></i> Photo + Text</option>
+          </select>
+        </div>
+        <div id="statusMediaUpload">
+          <div class="file-upload" onclick="document.getElementById('statusFileInput').click()"><i
+              class="fas fa-cloud-upload-alt"></i> Upload media</div>
+          <input type="file" id="statusFileInput" accept="image/*,video/*,audio/*" onchange="handleStatusFile(event)"
+            style="display:none;">
+          <div class="preview-area" id="statusPreview"></div>
+        </div>
+        <div id="statusTextField" style="display:none;">
+          <div class="form-group"><label class="form-label">Text</label><textarea class="form-textarea" id="statusText"
+              placeholder="Your status text"></textarea></div>
+          <div class="form-group"><label class="form-label">Background Color</label><input type="color"
+              class="form-input" id="statusBgColor" value="#198a00"></div>
+        </div>
+        <div id="statusAudioField" style="display:none;">
+          <div class="form-group"><label class="form-label">Track Title</label><input type="text" class="form-input"
+              id="statusTrackTitle" placeholder="Song title"></div>
+          <div class="form-group"><label class="form-label">Artist</label><input type="text" class="form-input"
+              id="statusArtist" placeholder="Artist name"></div>
+        </div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Post Status</button>
+        <button type="button" class="btn btn-secondary" onclick="closeStatusModal()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const DB = { get(k) { try { return JSON.parse(localStorage.getItem('zc_' + k)); } catch (e) { return null; } }, set(k, v) { localStorage.setItem('zc_' + k, JSON.stringify(v)); }, users() { return this.get('users') || {}; }, posts() { return this.get('posts') || []; }, stories() { return this.get('stories') || []; }, friends() { return this.get('friends') || {}; }, requests() { return this.get('requests') || {}; }, messages() { return this.get('messages') || {}; }, saved() { return this.get('saved') || {}; } };
+    const cu = localStorage.getItem('zc_cur');
+    if (!cu || !DB.users()[cu]) window.location.href = 'login.html';
+    let postFiles = [], statusFile = null, storyTimer = null, currentStories = [], currentStoryIdx = 0;
+
+    function init() { updateUI(); loadRequests(); loadStatuses(); loadFeed(); updateBadges(); }
+    function updateUI() { const u = DB.users()[cu]; const av = document.getElementById('myAv'); if (u.profilePic) av.innerHTML = `<img src="${u.profilePic}">`; else av.textContent = u.fullName[0].toUpperCase(); }
+    function updateBadges() { const reqs = DB.requests()[cu] || []; const rb = document.getElementById('reqBadge'); if (reqs.length) { rb.textContent = reqs.length; rb.classList.add('show'); } else rb.classList.remove('show'); const msgs = DB.messages()[cu] || []; const unread = msgs.filter(m => m.to === cu && !m.read).length; const mb = document.getElementById('msgBadge'); if (unread) { mb.textContent = unread; mb.classList.add('show'); } else mb.classList.remove('show'); }
+    function loadRequests() { const reqs = DB.requests()[cu] || []; const bar = document.getElementById('reqBar'); if (reqs.length) { bar.style.display = 'flex'; document.getElementById('reqCount').textContent = reqs.length; } else bar.style.display = 'none'; }
+
+    function loadStatuses() {
+      const stories = DB.stories().filter(s => Date.now() - new Date(s.timestamp).getTime() < 86400000);
+      const users = DB.users(); const friends = DB.friends()[cu] || [];
+      const grouped = {};
+      stories.forEach(s => { if (s.author === cu || friends.includes(s.author)) { if (!grouped[s.author]) grouped[s.author] = []; grouped[s.author].push(s); } });
+      let html = `<button class="status-item" onclick="openStatusCreator()"><div class="status-ring mine"><div class="status-avatar">${users[cu]?.fullName[0] || 'M'}</div><div class="status-plus">+</div></div><span class="status-name">My Status</span></button>`;
+      Object.keys(grouped).forEach(a => { if (a === cu) return; const user = users[a] || { fullName: 'Unknown' }; const hasNew = grouped[a].some(s => !(s.viewers || []).includes(cu)); html += `<button class="status-item" onclick="viewStories('${a}')"><div class="status-ring ${hasNew ? 'new' : 'viewed'}"><div class="status-avatar">${user.fullName[0]}</div></div><span class="status-name">${user.fullName.split(' ')[0]}</span></button>`; });
+      document.getElementById('statusScroll').innerHTML = html;
+    }
+
+    function viewStories(author) {
+      currentStories = DB.stories().filter(s => s.author === author && Date.now() - new Date(s.timestamp).getTime() < 86400000);
+      if (!currentStories.length) return; currentStoryIdx = 0;
+      const user = DB.users()[author] || { fullName: 'Unknown' };
+      const av = document.getElementById('svAv'); if (user.profilePic) av.innerHTML = `<img src="${user.profilePic}">`; else av.textContent = user.fullName[0];
+      document.getElementById('svName').textContent = user.fullName;
+      document.getElementById('storyViewer').classList.add('active');
+      const progBar = document.getElementById('svProgressBar');
+      progBar.innerHTML = currentStories.map(() => '<div class="sv-prog-seg"><div class="sv-prog-fill"></div></div>').join('');
+      showStory();
+    }
+
+    function showStory() {
+      if (currentStoryIdx >= currentStories.length) { closeStoryViewer(); return; }
+      const story = currentStories[currentStoryIdx];
+      document.getElementById('svTime').textContent = new Date(story.timestamp).toLocaleTimeString();
+      const mediaDiv = document.getElementById('svMedia');
+      let html = '';
+      if (story.statusType === 'text') { html = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:${story.bgColor || '#198a00'};border-radius:12px;"><div style="color:white;font-size:28px;font-weight:700;text-align:center;padding:20px;">${story.textContent}</div></div>`; }
+      else if (story.statusType === 'audio') { html = `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#1db954,#191414);border-radius:12px;color:white;"><div style="font-size:48px;">🎵</div><div style="font-size:20px;font-weight:700;margin-top:12px;">${story.trackTitle || 'Unknown Track'}</div><div style="font-size:16px;opacity:0.8;">${story.artist || 'Unknown Artist'}</div>${story.mediaData ? `<audio src="${story.mediaData}" controls style="margin-top:16px;width:80%;"></audio>` : ''}</div>`; }
+      else { if (story.mediaType === 'image') html = `<img src="${story.mediaData}">`; else if (story.mediaType === 'video') html = `<video src="${story.mediaData}" autoplay loop></video>`; if (story.textContent) html += `<div class="sv-text-overlay">${story.textContent}</div>`; if (story.trackTitle) html += `<div class="sv-audio-overlay">🎵 ${story.trackTitle} - ${story.artist || ''}</div>`; }
+      mediaDiv.innerHTML = html;
+      if (!story.viewers) story.viewers = [];
+      if (!story.viewers.includes(cu)) { story.viewers.push(cu); const all = DB.stories(); const idx = all.findIndex(s => s.id === story.id); if (idx > -1) { all[idx] = story; DB.set('stories', all); } }
+      const fills = document.querySelectorAll('.sv-prog-fill');
+      fills.forEach((f, i) => { f.style.transition = 'none'; f.style.width = i < currentStoryIdx ? '100%' : '0%'; f.classList.toggle('done', i < currentStoryIdx); });
+      const cf = fills[currentStoryIdx]; if (cf) setTimeout(() => { cf.style.transition = 'width 5s linear'; cf.style.width = '100%'; }, 50);
+      clearTimeout(storyTimer); storyTimer = setTimeout(() => { currentStoryIdx++; showStory(); }, 5000);
+    }
+    function prevStory() { if (currentStoryIdx > 0) { currentStoryIdx--; showStory(); } }
+    function nextStory() { currentStoryIdx++; showStory(); }
+    function closeStoryViewer() { document.getElementById('storyViewer').classList.remove('active'); clearTimeout(storyTimer); loadStatuses(); }
+
+    function openStatusCreator() { document.getElementById('statusModal').classList.add('show'); statusFile = null; document.getElementById('statusPreview').innerHTML = ''; document.getElementById('statusText').value = ''; document.getElementById('statusType').value = 'image'; toggleStatusFields(); }
+    function closeStatusModal() { document.getElementById('statusModal').classList.remove('show'); }
+    function toggleStatusFields() { const t = document.getElementById('statusType').value; document.getElementById('statusMediaUpload').style.display = (t === 'image' || t === 'video' || t === 'mixed') ? 'block' : 'none'; document.getElementById('statusTextField').style.display = (t === 'text' || t === 'mixed') ? 'block' : 'none'; document.getElementById('statusAudioField').style.display = t === 'audio' ? 'block' : 'none'; }
+    function handleStatusFile(e) { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = function (ev) { statusFile = { data: ev.target.result, type: f.type, name: f.name }; document.getElementById('statusPreview').innerHTML = f.type.startsWith('image/') ? `<img src="${ev.target.result}" style="max-width:100%;max-height:200px;border-radius:8px;">` : f.type.startsWith('video/') ? `<video src="${ev.target.result}" controls style="max-width:100%;max-height:200px;"></video>` : `<p>🎵 ${f.name}</p>`; }; r.readAsDataURL(f); }
+    function createStatus(e) {
+      e.preventDefault(); const type = document.getElementById('statusType').value; let mediaData = null, mediaType = null, textContent = '', trackTitle = '', artist = '', bgColor = '#198a00';
+      if (type === 'image' || type === 'video') { if (!statusFile) return alert('Select a file!'); mediaData = statusFile.data; mediaType = statusFile.type.split('/')[0]; }
+      else if (type === 'text') { textContent = document.getElementById('statusText').value.trim(); if (!textContent) return alert('Enter text!'); bgColor = document.getElementById('statusBgColor').value; }
+      else if (type === 'audio') { trackTitle = document.getElementById('statusTrackTitle').value.trim() || 'Unknown Track'; artist = document.getElementById('statusArtist').value.trim() || 'Unknown Artist'; if (statusFile) { mediaData = statusFile.data; mediaType = 'audio'; } }
+      else if (type === 'mixed') { if (!statusFile) return alert('Select a photo!'); mediaData = statusFile.data; mediaType = 'image'; textContent = document.getElementById('statusText').value.trim(); }
+      const story = { id: Date.now().toString(), author: cu, statusType: type, mediaData, mediaType, textContent, trackTitle, artist, bgColor, timestamp: new Date().toISOString(), viewers: [] };
+      DB.set('stories', [...DB.stories(), story]); closeStatusModal(); loadStatuses(); alert('Status posted for 24 hours!');
+    }
+
+    function loadFeed() {
+      const friends = DB.friends()[cu] || [];
+      const posts = DB.posts().filter(p => p.author === cu || friends.includes(p.author)).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      const container = document.getElementById('feedContainer');
+      if (!posts.length) { container.innerHTML = '<div style="text-align:center;padding:60px 20px;"><div style="font-size:60px;"><i class="fas fa-flag"></i></div><h2>Welcome to Zedcom!</h2><p style="color:var(--gray);">Add friends to see their posts.</p></div>'; return; }
+      container.innerHTML = posts.map(p => {
+        const user = DB.users()[p.author] || { fullName: 'Unknown', profilePic: '' }; const isLiked = (p.likes || []).includes(cu); const isSaved = (DB.saved()[cu] || []).includes(p.id);
+        let media = '';
+        if (p.mediaData) { if (p.mediaType === 'image') media = `<img src="${p.mediaData}" class="post-media" loading="lazy">`; else if (p.mediaType === 'video') media = `<video src="${p.mediaData}" class="post-media" controls></video>`; else if (p.mediaType === 'audio') media = `<audio src="${p.mediaData}" class="post-audio" controls></audio>`; }
+        return `<div class="post"><div class="post-head"><div class="post-av">${user.profilePic ? `<img src="${user.profilePic}">` : user.fullName[0]}</div><div class="post-info"><div class="post-author" onclick="viewProfile('${p.author}')">${user.fullName}</div><div class="post-time">${timeAgo(p.timestamp)}</div></div><button class="post-menu" onclick="deletePost('${p.id}')"><i class="fas fa-ellipsis-h"></i></button></div><div class="post-text">${escapeHtml(p.content || '')}</div>${media}<div class="post-actions"><button class="pa-btn ${isLiked ? 'liked' : ''}" onclick="likePost('${p.id}')"><i class="fas fa-heart"></i> ${(p.likes || []).length}</button><button class="pa-btn" onclick="commentPost('${p.id}')"><i class="fas fa-comment"></i> ${(p.comments || []).length}</button><button class="pa-btn ${isSaved ? 'saved' : ''}" onclick="savePost('${p.id}')"><i class="fas fa-bookmark"></i> Save</button><button class="pa-btn" onclick="sharePost()"><i class="fas fa-share"></i> Share</button>${p.mediaData ? `<button class="pa-btn" onclick="downloadMedia('${p.id}')"><i class="fas fa-download"></i></button>` : ''}</div></div>`;
+      }).join('');
+    }
+
+    function openPostModal() { document.getElementById('postModal').classList.add('show'); postFiles = []; document.getElementById('postPreview').innerHTML = ''; document.getElementById('postContent').value = ''; document.getElementById('mediaUrl').value = ''; }
+    function closePostModal() { document.getElementById('postModal').classList.remove('show'); }
+    function handlePostFiles(e) { Array.from(e.target.files).forEach(f => { if (f.size > 50 * 1024 * 1024) return alert('File too large! Max 50MB'); const r = new FileReader(); r.onload = function (ev) { postFiles.push({ data: ev.target.result, type: f.type, name: f.name }); updatePostPreview(); }; r.readAsDataURL(f); }); }
+    function updatePostPreview() { document.getElementById('postPreview').innerHTML = postFiles.map((f, i) => `<div class="preview-item">${f.type.startsWith('image/') ? `<img src="${f.data}">` : '🎬'}<button class="remove-btn" onclick="removePostFile(${i})"><i class="fas fa-times"></i></button></div>`).join(''); }
+    function removePostFile(i) { postFiles.splice(i, 1); updatePostPreview(); }
+    function createPost(e) { e.preventDefault(); const content = document.getElementById('postContent').value.trim(); const url = document.getElementById('mediaUrl').value.trim(); if (!content && !postFiles.length && !url) return alert('Add content or media!'); let mediaData = null, mediaType = null; if (postFiles.length === 1) { mediaData = postFiles[0].data; mediaType = postFiles[0].type.split('/')[0]; } else if (url) { mediaData = url; if (url.match(/\.(jpg|jpeg|png|gif|webp)/i)) mediaType = 'image'; else if (url.match(/\.(mp4|webm|mov)/i)) mediaType = 'video'; else if (url.match(/\.(mp3|wav|ogg)/i)) mediaType = 'audio'; } DB.set('posts', [{ id: Date.now().toString(), author: cu, content, mediaData, mediaType, timestamp: new Date().toISOString(), likes: [], comments: [] }, ...DB.posts()]); closePostModal(); loadFeed(); }
+    function likePost(id) { const posts = DB.posts(); const p = posts.find(x => x.id === id); if (!p) return; if (!p.likes) p.likes = []; const idx = p.likes.indexOf(cu); idx > -1 ? p.likes.splice(idx, 1) : p.likes.push(cu); DB.set('posts', posts); loadFeed(); }
+    function commentPost(id) { const text = prompt('Write a comment:'); if (!text) return; const posts = DB.posts(); const p = posts.find(x => x.id === id); if (!p) return; if (!p.comments) p.comments = []; p.comments.push({ author: cu, text, timestamp: new Date().toISOString() }); DB.set('posts', posts); loadFeed(); }
+    function savePost(id) { const saved = DB.saved(); if (!saved[cu]) saved[cu] = []; const idx = saved[cu].indexOf(id); idx > -1 ? saved[cu].splice(idx, 1) : saved[cu].push(id); DB.set('saved', saved); loadFeed(); }
+    function deletePost(id) { if (!confirm('Delete this post?')) return; DB.set('posts', DB.posts().filter(p => p.id !== id)); loadFeed(); }
+    function downloadMedia(id) { const p = DB.posts().find(x => x.id === id); if (!p || !p.mediaData) return; const a = document.createElement('a'); a.href = p.mediaData; a.download = `zedcom_${id}.${p.mediaType === 'image' ? 'jpg' : p.mediaType === 'video' ? 'mp4' : 'mp3'}`; a.click(); }
+    function sharePost() { navigator.clipboard?.writeText(window.location.href).then(() => alert('Link copied!')); }
+    function viewProfile(u) { localStorage.setItem('zc_view_profile', u); window.location.href = 'profile.html'; }
+    function logout() { localStorage.removeItem('zc_cur'); window.location.href = 'login.html'; }
+    function timeAgo(ts) { const d = Date.now() - new Date(ts).getTime(); const m = Math.floor(d / 60000); if (m < 1) return 'Just now'; if (m < 60) return m + 'm'; const h = Math.floor(m / 60); if (h < 24) return h + 'h'; return Math.floor(h / 24) + 'd'; }
+    function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+    init();
+  </script>
+</body>
+
+</html>

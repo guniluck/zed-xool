@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Zedcom - Advanced Social Platform</title>
+  <!-- Font Awesome 6 for real icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --green: #198a00;
+      --red: #de2010;
+      --orange: #ef7d00;
+      --gold: #ffb900;
+      --bg: #f0f2f5;
+      --white: #fff;
+      --border: #dadde1;
+      --text: #1c1e21;
+      --gray: #65676b;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      --radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    .app-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--white);
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 70px;
+    }
+
+    /* Header */
+    .main-header {
+      background: linear-gradient(135deg, var(--green), #0d4d00);
+      color: white;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo-text {
+      font-size: 26px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .icon-circle:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
+    }
+
+    /* Status Bar */
+    .status-bar {
+      padding: 16px;
+      border-bottom: 8px solid var(--bg);
+      background: white;
+    }
+
+    .status-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .status-add-btn {
+      background: var(--green);
+      color: white;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .status-scroll {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding: 8px 0;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .status-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .status-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      flex-shrink: 0;
+      border: none;
+      background: none;
+      padding: 0;
+      position: relative;
+    }
+
+    .status-ring-wrap {
+      position: relative;
+      width: 70px;
+      height: 70px;
+    }
+
+    .status-ring {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      padding: 3px;
+      position: relative;
+    }
+
+    .status-ring.unviewed {
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    }
+
+    .status-ring.viewed {
+      background: #ccc;
+    }
+
+    .status-ring.mine {
+      background: #e0e0e0;
+    }
+
+    .status-ring.music {
+      background: linear-gradient(45deg, #1db954, #191414);
+    }
+
+    .status-ring.text-only {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+    }
+
+    .status-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 26px;
+      border: 3px solid white;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .status-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .status-badge {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      border: 2px solid white;
+    }
+
+    .status-badge.photo {
+      background: #f09433;
+      color: white;
+    }
+
+    .status-badge.video {
+      background: #dc2743;
+      color: white;
+    }
+
+    .status-badge.music {
+      background: #1db954;
+      color: white;
+    }
+
+    .status-badge.text {
+      background: #667eea;
+      color: white;
+    }
+
+    .status-badge.mixed {
+      background: var(--gold);
+      color: black;
+    }
+
+    .status-name {
+      font-size: 12px;
+      color: var(--gray);
+      max-width: 70px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .status-time {
+      font-size: 10px;
+      color: #999;
+    }
+
+    /* Create Post */
+    .create-section {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: white;
+    }
+
+    .create-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .avatar-small {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 18px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .avatar-small img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .create-input {
+      flex: 1;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 30px;
+      padding: 10px 16px;
+      cursor: pointer;
+      color: var(--gray);
+      font-size: 15px;
+      transition: all 0.2s;
+    }
+
+    .create-input:hover {
+      border-color: var(--green);
+      background: #f5f5f5;
+    }
+
+    .create-buttons {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .create-btn {
+      flex: 1 1 auto;
+      min-width: 60px;
+      padding: 10px 6px;
+      border: none;
+      background: var(--bg);
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .create-btn:hover {
+      background: #e4e6e9;
+      transform: translateY(-1px);
+    }
+
+    /* Posts */
+    .feed-section {
+      padding: 0;
+    }
+
+    .post-card {
+      background: white;
+      padding: 16px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .post-card:hover {
+      box-shadow: var(--shadow);
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .post-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 18px;
+      overflow: hidden;
+    }
+
+    .post-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .post-user-info {
+      flex: 1;
+    }
+
+    .post-username {
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .post-username:hover {
+      text-decoration: underline;
+    }
+
+    .post-time {
+      font-size: 12px;
+      color: var(--gray);
+    }
+
+    .post-menu-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .post-menu-btn:hover {
+      background: var(--bg);
+    }
+
+    .post-text {
+      margin-bottom: 10px;
+      font-size: 15px;
+      line-height: 1.5;
+      word-wrap: break-word;
+    }
+
+    .post-media-grid {
+      display: grid;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+
+    .post-media-grid.single {
+      grid-template-columns: 1fr;
+    }
+
+    .post-media-grid.double {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .post-media-item {
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      background: black;
+    }
+
+    .post-media-item img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+    }
+
+    .post-media-item video {
+      width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+    }
+
+    .post-audio-player {
+      width: 100%;
+      padding: 8px;
+      background: var(--bg);
+      border-radius: 10px;
+    }
+
+    .post-audio-player audio {
+      width: 100%;
+    }
+
+    .post-actions-row {
+      display: flex;
+      gap: 4px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray);
+      border-radius: 6px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-width: 60px;
+    }
+
+    .action-btn:hover {
+      background: var(--bg);
+    }
+
+    .action-btn.liked {
+      color: var(--red);
+    }
+
+    .action-btn.saved {
+      color: var(--green);
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 600px;
+      background: white;
+      display: flex;
+      border-top: 1px solid var(--border);
+      z-index: 100;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-link {
+      flex: 1 0 auto;
+      min-width: 70px;
+      padding: 8px 4px;
+      text-align: center;
+      text-decoration: none;
+      color: var(--gray);
+      font-size: 11px;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: none;
+      background: none;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .nav-link .nav-icon {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .nav-link.active {
+      color: var(--green);
+    }
+
+    /* Story Viewer - Advanced */
+    .story-viewer-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      z-index: 1000;
+      flex-direction: column;
+    }
+
+    .story-viewer-overlay.active {
+      display: flex;
+    }
+
+    .story-viewer-header {
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      z-index: 10;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);
+    }
+
+    .story-viewer-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      overflow: hidden;
+    }
+
+    .story-viewer-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .story-viewer-info {
+      flex: 1;
+    }
+
+    .story-viewer-name {
+      font-weight: 600;
+    }
+
+    .story-viewer-time {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .story-viewer-close {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .story-progress-container {
+      display: flex;
+      gap: 4px;
+      padding: 0 16px;
+      margin-bottom: 16px;
+    }
+
+    .story-progress-segment {
+      flex: 1;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .story-progress-fill {
+      height: 100%;
+      background: white;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .story-progress-fill.completed {
+      width: 100%;
+    }
+
+    .story-media-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+    }
+
+    .story-media-container img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .story-media-container video {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .story-text-overlay {
+      position: absolute;
+      bottom: 40px;
+      left: 20px;
+      right: 20px;
+      text-align: center;
+      color: white;
+      font-size: 24px;
+      font-weight: 700;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+    }
+
+    .story-music-overlay {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.5);
+      color: #1db954;
+      padding: 8px 16px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    .story-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
+
+    .story-nav-btn.prev {
+      left: 10px;
+    }
+
+    .story-nav-btn.next {
+      right: 10px;
+    }
+
+    /* Modals */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-dialog {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      width: 92%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--green);
+    }
+
+    .form-textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 80px;
+      outline: none;
+    }
+
+    .form-textarea:focus {
+      border-color: var(--green);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #147a00;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(25, 138, 0, 0.3);
+    }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 14px;
+      background: #e4e6eb;
+      color: var(--text);
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .file-upload-area {
+      border: 3px dashed var(--border);
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 12px;
+    }
+
+    .file-upload-area:hover {
+      border-color: var(--green);
+      background: #f0f9ff;
+    }
+
+    .file-preview-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .file-preview-item {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .file-preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .file-preview-item .remove-file {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: var(--red);
+      color: white;
+      border: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Responsive */
+    @media (min-width: 768px) {
+      .app-container {
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .status-ring-wrap {
+        width: 60px;
+        height: 60px;
+      }
+
+      .create-btn {
+        font-size: 11px;
+        padding: 8px 4px;
+      }
+
+      .action-btn {
+        font-size: 12px;
+        padding: 6px 4px;
+      }
+
+      .nav-link {
+        min-width: 60px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .nav-link .nav-icon {
+        font-size: 18px;
+      }
+
+      .nav-link {
+        font-size: 9px;
+        min-width: 55px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="main-header">
+      <div class="logo-text"><i class="fas fa-flag"></i> Zedcom</div>
+      <div class="header-actions">
+        <a href="chats.html" class="icon-circle"><i class="fas fa-comments"></i></a>
+        <a href="profile.html" class="icon-circle"><i class="fas fa-user-circle"></i></a>
+      </div>
+    </header>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <div class="status-title">
+        <span><i class="fas fa-history"></i> Status Updates</span>
+        <button class="status-add-btn" onclick="openStatusCreator()"><i class="fas fa-plus"></i> Add Status</button>
+      </div>
+      <div class="status-scroll" id="statusScroll"></div>
+    </div>
+
+    <!-- Create Post -->
+    <div class="create-section">
+      <div class="create-row">
+        <div class="avatar-small" id="myAvatarSmall">U</div>
+        <div class="create-input" onclick="openPostCreator()"><i class="fas fa-pen"></i> What's on your mind?</div>
+      </div>
+      <div class="create-buttons">
+        <button class="create-btn" onclick="openPostCreator('image')"><i class="fas fa-image"></i> Photo</button>
+        <button class="create-btn" onclick="openPostCreator('video')"><i class="fas fa-video"></i> Video</button>
+        <button class="create-btn" onclick="openPostCreator('audio')"><i class="fas fa-music"></i> Music</button>
+        <button class="create-btn" onclick="openStatusCreator()"><i class="fas fa-pencil-alt"></i> Status</button>
+      </div>
+    </div>
+
+    <!-- Feed -->
+    <div class="feed-section" id="feedSection"></div>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+      <a href="index.html" class="nav-link active"><span class="nav-icon"><i class="fas fa-home"></i></span>Home</a>
+      <a href="videos.html" class="nav-link"><span class="nav-icon"><i class="fas fa-video"></i></span>Videos</a>
+      <button class="nav-link" onclick="openPostCreator()"><span class="nav-icon"><i
+            class="fas fa-plus-circle"></i></span>Post</button>
+      <a href="chats.html" class="nav-link"><span class="nav-icon"><i class="fas fa-comments"></i></span>Chats</a>
+      <a href="profile.html" class="nav-link"><span class="nav-icon"><i
+            class="fas fa-user-circle"></i></span>Profile</a>
+    </nav>
+  </div>
+
+  <!-- Story Viewer -->
+  <div class="story-viewer-overlay" id="storyViewer">
+    <div class="story-viewer-header">
+      <div class="story-viewer-avatar" id="viewerAvatar">S</div>
+      <div class="story-viewer-info">
+        <div class="story-viewer-name" id="viewerName">User</div>
+        <div class="story-viewer-time" id="viewerTime"></div>
+      </div>
+      <button class="story-viewer-close" onclick="closeStoryViewer()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="story-progress-container" id="storyProgressContainer"></div>
+    <div class="story-media-container" id="storyMediaContainer"></div>
+    <button class="story-nav-btn prev" onclick="prevStory()"><i class="fas fa-chevron-left"></i></button>
+    <button class="story-nav-btn next" onclick="nextStory()"><i class="fas fa-chevron-right"></i></button>
+  </div>
+
+  <!-- Post Creator Modal -->
+  <div class="modal-overlay" id="postCreatorModal">
+    <div class="modal-dialog">
+      <h2 class="modal-title">Create Post</h2>
+      <form onsubmit="createPost(event)" id="postForm">
+        <div class="form-group">
+          <textarea class="form-textarea" id="postContent"
+            placeholder="What's on your mind? Add music, photos, or videos!" required></textarea>
+        </div>
+        <div class="file-upload-area" id="fileDropZone" onclick="document.getElementById('fileInput').click()">
+          <div><i class="fas fa-cloud-upload-alt"></i> Drop files here or click to upload</div>
+          <small style="color:var(--gray);">Images, Videos, Audio (max 50MB each)</small>
+        </div>
+        <input type="file" id="fileInput" accept="image/*,video/*,audio/*" multiple onchange="handleFileSelect(event)"
+          style="display:none;">
+        <div class="file-preview-container" id="filePreviewContainer"></div>
+        <div class="form-group">
+          <label>Or paste media URL</label>
+          <input type="url" class="form-input" id="mediaUrlInput" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label>Post Type</label>
+          <select class="form-input" id="postType">
+            <option value="regular">Regular Post</option>
+            <option value="story">Story (24 hours)</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Publish</button>
+        <button type="button" class="btn-secondary" onclick="closePostCreator()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Status Creator Modal -->
+  <div class="modal-overlay" id="statusCreatorModal">
+    <div class="modal-dialog">
+      <h2 class="modal-title">Create Status</h2>
+      <form onsubmit="createStatus(event)">
+        <div class="form-group">
+          <label>Status Type</label>
+          <select class="form-input" id="statusType" onchange="toggleStatusFields()">
+            <option value="image"><i class="fas fa-image"></i> Photo Status</option>
+            <option value="video"><i class="fas fa-video"></i> Video Status</option>
+            <option value="text"><i class="fas fa-font"></i> Text Status</option>
+            <option value="music"><i class="fas fa-music"></i> Music Status</option>
+            <option value="mixed"><i class="fas fa-layer-group"></i> Mixed (Photo + Text)</option>
+          </select>
+        </div>
+        <div id="statusMediaUpload">
+          <div class="file-upload-area" onclick="document.getElementById('statusFileInput').click()">
+            <div><i class="fas fa-cloud-upload-alt"></i> Upload media for status</div>
+          </div>
+          <input type="file" id="statusFileInput" accept="image/*,video/*,audio/*" onchange="handleStatusFile(event)"
+            style="display:none;">
+          <div class="file-preview-container" id="statusPreview"></div>
+        </div>
+        <div id="statusTextField" style="display:none;">
+          <div class="form-group">
+            <label>Text Content</label>
+            <textarea class="form-textarea" id="statusText" placeholder="What's on your mind?"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Background Color</label>
+            <input type="color" class="form-input" id="statusBgColor" value="#198a00">
+          </div>
+        </div>
+        <div id="statusMusicField" style="display:none;">
+          <div class="form-group">
+            <label>Music Title</label>
+            <input type="text" class="form-input" id="statusMusicTitle" placeholder="Song title">
+          </div>
+          <div class="form-group">
+            <label>Artist</label>
+            <input type="text" class="form-input" id="statusMusicArtist" placeholder="Artist name">
+          </div>
+          <div class="file-upload-area" onclick="document.getElementById('musicFileInput').click()">
+            <div><i class="fas fa-upload"></i> Upload audio file (optional)</div>
+          </div>
+          <input type="file" id="musicFileInput" accept="audio/*" onchange="handleMusicFile(event)"
+            style="display:none;">
+        </div>
+        <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Post Status</button>
+        <button type="button" class="btn-secondary" onclick="closeStatusCreator()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ==================== ADVANCED STORAGE ENGINE ====================
+    const DB = {
+      get(key) {
+        try { return JSON.parse(localStorage.getItem('zc_' + key)); }
+        catch (e) { return null; }
+      },
+      set(key, value) {
+        localStorage.setItem('zc_' + key, JSON.stringify(value));
+      },
+      users() { return this.get('users') || {}; },
+      posts() { return this.get('posts') || []; },
+      stories() { return this.get('stories') || []; },
+      messages() { return this.get('messages') || {}; },
+      friends() { return this.get('friends') || {}; },
+      saved() { return this.get('saved') || {}; },
+      currentUser() { return localStorage.getItem('zc_cur'); },
+      login(username) { localStorage.setItem('zc_cur', username); },
+      logout() { localStorage.removeItem('zc_cur'); }
+    };
+
+    // ==================== APP STATE ====================
+    let currentUser = DB.currentUser() || 'admin';
+    let tempFiles = [];
+    let tempStatusFile = null;
+    let tempMusicFile = null;
+    let storyTimer = null;
+    let currentStories = [];
+    let currentStoryIndex = 0;
+    let currentStoryAuthor = '';
+
+    // ==================== INITIALIZATION ====================
+    function initApp() {
+      // Ensure demo users exist
+      const users = DB.users();
+      if (!users['admin']) {
+        users['admin'] = {
+          fullName: 'Zedcom Admin',
+          username: 'admin',
+          password: 'admin123',
+          email: 'admin@zedcom.zm',
+          location: 'Lusaka',
+          bio: 'Official Zedcom Administrator 🇿🇲',
+          profilePic: '',
+          joinedDate: new Date().toISOString()
+        };
+      }
+      if (!users['demo']) {
+        users['demo'] = {
+          fullName: 'Mwila Banda',
+          username: 'demo',
+          password: 'demo123',
+          email: 'mwila@zedcom.zm',
+          location: 'Copperbelt',
+          bio: 'Music lover 🎵 | Photographer 📷',
+          profilePic: '',
+          joinedDate: new Date().toISOString()
+        };
+      }
+      DB.set('users', users);
+
+      if (!DB.currentUser()) {
+        DB.login('admin');
+        currentUser = 'admin';
+      }
+
+      updateUserInterface();
+      loadStatusBar();
+      loadFeed();
+    }
+
+    function updateUserInterface() {
+      const user = DB.users()[currentUser];
+      if (!user) return;
+
+      const avatarEl = document.getElementById('myAvatarSmall');
+      if (user.profilePic) {
+        avatarEl.innerHTML = `<img src="${user.profilePic}" alt="${user.fullName}">`;
+      } else {
+        avatarEl.textContent = user.fullName[0].toUpperCase();
+      }
+    }
+
+    // ==================== STATUS SYSTEM ====================
+    function loadStatusBar() {
+      const stories = DB.stories();
+      const users = DB.users();
+      const scroll = document.getElementById('statusScroll');
+
+      // Filter stories from last 24 hours
+      const recentStories = stories.filter(s =>
+        (Date.now() - new Date(s.timestamp).getTime()) < 86400000
+      );
+
+      // Group by author
+      const authorGroups = {};
+      recentStories.forEach(s => {
+        if (!authorGroups[s.author]) authorGroups[s.author] = [];
+        authorGroups[s.author].push(s);
+      });
+
+      let html = `
+                <button class="status-card" onclick="openStatusCreator()">
+                    <div class="status-ring-wrap">
+                        <div class="status-ring mine">
+                            <div class="status-avatar">${users[currentUser]?.fullName[0] || 'M'}</div>
+                            <div class="status-badge mixed"><i class="fas fa-plus"></i></div>
+                        </div>
+                    </div>
+                    <span class="status-name">My Status</span>
+                </button>`;
+
+      Object.keys(authorGroups).forEach(author => {
+        if (author === currentUser) return;
+        const user = users[author] || { fullName: 'Unknown' };
+        const authorStories = authorGroups[author];
+        const hasUnviewed = authorStories.some(s => !(s.viewers || []).includes(currentUser));
+
+        // Determine badge type
+        const types = authorStories.map(s => s.statusType);
+        let badgeType = 'mixed';
+        if (types.every(t => t === 'image')) badgeType = 'photo';
+        else if (types.every(t => t === 'video')) badgeType = 'video';
+        else if (types.every(t => t === 'music')) badgeType = 'music';
+        else if (types.every(t => t === 'text')) badgeType = 'text';
+
+        html += `
+                    <button class="status-card" onclick="viewStories('${author}')">
+                        <div class="status-ring-wrap">
+                            <div class="status-ring ${hasUnviewed ? 'unviewed' : 'viewed'}">
+                                <div class="status-avatar">
+                                    ${user.profilePic ? `<img src="${user.profilePic}" alt="${user.fullName}">` : user.fullName[0]}
+                                </div>
+                                <div class="status-badge ${badgeType}">
+                                    ${badgeType === 'photo' ? '<i class="fas fa-image"></i>' : badgeType === 'video' ? '<i class="fas fa-video"></i>' : badgeType === 'music' ? '<i class="fas fa-music"></i>' : badgeType === 'text' ? '<i class="fas fa-font"></i>' : '<i class="fas fa-star"></i>'}
+                                </div>
+                            </div>
+                        </div>
+                        <span class="status-name">${user.fullName.split(' ')[0]}</span>
+                        <span class="status-time">${timeAgo(authorStories[authorStories.length - 1].timestamp)}</span>
+                    </button>`;
+      });
+
+      scroll.innerHTML = html || '<p style="color:var(--gray);padding:20px;">No status updates yet. Be the first!</p>';
+    }
+
+    function openStatusCreator() {
+      document.getElementById('statusCreatorModal').classList.add('active');
+      document.getElementById('statusType').value = 'image';
+      toggleStatusFields();
+      tempStatusFile = null;
+      tempMusicFile = null;
+      document.getElementById('statusPreview').innerHTML = '';
+      document.getElementById('statusText').value = '';
+      document.getElementById('statusMusicTitle').value = '';
+      document.getElementById('statusMusicArtist').value = '';
+    }
+
+    function closeStatusCreator() {
+      document.getElementById('statusCreatorModal').classList.remove('active');
+    }
+
+    function toggleStatusFields() {
+      const type = document.getElementById('statusType').value;
+      document.getElementById('statusMediaUpload').style.display =
+        (type === 'image' || type === 'video' || type === 'mixed') ? 'block' : 'none';
+      document.getElementById('statusTextField').style.display =
+        (type === 'text' || type === 'mixed') ? 'block' : 'none';
+      document.getElementById('statusMusicField').style.display =
+        type === 'music' ? 'block' : 'none';
+    }
+
+    function handleStatusFile(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (ev) {
+        tempStatusFile = {
+          data: ev.target.result,
+          type: file.type,
+          name: file.name
+        };
+
+        const preview = document.getElementById('statusPreview');
+        if (file.type.startsWith('image/')) {
+          preview.innerHTML = `<div class="file-preview-item"><img src="${ev.target.result}"></div>`;
+        } else if (file.type.startsWith('video/')) {
+          preview.innerHTML = `<div class="file-preview-item"><video src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;"></video></div>`;
+        } else if (file.type.startsWith('audio/')) {
+          preview.innerHTML = `<div class="file-preview-item"><i class="fas fa-music"></i> Audio</div>`;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleMusicFile(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (ev) {
+        tempMusicFile = {
+          data: ev.target.result,
+          type: file.type,
+          name: file.name
+        };
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function createStatus(e) {
+      e.preventDefault();
+
+      const type = document.getElementById('statusType').value;
+      let mediaData = null;
+      let mediaType = null;
+      let textContent = '';
+      let musicInfo = null;
+
+      if (type === 'image' || type === 'video') {
+        if (!tempStatusFile) return alert('Please select a media file!');
+        mediaData = tempStatusFile.data;
+        mediaType = tempStatusFile.type.split('/')[0];
+      } else if (type === 'text') {
+        textContent = document.getElementById('statusText').value.trim();
+        if (!textContent) return alert('Please enter some text!');
+      } else if (type === 'music') {
+        textContent = document.getElementById('statusMusicTitle').value.trim();
+        const artist = document.getElementById('statusMusicArtist').value.trim();
+        musicInfo = { title: textContent || 'Unknown Track', artist: artist || 'Unknown Artist' };
+        if (tempMusicFile) {
+          mediaData = tempMusicFile.data;
+          mediaType = 'audio';
+        } else if (tempStatusFile) {
+          mediaData = tempStatusFile.data;
+          mediaType = tempStatusFile.type.split('/')[0];
+        }
+      } else if (type === 'mixed') {
+        if (!tempStatusFile) return alert('Please select a photo!');
+        mediaData = tempStatusFile.data;
+        mediaType = 'image';
+        textContent = document.getElementById('statusText').value.trim();
+      }
+
+      const story = {
+        id: Date.now().toString(),
+        author: currentUser,
+        statusType: type,
+        mediaData: mediaData,
+        mediaType: mediaType,
+        textContent: textContent,
+        musicInfo: musicInfo,
+        bgColor: document.getElementById('statusBgColor').value,
+        timestamp: new Date().toISOString(),
+        viewers: []
+      };
+
+      const stories = DB.stories();
+      stories.push(story);
+      DB.set('stories', stories);
+
+      closeStatusCreator();
+      loadStatusBar();
+      alert('Status posted! It will be visible for 24 hours. 🎉');
+    }
+
+    function viewStories(author) {
+      const stories = DB.stories().filter(s =>
+        s.author === author &&
+        (Date.now() - new Date(s.timestamp).getTime()) < 86400000
+      );
+
+      if (stories.length === 0) {
+        alert('No status available from this user.');
+        return;
+      }
+
+      currentStories = stories;
+      currentStoryAuthor = author;
+      currentStoryIndex = 0;
+
+      const user = DB.users()[author] || { fullName: 'Unknown' };
+      document.getElementById('viewerAvatar').textContent = user.fullName[0];
+      if (user.profilePic) {
+        document.getElementById('viewerAvatar').innerHTML = `<img src="${user.profilePic}" style="width:100%;height:100%;object-fit:cover;">`;
+      }
+      document.getElementById('viewerName').textContent = user.fullName;
+      document.getElementById('storyViewer').classList.add('active');
+
+      // Create progress segments
+      const progressContainer = document.getElementById('storyProgressContainer');
+      progressContainer.innerHTML = stories.map(() =>
+        '<div class="story-progress-segment"><div class="story-progress-fill"></div></div>'
+      ).join('');
+
+      showCurrentStory();
+    }
+
+    function showCurrentStory() {
+      if (currentStoryIndex >= currentStories.length) {
+        closeStoryViewer();
+        return;
+      }
+
+      const story = currentStories[currentStoryIndex];
+      document.getElementById('viewerTime').textContent = new Date(story.timestamp).toLocaleTimeString();
+
+      // Mark as viewed
+      if (!story.viewers) story.viewers = [];
+      if (!story.viewers.includes(currentUser)) {
+        story.viewers.push(currentUser);
+        const allStories = DB.stories();
+        const idx = allStories.findIndex(s => s.id === story.id);
+        if (idx > -1) {
+          allStories[idx] = story;
+          DB.set('stories', allStories);
+        }
+      }
+
+      const mediaContainer = document.getElementById('storyMediaContainer');
+      let mediaHTML = '';
+
+      if (story.statusType === 'text') {
+        mediaHTML = `
+                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:${story.bgColor};border-radius:16px;">
+                        <div class="story-text-overlay" style="position:static;font-size:32px;">${story.textContent}</div>
+                    </div>`;
+      } else if (story.statusType === 'music') {
+        mediaHTML = `
+                    <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#1db954,#191414);border-radius:16px;color:white;">
+                        <div style="font-size:48px;"><i class="fas fa-music"></i></div>
+                        <div style="font-size:20px;font-weight:700;margin-top:16px;">${story.musicInfo?.title || 'Unknown Track'}</div>
+                        <div style="font-size:16px;opacity:0.8;">${story.musicInfo?.artist || 'Unknown Artist'}</div>
+                        ${story.mediaData && story.mediaType === 'audio' ?
+            `<audio src="${story.mediaData}" controls style="margin-top:20px;width:80%;"></audio>` : ''}
+                    </div>`;
+      } else {
+        if (story.mediaType === 'image') {
+          mediaHTML = `<img src="${story.mediaData}" style="max-width:100%;max-height:100%;object-fit:contain;">`;
+        } else if (story.mediaType === 'video') {
+          mediaHTML = `<video src="${story.mediaData}" autoplay loop style="max-width:100%;max-height:100%;" onended="nextStory()"></video>`;
+        }
+
+        if (story.textContent) {
+          mediaHTML += `<div class="story-text-overlay">${story.textContent}</div>`;
+        }
+
+        if (story.musicInfo) {
+          mediaHTML += `<div class="story-music-overlay"><i class="fas fa-music"></i> ${story.musicInfo.title} - ${story.musicInfo.artist}</div>`;
+        }
+      }
+
+      mediaContainer.innerHTML = mediaHTML;
+
+      // Animate progress
+      const progressFills = document.querySelectorAll('.story-progress-fill');
+      progressFills.forEach((fill, i) => {
+        fill.style.transition = 'none';
+        fill.style.width = i < currentStoryIndex ? '100%' : '0%';
+        fill.classList.toggle('completed', i < currentStoryIndex);
+      });
+
+      const currentFill = progressFills[currentStoryIndex];
+      if (currentFill) {
+        setTimeout(() => {
+          currentFill.style.transition = 'width 5s linear';
+          currentFill.style.width = '100%';
+        }, 50);
+      }
+
+      clearTimeout(storyTimer);
+      storyTimer = setTimeout(() => {
+        currentStoryIndex++;
+        showCurrentStory();
+      }, 5000);
+    }
+
+    function nextStory() {
+      currentStoryIndex++;
+      showCurrentStory();
+    }
+
+    function prevStory() {
+      if (currentStoryIndex > 0) {
+        currentStoryIndex--;
+        showCurrentStory();
+      }
+    }
+
+    function closeStoryViewer() {
+      document.getElementById('storyViewer').classList.remove('active');
+      document.getElementById('storyMediaContainer').innerHTML = '';
+      clearTimeout(storyTimer);
+      loadStatusBar();
+    }
+
+    // ==================== POST SYSTEM ====================
+    function loadFeed() {
+      const posts = DB.posts().sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      const feedSection = document.getElementById('feedSection');
+
+      if (posts.length === 0) {
+        feedSection.innerHTML = `
+                    <div style="text-align:center;padding:60px 20px;">
+                        <div style="font-size:48px;"><i class="fas fa-flag"></i></div>
+                        <h2>Welcome to Zedcom!</h2>
+                        <p style="color:var(--gray);">Be the first to share something with the community.</p>
+                    </div>`;
+        return;
+      }
+
+      feedSection.innerHTML = posts.map(post => {
+        const user = DB.users()[post.author] || { fullName: 'Unknown', profilePic: '' };
+        const isLiked = (post.likes || []).includes(currentUser);
+        const isSaved = (DB.saved()[currentUser] || []).includes(post.id);
+
+        let mediaHTML = '';
+        if (post.mediaData) {
+          if (post.mediaType === 'image') {
+            mediaHTML = `<div class="post-media-grid single"><div class="post-media-item"><img src="${post.mediaData}" alt="Post image"></div></div>`;
+          } else if (post.mediaType === 'video') {
+            mediaHTML = `<div class="post-media-grid single"><div class="post-media-item"><video src="${post.mediaData}" controls></video></div></div>`;
+          } else if (post.mediaType === 'audio') {
+            mediaHTML = `<div class="post-audio-player"><audio src="${post.mediaData}" controls></audio></div>`;
+          }
+        }
+
+        // Handle multiple media
+        if (post.mediaFiles && post.mediaFiles.length > 0) {
+          const gridClass = post.mediaFiles.length === 1 ? 'single' : 'double';
+          mediaHTML = `<div class="post-media-grid ${gridClass}">`;
+          post.mediaFiles.forEach(file => {
+            if (file.type.startsWith('image/')) {
+              mediaHTML += `<div class="post-media-item"><img src="${file.data}" alt="Media"></div>`;
+            } else if (file.type.startsWith('video/')) {
+              mediaHTML += `<div class="post-media-item"><video src="${file.data}" controls></video></div>`;
+            }
+          });
+          mediaHTML += '</div>';
+        }
+
+        return `
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-avatar">
+                            ${user.profilePic ? `<img src="${user.profilePic}" alt="${user.fullName}">` : user.fullName[0]}
+                        </div>
+                        <div class="post-user-info">
+                            <div class="post-username">${user.fullName}</div>
+                            <div class="post-time">${timeAgo(post.timestamp)} • ${post.location || 'Zambia'}</div>
+                        </div>
+                        <button class="post-menu-btn" onclick="deletePost('${post.id}')"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                    <div class="post-text">${escapeHtml(post.content || '')}</div>
+                    ${mediaHTML}
+                    <div class="post-actions-row">
+                        <button class="action-btn ${isLiked ? 'liked' : ''}" onclick="likePost('${post.id}')">
+                            <i class="fas fa-heart"></i> ${(post.likes || []).length}
+                        </button>
+                        <button class="action-btn" onclick="commentPost('${post.id}')">
+                            <i class="fas fa-comment"></i> ${(post.comments || []).length}
+                        </button>
+                        <button class="action-btn" onclick="sharePost()">
+                            <i class="fas fa-share"></i> Share
+                        </button>
+                        <button class="action-btn ${isSaved ? 'saved' : ''}" onclick="savePost('${post.id}')">
+                            <i class="fas fa-bookmark"></i> Save
+                        </button>
+                        ${post.mediaData ? `<button class="action-btn" onclick="downloadMedia('${post.id}')"><i class="fas fa-download"></i> Download</button>` : ''}
+                    </div>
+                </div>`;
+      }).join('');
+    }
+
+    function openPostCreator(type) {
+      document.getElementById('postCreatorModal').classList.add('active');
+      document.getElementById('postContent').value = '';
+      document.getElementById('mediaUrlInput').value = '';
+      document.getElementById('filePreviewContainer').innerHTML = '';
+      tempFiles = [];
+    }
+
+    function closePostCreator() {
+      document.getElementById('postCreatorModal').classList.remove('active');
+    }
+
+    function handleFileSelect(e) {
+      const files = Array.from(e.target.files);
+      if (files.length === 0) return;
+
+      files.forEach(file => {
+        if (file.size > 50 * 1024 * 1024) {
+          alert(`File ${file.name} is too large! Max 50MB.`);
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+          tempFiles.push({
+            data: ev.target.result,
+            type: file.type,
+            name: file.name
+          });
+          updateFilePreview();
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function updateFilePreview() {
+      const container = document.getElementById('filePreviewContainer');
+      container.innerHTML = tempFiles.map((file, i) => `
+                <div class="file-preview-item">
+                    ${file.type.startsWith('image/') ? `<img src="${file.data}">` :
+          file.type.startsWith('video/') ? `<video src="${file.data}">` :
+            `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#e0e0e0;"><i class="fas fa-music"></i></div>`}
+                    <button class="remove-file" onclick="removeFile(${i})"><i class="fas fa-times"></i></button>
+                </div>
+            `).join('');
+    }
+
+    function removeFile(index) {
+      tempFiles.splice(index, 1);
+      updateFilePreview();
+    }
+
+    function createPost(e) {
+      e.preventDefault();
+
+      const content = document.getElementById('postContent').value.trim();
+      const mediaUrl = document.getElementById('mediaUrlInput').value.trim();
+      const postType = document.getElementById('postType').value;
+
+      if (!content && tempFiles.length === 0 && !mediaUrl) {
+        return alert('Please add some content or media!');
+      }
+
+      let mediaData = null;
+      let mediaType = null;
+      let mediaFiles = [];
+
+      if (tempFiles.length > 0) {
+        if (tempFiles.length === 1) {
+          mediaData = tempFiles[0].data;
+          mediaType = tempFiles[0].type.split('/')[0];
+        } else {
+          mediaFiles = tempFiles;
+        }
+      } else if (mediaUrl) {
+        mediaData = mediaUrl;
+        if (mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)/i)) mediaType = 'image';
+        else if (mediaUrl.match(/\.(mp4|webm|mov)/i)) mediaType = 'video';
+        else if (mediaUrl.match(/\.(mp3|wav|ogg)/i)) mediaType = 'audio';
+      }
+
+      const post = {
+        id: Date.now().toString(),
+        author: currentUser,
+        content: content,
+        mediaData: mediaData,
+        mediaType: mediaType,
+        mediaFiles: mediaFiles,
+        postType: postType,
+        timestamp: new Date().toISOString(),
+        likes: [],
+        comments: [],
+        shares: 0
+      };
+
+      const posts = DB.posts();
+      posts.unshift(post);
+      DB.set('posts', posts);
+
+      // If it's a story type, also add to stories
+      if (postType === 'story') {
+        const story = {
+          id: Date.now().toString() + '_story',
+          author: currentUser,
+          statusType: mediaType === 'image' ? 'image' : mediaType === 'video' ? 'video' : 'text',
+          mediaData: mediaData,
+          mediaType: mediaType,
+          textContent: content,
+          timestamp: new Date().toISOString(),
+          viewers: []
+        };
+        const stories = DB.stories();
+        stories.push(story);
+        DB.set('stories', stories);
+        loadStatusBar();
+      }
+
+      closePostCreator();
+      loadFeed();
+    }
+
+    function likePost(id) {
+      const posts = DB.posts();
+      const post = posts.find(p => p.id === id);
+      if (!post) return;
+
+      if (!post.likes) post.likes = [];
+      const idx = post.likes.indexOf(currentUser);
+      if (idx > -1) {
+        post.likes.splice(idx, 1);
+      } else {
+        post.likes.push(currentUser);
+      }
+
+      DB.set('posts', posts);
+      loadFeed();
+    }
+
+    function commentPost(id) {
+      const text = prompt('Write a comment:');
+      if (!text) return;
+
+      const posts = DB.posts();
+      const post = posts.find(p => p.id === id);
+      if (!post) return;
+
+      if (!post.comments) post.comments = [];
+      post.comments.push({
+        author: currentUser,
+        text: text,
+        timestamp: new Date().toISOString()
+      });
+
+      DB.set('posts', posts);
+      loadFeed();
+    }
+
+    function sharePost() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Check out this post on Zedcom',
+          url: window.location.href
+        });
+      } else {
+        navigator.clipboard.writeText(window.location.href)
+          .then(() => alert('Link copied to clipboard!'));
+      }
+    }
+
+    function savePost(id) {
+      const saved = DB.saved();
+      if (!saved[currentUser]) saved[currentUser] = [];
+
+      const idx = saved[currentUser].indexOf(id);
+      if (idx > -1) {
+        saved[currentUser].splice(idx, 1);
+      } else {
+        saved[currentUser].push(id);
+      }
+
+      DB.set('saved', saved);
+      loadFeed();
+    }
+
+    function downloadMedia(id) {
+      const post = DB.posts().find(p => p.id === id);
+      if (!post || !post.mediaData) return alert('No media to download.');
+
+      const a = document.createElement('a');
+      a.href = post.mediaData;
+      a.download = `zedcom_media_${post.id}.${post.mediaType === 'image' ? 'jpg' : post.mediaType === 'video' ? 'mp4' : 'mp3'}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function deletePost(id) {
+      if (!confirm('Delete this post?')) return;
+
+      let posts = DB.posts();
+      posts = posts.filter(p => p.id !== id);
+      DB.set('posts', posts);
+      loadFeed();
+    }
+
+    // ==================== UTILITY FUNCTIONS ====================
+    function timeAgo(timestamp) {
+      const now = Date.now();
+      const then = new Date(timestamp).getTime();
+      const diff = now - then;
+
+      const seconds = Math.floor(diff / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+
+      if (seconds < 60) return 'Just now';
+      if (minutes < 60) return `${minutes}m ago`;
+      if (hours < 24) return `${hours}h ago`;
+      if (days < 7) return `${days}d ago`;
+      return new Date(timestamp).toLocaleDateString();
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ==================== EVENT LISTENERS ====================
+    // Close modals on overlay click
+    document.addEventListener('click', function (e) {
+      if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('active');
+      }
+    });
+
+    // Keyboard navigation for stories
+    document.addEventListener('keydown', function (e) {
+      const viewer = document.getElementById('storyViewer');
+      if (!viewer.classList.contains('active')) return;
+
+      if (e.key === 'ArrowLeft') prevStory();
+      if (e.key === 'ArrowRight') nextStory();
+      if (e.key === 'Escape') closeStoryViewer();
+    });
+
+    // Drag and drop for post creator
+    const dropZone = document.getElementById('fileDropZone');
+    if (dropZone) {
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        });
+      });
+
+      dropZone.addEventListener('drop', function (e) {
+        const files = Array.from(e.dataTransfer.files);
+        if (files.length > 0) {
+          const input = document.getElementById('fileInput');
+          const dt = new DataTransfer();
+          files.forEach(file => dt.items.add(file));
+          input.files = dt.files;
+          handleFileSelect({ target: { files: dt.files } });
+        }
+      });
+    }
+
+    // Initialize the app
+    initApp();
+  </script>
+</body>
+
+</html>

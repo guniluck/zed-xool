@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zedcom - Profile</title>
+  <style>
+    :root {
+      --green: #198a00;
+      --orange: #ef7d00;
+      --bg: #f0f2f5;
+      --white: #fff;
+      --border: #dadde1;
+      --text: #1c1e21;
+      --gray: #65676b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--white);
+      min-height: 100vh;
+      padding-bottom: 70px;
+    }
+
+    .header {
+      background: var(--green);
+      color: white;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header a,
+    .header button {
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      flex: 1;
+    }
+
+    .cover {
+      height: 150px;
+      background: linear-gradient(135deg, var(--green), #000);
+    }
+
+    .profile-info {
+      text-align: center;
+      padding: 0 16px 20px;
+      margin-top: -60px;
+    }
+
+    .p-av {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid white;
+      margin: 0 auto 12px;
+      background: var(--orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      color: white;
+      font-weight: 700;
+      overflow: hidden;
+    }
+
+    .p-av img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .p-name {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .p-user {
+      color: var(--gray);
+      font-size: 15px;
+    }
+
+    .p-bio {
+      margin: 8px 0 16px;
+      color: var(--gray);
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 16px;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat strong {
+      font-size: 22px;
+      display: block;
+    }
+
+    .stat span {
+      font-size: 12px;
+      color: var(--gray);
+    }
+
+    .btn {
+      padding: 10px 22px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 4px;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #147a00;
+    }
+
+    .btn-gray {
+      background: #e4e6eb;
+      color: var(--text);
+    }
+
+    .btn-gray:hover {
+      background: #d0d0d0;
+    }
+
+    .posts-section {
+      padding: 16px;
+    }
+
+    .post {
+      background: white;
+      padding: 12px;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .post img,
+    .post video {
+      width: 100%;
+      max-height: 350px;
+      object-fit: contain;
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+
+    .post audio {
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 600px;
+      background: white;
+      display: flex;
+      border-top: 1px solid var(--border);
+      z-index: 100;
+    }
+
+    .bn-item {
+      flex: 1;
+      padding: 6px 2px;
+      text-align: center;
+      text-decoration: none;
+      color: var(--gray);
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .bn-item .bn-icon {
+      font-size: 18px;
+      display: block;
+    }
+
+    .bn-item.active {
+      color: var(--green);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      border-radius: 14px;
+      padding: 22px;
+      width: 90%;
+      max-width: 420px;
+    }
+
+    .modal-box h3 {
+      margin-bottom: 14px;
+      font-size: 20px;
+    }
+
+    .modal-box input,
+    .modal-box textarea,
+    .modal-box select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .modal-box input:focus,
+    .modal-box textarea:focus {
+      border-color: var(--green);
+    }
+
+    @media (min-width: 768px) {
+      .app {
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="header"><a href="index.html">←</a>
+      <h1>Profile</h1><button onclick="openEditModal()">✏️</button>
+    </header>
+    <div class="cover"></div>
+    <div class="profile-info">
+      <div class="p-av" id="pAv">U</div>
+      <h2 class="p-name" id="pName">User</h2>
+      <p class="p-user" id="pUser">@user</p>
+      <p class="p-bio" id="pBio">No bio yet</p>
+      <div class="stats">
+        <div class="stat"><strong id="pPosts">0</strong><span>Posts</span></div>
+        <div class="stat"><strong id="pFriends">0</strong><span>Friends</span></div>
+        <div class="stat"><strong id="pLikes">0</strong><span>Likes</span></div>
+      </div><button class="btn btn-primary" onclick="openEditModal()">Edit Profile</button><button class="btn btn-gray"
+        onclick="exportData()">📥 Export Data</button>
+    </div>
+    <div class="posts-section" id="profilePosts"></div>
+    <nav class="bottom-nav"><a href="index.html" class="bn-item"><span class="bn-icon">🏠</span>Home</a><a
+        href="videos.html" class="bn-item"><span class="bn-icon">🎬</span>Videos</a><a href="friends.html"
+        class="bn-item"><span class="bn-icon">👥</span>Friends</a><a href="pages.html" class="bn-item"><span
+          class="bn-icon">📄</span>Pages</a><a href="groups.html" class="bn-item"><span
+          class="bn-icon">👪</span>Groups</a><a href="chats.html" class="bn-item"><span
+          class="bn-icon">💬</span>Chats</a><a href="profile.html" class="bn-item active"><span
+          class="bn-icon">👤</span>Profile</a></nav>
+  </div>
+  <div class="modal" id="editModal">
+    <div class="modal-box">
+      <h3>Edit Profile</h3>
+      <form onsubmit="saveProfile(event)"><input type="text" id="eName" placeholder="Full Name" required><textarea
+          id="eBio" placeholder="Bio" rows="2"></textarea><select id="eLoc">
+          <option value="">Province</option>
+          <option>Lusaka</option>
+          <option>Copperbelt</option>
+          <option>Southern</option>
+          <option>Eastern</option>
+          <option>Western</option>
+          <option>Northern</option>
+        </select><input type="file" id="ePic" accept="image/*" onchange="previewEditPic(event)">
+        <div id="ePicPrev" style="margin:8px 0;"></div><button type="submit" class="btn btn-primary"
+          style="width:100%;">Save Changes</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    const DB = { get(k) { try { return JSON.parse(localStorage.getItem('zc_' + k)); } catch (e) { return null; } }, set(k, v) { localStorage.setItem('zc_' + k, JSON.stringify(v)); }, users() { return this.get('users') || {}; }, posts() { return this.get('posts') || []; }, friends() { return this.get('friends') || {}; } };
+    const cu = localStorage.getItem('zc_cur'); if (!cu) window.location.href = 'login.html';
+    let tempPic = null;
+    function init() { loadProfile(); }
+    function loadProfile() { const u = DB.users()[cu]; const p = DB.posts().filter(p => p.author === cu); const f = (DB.friends()[cu] || []).length; document.getElementById('pName').textContent = u.fullName; document.getElementById('pUser').textContent = '@' + u.username; document.getElementById('pBio').textContent = u.bio || 'No bio yet'; document.getElementById('pPosts').textContent = p.length; document.getElementById('pFriends').textContent = f; document.getElementById('pLikes').textContent = p.reduce((s, x) => s + (x.likes || []).length, 0); const av = document.getElementById('pAv'); if (u.profilePic) av.innerHTML = `<img src="${u.profilePic}">`; else av.textContent = u.fullName[0].toUpperCase(); document.getElementById('profilePosts').innerHTML = p.length ? p.map(x => `<div class="post"><p>${x.content || ''}</p>${x.mediaData ? (x.mediaType === 'image' ? `<img src="${x.mediaData}">` : x.mediaType === 'video' ? `<video src="${x.mediaData}" controls></video>` : x.mediaType === 'audio' ? `<audio src="${x.mediaData}" controls></audio>` : '') : ''}<p style="font-size:11px;color:var(--gray);margin-top:4px;">${new Date(x.timestamp).toLocaleDateString()} • ❤️ ${(x.likes || []).length}</p></div>`).join('') : '<p style="text-align:center;padding:30px;color:var(--gray);">No posts yet.</p>'; }
+    function openEditModal() { const u = DB.users()[cu]; document.getElementById('eName').value = u.fullName; document.getElementById('eBio').value = u.bio || ''; document.getElementById('eLoc').value = u.location || ''; document.getElementById('editModal').classList.add('show'); tempPic = null; document.getElementById('ePicPrev').innerHTML = ''; }
+    function previewEditPic(e) { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = function (ev) { tempPic = ev.target.result; document.getElementById('ePicPrev').innerHTML = `<img src="${ev.target.result}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">`; }; r.readAsDataURL(f); }
+    function saveProfile(e) { e.preventDefault(); const users = DB.users(); users[cu] = { ...users[cu], fullName: document.getElementById('eName').value, bio: document.getElementById('eBio').value, location: document.getElementById('eLoc').value, profilePic: tempPic || users[cu].profilePic }; DB.set('users', users); document.getElementById('editModal').classList.remove('show'); loadProfile(); }
+    function exportData() { const data = { user: DB.users()[cu], posts: DB.posts().filter(p => p.author === cu) }; const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `zedcom_${cu}.json`; a.click(); }
+    init();
+  </script>
+</body>
+
+</html>

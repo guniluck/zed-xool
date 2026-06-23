@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Zedcom - Groups</title>
+  <!-- Font Awesome 6 for real icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --green: #198a00;
+      --bg: #f0f2f5;
+      --white: #fff;
+      --border: #dadde1;
+      --text: #1c1e21;
+      --gray: #65676b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--white);
+      min-height: 100vh;
+      padding-bottom: 75px;
+      /* space for bottom nav */
+    }
+
+    .header {
+      background: var(--green);
+      color: white;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .header a {
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+      background: white;
+      color: var(--green);
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .group-list {
+      padding: 16px;
+    }
+
+    .group-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      background: white;
+      transition: all 0.2s;
+    }
+
+    .group-card:hover {
+      background: #f9f9f9;
+      border-color: #ccc;
+    }
+
+    .group-av {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #ef7d00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .group-info {
+      flex: 1;
+      min-width: 0;
+      /* prevent overflow */
+    }
+
+    .group-name {
+      font-weight: 600;
+      font-size: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .group-meta {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 2px;
+    }
+
+    /* ---------- Modal ---------- */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      border-radius: 14px;
+      padding: 24px 20px;
+      width: 92%;
+      max-width: 400px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .modal-box h3 {
+      margin-bottom: 16px;
+      font-size: 20px;
+    }
+
+    .modal-box input,
+    .modal-box select,
+    .modal-box textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .modal-box input:focus,
+    .modal-box select:focus,
+    .modal-box textarea:focus {
+      border-color: var(--green);
+    }
+
+    .modal-box .btn-sm {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+    }
+
+    /* ---------- Bottom Nav ---------- */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 600px;
+      background: white;
+      display: flex;
+      border-top: 1px solid var(--border);
+      z-index: 100;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .bn-item {
+      flex: 1 0 auto;
+      min-width: 60px;
+      padding: 8px 4px;
+      text-align: center;
+      text-decoration: none;
+      color: var(--gray);
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .bn-item .bn-icon {
+      font-size: 18px;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .bn-item.active {
+      color: var(--green);
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 400px) {
+      .header h1 {
+        font-size: 18px;
+      }
+
+      .btn-sm {
+        padding: 6px 12px;
+        font-size: 13px;
+      }
+
+      .group-av {
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+      }
+
+      .group-card {
+        padding: 12px 10px;
+      }
+
+      .bn-item {
+        min-width: 50px;
+        font-size: 9px;
+      }
+
+      .bn-item .bn-icon {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="header">
+      <a href="index.html"><i class="fas fa-arrow-left"></i></a>
+      <h1><i class="fas fa-users"></i> Groups</h1>
+      <button class="btn-sm" onclick="openCreate()"><i class="fas fa-plus"></i> Create</button>
+    </header>
+
+    <div class="group-list" id="groupList"></div>
+
+    <nav class="bottom-nav">
+      <a href="index.html" class="bn-item"><span class="bn-icon"><i class="fas fa-home"></i></span>Home</a>
+      <a href="videos.html" class="bn-item"><span class="bn-icon"><i class="fas fa-video"></i></span>Videos</a>
+      <a href="friends.html" class="bn-item"><span class="bn-icon"><i class="fas fa-user-friends"></i></span>Friends</a>
+      <a href="pages.html" class="bn-item"><span class="bn-icon"><i class="fas fa-flag"></i></span>Pages</a>
+      <a href="groups.html" class="bn-item active"><span class="bn-icon"><i class="fas fa-users"></i></span>Groups</a>
+      <a href="chats.html" class="bn-item"><span class="bn-icon"><i class="fas fa-comments"></i></span>Chats</a>
+    </nav>
+  </div>
+
+  <!-- Create Group Modal -->
+  <div class="modal" id="createModal">
+    <div class="modal-box">
+      <h3>Create Group</h3>
+      <form onsubmit="createGroup(event)">
+        <input type="text" id="gName" placeholder="Group Name" required>
+        <select id="gPrivacy">
+          <option value="public">Public</option>
+          <option value="private">Private</option>
+        </select>
+        <textarea id="gDesc" placeholder="Description" rows="2"></textarea>
+        <button type="submit" class="btn-sm" style="background:var(--green);color:white;">
+          <i class="fas fa-check"></i> Create
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const DB = {
+      get(k) { try { return JSON.parse(localStorage.getItem('zc_' + k)); } catch (e) { return null; } },
+      set(k, v) { localStorage.setItem('zc_' + k, JSON.stringify(v)); },
+      groups() { return this.get('groups') || []; }
+    };
+    const cu = localStorage.getItem('zc_cur');
+
+    function load() {
+      const groups = DB.groups();
+      const container = document.getElementById('groupList');
+      if (!groups.length) {
+        container.innerHTML = `
+          <div style="text-align:center;padding:60px 20px;">
+            <div style="font-size:60px;"><i class="fas fa-users"></i></div>
+            <h3>No groups yet</h3>
+            <p style="color:var(--gray);">Create a group to connect with people</p>
+          </div>`;
+        return;
+      }
+      container.innerHTML = groups.map(g => `
+        <div class="group-card">
+          <div class="group-av">${g.name[0].toUpperCase()}</div>
+          <div class="group-info">
+            <div class="group-name" title="${g.name}">${g.name}</div>
+            <div class="group-meta">
+              <i class="fas ${g.privacy === 'public' ? 'fa-globe' : 'fa-lock'}"></i>
+              ${g.privacy} · ${g.members?.length || 0} members
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openCreate() {
+      document.getElementById('createModal').classList.add('show');
+    }
+
+    function createGroup(e) {
+      e.preventDefault();
+      const name = document.getElementById('gName').value.trim();
+      if (!name) return;
+      const group = {
+        id: Date.now().toString(),
+        name,
+        privacy: document.getElementById('gPrivacy').value,
+        description: document.getElementById('gDesc').value.trim(),
+        creator: cu,
+        members: [cu],
+        created: new Date().toISOString()
+      };
+      DB.set('groups', [group, ...DB.groups()]);
+      document.getElementById('createModal').classList.remove('show');
+      document.getElementById('gName').value = '';
+      document.getElementById('gDesc').value = '';
+      load();
+    }
+
+    // Close modal on outside click
+    document.getElementById('createModal').addEventListener('click', function (e) {
+      if (e.target === this) this.classList.remove('show');
+    });
+
+    load();
+  </script>
+</body>
+
+</html>
